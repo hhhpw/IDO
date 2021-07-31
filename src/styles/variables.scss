@@ -1,0 +1,30 @@
+// base color
+$dark-blue: #324157;
+$light-blue: #3a71a8;
+$red: #c03639;
+$pink: #e65d6e;
+$green: #30b08f;
+$tiffany: #4ab7bd;
+$yellow: #fec171;
+$panGreen: #30b08f;
+$blue: #409eff;
+$white: #ffffff;
+
+// 文本
+$text_base_color: #191d28;
+$text_light_color: #2afefe;
+
+//button
+$btn_base_bgcolor: #2afefe;
+// border
+$light_bordercolor: #2afefe;
+
+$open_color: #2afefe;
+$will_color: #bbff8a;
+$closed_color: #a6dfe6;
+
+:export {
+  openColor: $open_color;
+  willColor: $will_color;
+  closedColor: $closed_color;
+}
