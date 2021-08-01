@@ -1,8 +1,12 @@
 <template>
-  <div>exchange</div>
+  <div>
+    <start-input></start-input>
+  </div>
 </template>
 <script>
+import StartInput from "@startUI/StartInput.vue";
 export default {
+  components: { StartInput },
   data() {
     return {};
   },
@@ -12,4 +16,9 @@ export default {
   beforeDestroy() {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+div {
+  color: red;
+  font-size: 100x;
+}
+</style>

@@ -5,6 +5,7 @@
       <start-tag
         v-for="(d, i) in supportList"
         :key="i"
+        class="support-icon"
         :class="`support-tag-${i + 1}`"
         :style="`background-image: url(${d})`"
       >
@@ -47,15 +48,12 @@ export default {
   bottom: 0;
   width: 100%;
   height: 146px;
-  background: linear-gradient(
-      180deg,
-      rgba(42, 254, 254, 0.59) 0%,
-      rgba(42, 254, 254, 0.56) 28%,
-      rgba(42, 254, 254, 0) 100%
-    ),
-    linear-gradient(180deg, #2afefe 0%, rgba(42, 254, 254, 0) 100%);
+  background-image: url("../../assets/home/support-bg.png");
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
+  .support-icon {
+    height: 60px;
+  }
   @for $i from 1 through 4 {
     .support-tag-#{$i} {
       @if $i == 1 {

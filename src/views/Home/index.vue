@@ -16,7 +16,8 @@
       </div>
       <support> </support>
     </div>
-    <start-space size="30"></start-space>
+    <start-input></start-input>
+    <!-- <start-space size="30"></start-space> -->
     <div class="start-container">
       <!-- <div class="aa">SRART</div>
     <div>{{ $t("constant.name") }}</div>
@@ -29,32 +30,54 @@
         <start-button> dropdown </start-button>
       </template>
     </start-drop-down> -->
-
-      <start-card cardType="open"> </start-card>
+      <div>
+        <start-card
+          v-for="(d, index) in cardData"
+          :key="index"
+          :cardType="d.cardType"
+          :data="d"
+          style="margin-top: 80px"
+          @clickMethod="clickMethod"
+        ></start-card>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import StartCard from "@startUI/StartCard.vue";
 import StartButton from "@startUI/StartButton.vue";
-import StartSpace from "@startUI/StartSpace.vue";
+// import StartSpace from "@startUI/StartSpace.vue";
 import support from "./support.vue";
+import { cardData } from "@startUI/mock.js";
+import StartInput from "@startUI/StartInput.vue";
 // import StartDropDown from "@startUI/StartDropDown.vue";
 export default {
   data() {
     return {
       parentName: ["name", "AA", "BB", "CC"],
+      cardData,
     };
   },
   components: {
     StartCard,
     StartButton,
     support,
-    StartSpace,
+    StartInput,
+    // StartSpace,
     // StartDropDown,
   },
   mounted() {},
-  methods: {},
+  methods: {
+    clickMethod(value) {
+      this.$router.push({
+        path: "/exchange",
+        query: {
+          currency: "STC",
+        },
+      });
+      console.log("value", value);
+    },
+  },
   computed: {},
   beforeDestroy() {},
 };
@@ -85,6 +108,7 @@ export default {
   position: relative;
   .start-home-banner-content {
     margin-left: 12%;
+    margin-top: 50px;
     color: #fff;
     .start-home-banner-title {
       @include fontRigelstar();
