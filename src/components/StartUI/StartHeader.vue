@@ -3,7 +3,7 @@
     <div class="start-header-left">
       <img src="../../assets/header/logo.png" />
       <Menu
-        :default-active="activeIndex"
+        :default-active="activeHeaderItem"
         mode="horizontal"
         class="start-menu"
         @select="handleSelect"
@@ -11,16 +11,11 @@
         <MenuItem
           index="home"
           class="start-menu-item"
-          :class="{ 'start-menu-item-active': activeIndex === 'home' }"
+          v-for="(d, index) in headerItems"
+          :key="index"
+          :class="{ 'start-menu-item-active': activeHeaderItem === d.value }"
         >
-          {{ $t("项目") }}
-        </MenuItem>
-        <MenuItem
-          index="exchange"
-          class="start-menu-item"
-          :class="{ 'start-menu-item-active': activeIndex === 'exchange' }"
-        >
-          {{ $t("交换") }}
+          {{ $t(d.label) }}
         </MenuItem>
       </Menu>
     </div>
@@ -49,11 +44,13 @@ import { Menu, MenuItem } from "element-ui";
 import StartButton from "@startUI/StartButton.vue";
 import StartDropDown from "@startUI/StartDropDown.vue";
 import session from "@utils/session.js";
+import { mapState } from "vuex";
+// import StoreApp from "@store/StoreApp"
 export default {
   name: "StartHeader",
   data() {
     return {
-      activeIndex: "home",
+      // activeIndex: "home",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
@@ -96,7 +93,10 @@ export default {
       }
     },
   },
-  computed: {},
+  computed: mapState("StoreApp", {
+    headerItems: (state) => state.headerItems,
+    activeHeaderItem: (state) => state.activeHeaderItem,
+  }),
   beforeDestroy() {},
 };
 </script>

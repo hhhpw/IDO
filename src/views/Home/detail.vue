@@ -1,46 +1,48 @@
 <template>
   <div class="detail-wrap">
-    <start-space :size="30"></start-space>
-    <div class="start-container detail-wrap-content">
-      <div class="detail-wrap-content-left">
-        <!-- <start-space :size="20"></start-space> -->
-        <div class="detail-input-wrap">
-          <start-input class="detail-input"></start-input>
-        </div>
-        <start-space :size="20"></start-space>
-        <div class="detail-wrap-content-left-info">
-          <div>
-            <span>{{ $t("还可以质押") }}</span>
-            <span>12--321312STC</span>
+    <div class="start-container">
+      <start-space :size="30"></start-space>
+      <div class="detail-wrap-content">
+        <div class="detail-wrap-content-left">
+          <!-- <start-space :size="20"></start-space> -->
+          <div class="detail-input-wrap">
+            <start-input class="detail-input"></start-input>
           </div>
-          <div>
-            <span>{{ $t("余额") }}</span>
-            <span>12--321312STC</span>
+          <start-space :size="20"></start-space>
+          <div class="detail-wrap-content-left-info">
+            <div>
+              <span>{{ $t("还可以质押") }}</span>
+              <span>12--321312STC</span>
+            </div>
+            <div>
+              <span>{{ $t("余额") }}</span>
+              <span>12--321312STC</span>
+            </div>
+          </div>
+          <start-space :size="20"></start-space>
+          <start-button class="detail-wrap-content-button">
+            <p>dasda</p>
+          </start-button>
+          <start-space :size="20"></start-space>
+          <p class="detail-wrap-content-left-unstake">{{ $t("UNSTAKE") }}</p>
+          <start-space :size="40"></start-space>
+          <div class="detail-wrap-content-left-rule">
+            <p>
+              {{ $t("参与规则") }}
+            </p>
+            <start-space :size="10"></start-space>
+            <p class="detail-wrap-content-left-rule-content">
+              Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、
+              星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。Starcoin继承了比特币卓越的安全机制，
+              采用新PoW算法极大地增强了网络和智能合约的安全性和效率，目标是建立为普通用户提供服务的金融基础设施。
+              Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。
+              Starcoin继承了比特币卓越的安全机制，采用新PoW算法极大地
+            </p>
           </div>
         </div>
-        <start-space :size="20"></start-space>
-        <start-button class="detail-wrap-content-button">
-          <p>dasda</p>
-        </start-button>
-        <start-space :size="20"></start-space>
-        <p class="detail-wrap-content-left-unstake">{{ $t("UNSTAKE") }}</p>
-        <start-space :size="40"></start-space>
-        <div class="detail-wrap-content-left-rule">
-          <p>
-            {{ $t("参与规则") }}
-          </p>
-          <start-space :size="10"></start-space>
-          <p class="detail-wrap-content-left-rule-content">
-            Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、
-            星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。Starcoin继承了比特币卓越的安全机制，
-            采用新PoW算法极大地增强了网络和智能合约的安全性和效率，目标是建立为普通用户提供服务的金融基础设施。
-            Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。
-            Starcoin继承了比特币卓越的安全机制，采用新PoW算法极大地
-          </p>
+        <div class="detail-wrap-content-right">
+          <detail-card> </detail-card>
         </div>
-      </div>
-      <div class="detail-wrap-content-right">
-        <detail-card> </detail-card>
       </div>
     </div>
   </div>
@@ -68,7 +70,7 @@ export default {
   .detail-wrap-content {
     display: flex;
     justify-content: space-between;
-
+    align-items: flex-start;
     .detail-wrap-content-left {
       width: 36%;
       // flex: 1;

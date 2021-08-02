@@ -15,6 +15,11 @@ const routes = [
     component: () => import("../views/Exchange/index.vue"),
   },
   // {
+  //   path: "/detail",
+  //   name: "Detail",
+  //   component: () => import("../views/Detail/index.vue"),
+  // },
+  // {
   //   path: "/about",
   //   name: "About",
   //   // route level code-splitting
@@ -26,6 +31,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
+  mode: "history",
   routes,
 });
 

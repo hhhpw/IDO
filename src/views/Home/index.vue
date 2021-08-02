@@ -16,21 +16,9 @@
       </div>
       <support> </support>
     </div>
-    <start-input></start-input>
-    <!-- <start-space size="30"></start-space> -->
     <div class="start-container">
-      <!-- <div class="aa">SRART</div>
-    <div>{{ $t("constant.name") }}</div>
-    <div>{{ $t("constant.age", { age: 20 }) }}</div>
-    <start-button> dasdas </start-button>
-    <start-button dark blborder> dasdas </start-button>
-    <start-button light trborder> dasdas </start-button>
-    <start-drop-down trigger="click" :itemList="parentName">
-      <template #tag>
-        <start-button> dropdown </start-button>
-      </template>
-    </start-drop-down> -->
-      <div>
+      status: {{ status }}
+      <template v-if="status === 'home-list'">
         <start-card
           v-for="(d, index) in cardData"
           :key="index"
@@ -39,7 +27,10 @@
           style="margin-top: 80px"
           @clickMethod="clickMethod"
         ></start-card>
-      </div>
+      </template>
+      <template v-if="status === 'home-detail'">
+        <home-detail></home-detail>
+      </template>
     </div>
   </div>
 </template>
@@ -49,36 +40,45 @@ import StartButton from "@startUI/StartButton.vue";
 // import StartSpace from "@startUI/StartSpace.vue";
 import support from "./support.vue";
 import { cardData } from "@startUI/mock.js";
-import StartInput from "@startUI/StartInput.vue";
+import HomeDetail from "./detail.vue";
+// import StartInput from "@startUI/StartInput.vue";
 // import StartDropDown from "@startUI/StartDropDown.vue";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       parentName: ["name", "AA", "BB", "CC"],
       cardData,
+      // stautus: "home-list",
     };
   },
   components: {
     StartCard,
     StartButton,
     support,
-    StartInput,
+    HomeDetail,
+    // StartInput,
     // StartSpace,
     // StartDropDown,
   },
   mounted() {},
   methods: {
     clickMethod(value) {
-      this.$router.push({
-        path: "/exchange",
-        query: {
-          currency: "STC",
-        },
-      });
-      console.log("value", value);
+      console.log("this.$store", value);
+      this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", "home-detail");
+      // this.$router.push({
+      //   path: "/exchange",
+      //   query: {
+      //     currency: "STC",
+      //   },
+      // });
+      // console.log("value", value);
     },
   },
-  computed: {},
+  computed: mapState("StoreHome", {
+    status: (state) => state.status,
+    // activeHeaderItem: (state) => state.activeHeaderItem,
+  }),
   beforeDestroy() {},
 };
 </script>
@@ -103,12 +103,12 @@ export default {
   // border: 2px solid yellow;
   overflow: hidden;
   background-repeat: no-repeat;
-  height: 680px;
+  height: 740px;
   background-origin: content-box;
   position: relative;
   .start-home-banner-content {
     margin-left: 12%;
-    margin-top: 50px;
+    margin-top: 130px;
     color: #fff;
     .start-home-banner-title {
       @include fontRigelstar();

@@ -1,6 +1,5 @@
 <template>
   <div class="start-card" :style="getBg(cardType)">
-    {{ $listeners }}
     <slot name="title"> </slot>
     <p class="start-card-title">{{ $t("我要买") }}</p>
     <slot name=""> </slot>
@@ -18,25 +17,9 @@
           :colorType="colorType"
           :data="cardData"
         ></start-card-item>
-        <start-space :size="50"></start-space>
+        <start-space :size="40"></start-space>
         <div class="start-card-item-wrap-footer">on-going</div>
       </div>
-      <!-- <div
-        class="start-card-item"
-        :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
-      ></div>
-      <div
-        class="start-card-item"
-        :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
-      ></div>
-      <div
-        class="start-card-item"
-        :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
-      ></div>
-      <div
-        class="start-card-item"
-        :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
-      ></div> -->
     </div>
   </div>
 </template>
@@ -124,6 +107,7 @@ export default {
     font-size: 32px;
   }
   .start-card-content {
+    cursor: pointer;
     overflow: hidden;
     margin-top: 50px;
     .start-card-item-wrap {

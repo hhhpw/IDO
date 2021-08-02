@@ -1,11 +1,19 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import StoreApp from "./modules/StoreApp.js";
+import StoreHome from "./modules/StoreHome.js";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    // StoreApp,
+  },
   mutations: {},
   actions: {},
-  modules: {},
+  modules: {
+    StoreApp,
+    StoreHome,
+  },
 });
