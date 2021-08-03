@@ -4,37 +4,48 @@
       <img class="detail-card-header-logo" src="../../assets/header/logo.png" />
       <!-- <start-space :size="30" :horizontal="true"></start-space> -->
       <div class="detail-card-header-info">
-        <div>
+        <div class="detail-card-header-info-currency">
           <span>
             {{ $t("StartPad") }}
           </span>
           <span> ({{ $t("STP") }}) </span>
         </div>
         <div>
-          <span> 0x123131311331321313131999023x0012 </span>
-          <svg-icon name="copy-will"></svg-icon>
+          <span class="detail-card-header-info-hash">
+            0x123131311331321313131999023x0012
+          </span>
+          <svg-icon :name="`copy-${detailCardType}`"></svg-icon>
         </div>
       </div>
     </div>
     <start-space :size="20"></start-space>
     <div class="detail-card-labels">
-      <start-button v-for="(d, i) in labels" :key="i" light :style="setStyle"
+      <start-button
+        v-for="(d, i) in labels"
+        :key="i"
+        light
+        :style="setStyle(colorInfo)"
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
     <start-space :size="20"></start-space>
     <div class="detail-card-icons">
-      <start-button v-for="(d, i) in labels" :key="i" light :style="setStyle"
+      <start-button
+        v-for="(d, i) in labels"
+        :key="i"
+        light
+        :style="setStyle(colorInfo)"
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
+    <start-space :size="20"></start-space>
     <div class="detail-card-tabs">
       <start-tab-bar
         :value="tabCategory"
         @input="hanleTabChange"
         :items="tabItmes"
+        :color="colorInfo['common-color']"
       >
-        tabCategory:{{ tabCategory }}
       </start-tab-bar>
       <div class="detail-card-tabs-list">
         <start-list
@@ -42,6 +53,7 @@
           :key="index"
           :data="d"
           :type="tabCategory"
+          :bgColor="colorInfo['list-bg-color']"
         >
         </start-list>
       </div>
@@ -61,6 +73,7 @@ import StartButton from "@startUI/StartButton.vue";
 import StartTabBar from "@startUI/StartTabBar.vue";
 import StartList from "@startUI/StartList.vue";
 import { listpro } from "@startUI/mock.js";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -91,16 +104,22 @@ export default {
   methods: {
     hanleTabChange(val) {
       this.tabCategory = val;
-      // console.log("aaas", e);
     },
   },
   computed: {
     setStyle() {
-      return {
-        color: this.colorType,
-        border: `1px solid ${this.colorType}`,
+      return function (colors) {
+        // console.log("colors", colors);
+        return {
+          color: colors["label-text-color"],
+          border: `1px solid ${colors["common-color"]}`,
+        };
       };
     },
+    ...mapState("StoreHome", {
+      colorInfo: (state) => state.colorInfo,
+      detailCardType: (state) => state.detailCardType,
+    }),
   },
   beforeDestroy() {},
 };
@@ -119,6 +138,13 @@ export default {
     .detail-card-header-info {
       // display: flex;
       margin-left: 20px;
+      .detail-card-header-info-currency {
+        color: #fff;
+      }
+      .detail-card-header-info-hash {
+        color: $text_gray_color;
+        margin-right: 5px;
+      }
     }
   }
   .detail-card-tabs-list {

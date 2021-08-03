@@ -1,6 +1,10 @@
 <template>
   <div class="start-list">
-    <div class="start-list-item prodetail" v-if="type === 'prodetail'">
+    <div
+      class="start-list-item prodetail"
+      v-if="type === 'prodetail'"
+      :style="setStyle()"
+    >
       <span class="title">
         {{ data.title }}
       </span>
@@ -8,7 +12,11 @@
         {{ data.amount }}
       </span>
     </div>
-    <div class="start-list-item time" v-if="type === 'time'">
+    <div
+      class="start-list-item time"
+      v-if="type === 'time'"
+      :style="setStyle()"
+    >
       <span class="title">
         {{ data.title }}
       </span>
@@ -39,10 +47,18 @@ export default {
     data: {
       type: Object,
     },
+    bgColor: null,
     type: String,
   },
   mounted() {},
-  methods: {},
+  methods: {
+    setStyle() {
+      console.log("(this.bgColor", this.bgColor);
+      if (this.bgColor) {
+        return { "background-color": this.bgColor };
+      }
+    },
+  },
   computed: {},
   beforeDestroy() {},
 };
@@ -57,7 +73,7 @@ export default {
   .start-list-item {
     width: 100%;
     padding: 15px;
-    background-color: red;
+    // background-color: red;
     &.prodetail {
       display: flex;
       font-size: 14px;

@@ -17,7 +17,6 @@
       <support> </support>
     </div>
     <div class="start-container">
-      status: {{ status }}
       <template v-if="status === 'home-list'">
         <start-card
           v-for="(d, index) in cardData"
@@ -37,18 +36,16 @@
 <script>
 import StartCard from "@startUI/StartCard.vue";
 import StartButton from "@startUI/StartButton.vue";
-// import StartSpace from "@startUI/StartSpace.vue";
 import support from "./support.vue";
 import { cardData } from "@startUI/mock.js";
 import HomeDetail from "./detail.vue";
-// import StartInput from "@startUI/StartInput.vue";
-// import StartDropDown from "@startUI/StartDropDown.vue";
 import { mapState } from "vuex";
 export default {
   data() {
     return {
-      parentName: ["name", "AA", "BB", "CC"],
       cardData,
+      // cardInfo: {},
+      colorInfo: {},
       // stautus: "home-list",
     };
   },
@@ -64,15 +61,14 @@ export default {
   mounted() {},
   methods: {
     clickMethod(value) {
-      console.log("this.$store", value);
-      this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", "home-detail");
-      // this.$router.push({
-      //   path: "/exchange",
-      //   query: {
-      //     currency: "STC",
-      //   },
-      // });
-      // console.log("value", value);
+      this.$store.commit(
+        "StoreHome/STORE_HOME_CHANGE_STATUS",
+        Object.assign(
+          {},
+          { status: "home-detail" },
+          { cardType: value.cardType }
+        )
+      );
     },
   },
   computed: mapState("StoreHome", {

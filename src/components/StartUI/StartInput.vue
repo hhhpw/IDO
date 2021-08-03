@@ -1,47 +1,48 @@
 <template>
   <div class="start-input">
-    <el-input v-model="inputValue">
+    <el-input v-bind="{ ...$attrs }" @input="inputEvent">
       <div slot="suffix" class="start-input-suffix">
         <span class="start-input-suffix-max">MAX</span>
         <span>|</span>
         <span class="start-input-suffix-usdt">USDT</span>
       </div>
     </el-input>
-    <!-- <el-input placeholder="请输入内容" v-model="input4">
-        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      </el-input> -->
   </div>
 </template>
 <script>
-// import StartSpace from "@startUI/StartSpace.vue";
-// <el-input
-//    style="width:200px;"
-//    v-model="relationForm.fee"
-//    oninput="value=value.replace(/[^0-9.]/g,'')"
-//    :placeholder="代理费"
-//  ></el-input>
-
 export default {
   data() {
     return {
       inputValue: "",
     };
   },
-  components: {
-    // StartSpace,
-  },
+  components: {},
   props: {
     inputType: {
       type: String,
       default: "number",
     },
+    precision: {
+      type: Number, // 小数点后精度
+      default: 0,
+    },
+    type: {
+      type: String,
+      default: "number",
+    },
   },
   methods: {
-    inputLimit(val) {
-      console.log("val", val);
-    },
-    test() {
-      alert("ss");
+    inputEvent(val) {
+      if (this.type === "number" && this.precision > 0) {
+        val = val.toString();
+        val = val
+          .replace(/[^\d^\\.]+/g, "") // 把不是数字，不是小数点的过滤掉
+          .replace(/^0+(\d)/, "$1") // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+          .replace(/^\./, "0."); // 如果输入的第一位为小数点，则替换成 0. 实现自动补全
+        let reg = new RegExp("^\\d*(\\.?\\d{0," + this.precision + "})", "g");
+        this.value = val.match(reg)[0] || ""; // 最终匹配得到结果 以数字开头，只有一个小数点，而且小数点后面只能有0到2位小数
+      }
+      this.$emit("input", this.value);
     },
   },
 };
@@ -55,6 +56,9 @@ export default {
     .el-input,
     .el-input__inner {
       height: 54px;
+    }
+    .el-input__inner {
+      width: 80%;
     }
   }
   .start-input-suffix {

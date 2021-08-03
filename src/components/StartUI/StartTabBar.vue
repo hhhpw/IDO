@@ -1,6 +1,6 @@
 <template>
   <div class="start-tabs">
-    <tabs @tab-click="handleClick" :value="value">
+    <tabs @tab-click="handleClick" :value="value" :style="{ '--color': color }">
       <tab-pane
         v-for="d in items"
         :label="d.label"
@@ -10,12 +10,6 @@
         <slot></slot>
       </tab-pane>
     </tabs>
-    <!-- <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
-      <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
-    </el-tabs> -->
   </div>
 </template>
 <script>
@@ -26,6 +20,7 @@ export default {
     return {
       tabValue: this.value,
       activeName: "second",
+      "--testcolor": "red",
     };
   },
   components: {
@@ -37,7 +32,7 @@ export default {
       type: Array,
     },
     value: null,
-    color: {},
+    color: String,
   },
   mounted() {},
   methods: {
@@ -54,21 +49,19 @@ export default {
 .start-tabs {
   ::v-deep {
     .el-tabs__item.is-active {
-      color: green;
+      color: var(--color);
     }
     .el-tabs__item {
       color: #fff;
     }
     .el-tabs__active-bar {
-      background-color: greenyellow;
+      background-color: var(--color);
     }
     .el-tabs__item:hover {
       color: none;
     }
     .el-tabs__nav-wrap::after {
       display: none;
-      // display: none;
-      // content: "";
     }
   }
 }
