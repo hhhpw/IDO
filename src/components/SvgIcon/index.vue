@@ -4,6 +4,7 @@
     aria-hidden="true"
     v-bind="$attrs"
     :style="{ color: color }"
+    v-on="$listeners"
   >
     <use :xlink:href="iconName" />
   </svg>

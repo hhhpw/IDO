@@ -7,8 +7,9 @@
     >
       <start-input
         class="detail-input"
-        :precision="2"
+        :precision="9"
         :value="inputValue"
+        :maxColor="colorInfo['common-color']"
         @input="inputEvent"
       ></start-input>
     </div>

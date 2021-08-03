@@ -6,6 +6,7 @@
     </div> -->
     <start-header></start-header>
     <router-view></router-view>
+    <start-footer></start-footer>
     <!-- <router-view v-slot="{ Component }">
       <component :is="Component" />
     </router-view> -->
@@ -13,9 +14,11 @@
 </template>
 <script>
 import StartHeader from "@startUI/StartHeader";
+import StartFooter from "@startUI/StartFooter";
 export default {
   components: {
     StartHeader,
+    StartFooter,
   },
 };
 </script>

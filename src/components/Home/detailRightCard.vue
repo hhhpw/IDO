@@ -14,7 +14,10 @@
           <span class="detail-card-header-info-hash">
             0x123131311331321313131999023x0012
           </span>
-          <svg-icon :name="`copy-${detailCardType}`"></svg-icon>
+          <svg-icon
+            :name="`copy-${detailCardType}`"
+            @click="clipHash('====我复制了啊====')"
+          ></svg-icon>
         </div>
       </div>
     </div>
@@ -28,7 +31,7 @@
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
-    <start-space :size="20"></start-space>
+    <start-space :size="40"></start-space>
     <div class="detail-card-icons">
       <start-button
         v-for="(d, i) in labels"
@@ -72,6 +75,8 @@ import SvgIcon from "@components/SvgIcon/index.vue";
 import StartButton from "@startUI/StartButton.vue";
 import StartTabBar from "@startUI/StartTabBar.vue";
 import StartList from "@startUI/StartList.vue";
+// import clipboard from "clipboard-polyfill";
+import * as clipboard from "clipboard-polyfill/text";
 import { listpro } from "@startUI/mock.js";
 import { mapState } from "vuex";
 export default {
@@ -104,6 +109,16 @@ export default {
   methods: {
     hanleTabChange(val) {
       this.tabCategory = val;
+    },
+    clipHash(val) {
+      clipboard.writeText(val).then(
+        () => {
+          console.log("yes");
+        },
+        () => {
+          console.log("err0r");
+        }
+      );
     },
   },
   computed: {

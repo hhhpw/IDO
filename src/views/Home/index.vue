@@ -23,7 +23,7 @@
           :key="index"
           :cardType="d.cardType"
           :data="d"
-          style="margin-top: 80px"
+          style="margin-top: 70px"
           @clickMethod="clickMethod"
         ></start-card>
       </template>
@@ -31,6 +31,7 @@
         <home-detail></home-detail>
       </template>
     </div>
+    <start-space :size="120"></start-space>
   </div>
 </template>
 <script>
@@ -40,6 +41,7 @@ import support from "./support.vue";
 import { cardData } from "@startUI/mock.js";
 import HomeDetail from "./detail.vue";
 import { mapState } from "vuex";
+import StartSpace from "@startUI/StartSpace.vue";
 export default {
   data() {
     return {
@@ -54,9 +56,7 @@ export default {
     StartButton,
     support,
     HomeDetail,
-    // StartInput,
-    // StartSpace,
-    // StartDropDown,
+    StartSpace,
   },
   mounted() {},
   methods: {
@@ -71,10 +71,15 @@ export default {
       );
     },
   },
-  computed: mapState("StoreHome", {
-    status: (state) => state.status,
-    // activeHeaderItem: (state) => state.activeHeaderItem,
-  }),
+  computed: {
+    ...mapState("StoreHome", {
+      status: (state) => state.status,
+    }),
+    ...mapState("StoreApp", {
+      language: (state) => state.language,
+    }),
+  },
+
   beforeDestroy() {},
 };
 </script>

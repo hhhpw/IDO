@@ -2,9 +2,18 @@
   <div class="start-item-cell">
     <div v-if="cellType === 'horizontal'" class="start-item-cell-horizontal">
       <slot name="default"></slot>
-      <p class="start-item-cell-title">{{ data.title }}</p>
+      <p class="start-item-cell-title">{{ $t(data.title) }}</p>
       <start-space :size="5"></start-space>
-      <p class="start-item-cell-info">{{ data.amount }}</p>
+      <p class="start-item-cell-info">
+        <!-- {{ utilsNumber }} -->
+        <template v-if="formatOptions">
+          {{
+            utilsNumber.formatNumberMeta(data.amount, { grouped: true }).text
+          }}
+          {{ unit || "" }}
+        </template>
+        <template v-else> {{ data.amount }}</template>
+      </p>
       <start-space :size="20"></start-space>
     </div>
     <div v-if="cellType === 'vertical'" class="start-item-cell-vertical">
@@ -14,9 +23,14 @@
 </template>
 <script>
 import StartSpace from "@startUI/StartSpace.vue";
+import utilsNumber from "@utils/number.js";
+// import utilsNumber from '@/utils/utilsNumber';
+console.log("utilsNumber", utilsNumber);
 export default {
   data() {
-    return {};
+    return {
+      utilsNumber,
+    };
   },
   components: {
     StartSpace,
@@ -28,6 +42,10 @@ export default {
     },
     data: {
       type: Object,
+    },
+    formatOptions: {
+      type: [Object, null],
+      default: null,
     },
   },
   mounted() {},

@@ -1,6 +1,5 @@
 <template>
   <div class="start-card-item" @click="emit">
-    {{ $listeners }}
     <div v-if="cardDetailTyoe === 'rough'" class="start-card-item-rough">
       <div class="start-card-item-rough-header">
         <start-item-cell cellType="vertical">
@@ -100,10 +99,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.xxx {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .start-card-item {
   width: 100%;
   .start-card-item-rough {
     width: 100%;
+    position: relative;
     .start-card-item-rough-header {
       img {
         display: inline-block;

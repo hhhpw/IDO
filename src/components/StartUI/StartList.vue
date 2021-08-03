@@ -53,7 +53,6 @@ export default {
   mounted() {},
   methods: {
     setStyle() {
-      console.log("(this.bgColor", this.bgColor);
       if (this.bgColor) {
         return { "background-color": this.bgColor };
       }
@@ -104,14 +103,8 @@ export default {
         flex-direction: column;
         justify-content: center;
         color: #fff;
-        // flex: 3;
-        // font-weight: 500;
-        // color: #fff;
       }
     }
   }
 }
-// .start-list + .start-list {
-//   margin-top: 20px;
-// }
 </style>

@@ -3,7 +3,7 @@
     <slot name="title"> </slot>
     <p class="start-card-title">{{ $t("我要买") }}</p>
     <slot name=""> </slot>
-    <div class="start-card-content">
+    <div class="start-card-content" :style="{ '--color': colorType }">
       <div
         class="start-card-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
@@ -11,6 +11,24 @@
         :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
         @click="emit"
       >
+        {{ cardData && cardData.flags && cardData.flags.length }}
+        <div
+          v-if="cardData.flags"
+          class="start-card-item-wrap-labels"
+          :style="
+            setLabelsBg(
+              cardType,
+              cardData && cardData.flags && cardData.flags.length
+            )
+          "
+        >
+          <span v-for="(l, ix) in cardData.flags" :key="ix">
+            {{ $t(`${l}`) }}
+          </span>
+          <!-- <img src="../../assets/home/33.png" class="xxx" /> -->
+          <!-- :style="`background-image: url(${require(`../../assets/home/${cardType}-card-label-${cardData.flags.length}.png`)})`" -->
+        </div>
+
         <start-card-item
           cardDetailTyoe="rough"
           :cardType="cardType"
@@ -62,6 +80,14 @@ export default {
     },
   },
   computed: {
+    setLabelsBg() {
+      return function (type, len) {
+        if (len && Number(len) > 0)
+          return {
+            "background-image": `url(${require(`../../assets/home/${type}-card-label-${len}.png`)})`,
+          };
+      };
+    },
     getBg() {
       return function (type) {
         let bg = null,
@@ -96,32 +122,52 @@ export default {
 <style lang="scss" scoped>
 .start-card {
   background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 580px;
+  background-size: 100% 100%;
+  min-height: 550px;
   width: 100%;
   overflow: hidden;
-  padding: 30px 20px 40px;
-  padding-left: 45px;
-  // border: 2px solid red;
   .start-card-title {
     font-size: 32px;
+    margin-top: 30px;
+    margin-left: 40px;
   }
   .start-card-content {
     cursor: pointer;
     overflow: hidden;
-    margin-top: 50px;
+    margin-top: 20px;
+    padding: 30px 40px;
     .start-card-item-wrap {
-      padding-left: 30px;
-      padding-top: 60px;
+      padding: 60px 30px 0px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       float: left;
-      box-sizing: content-box;
+      box-sizing: border-box;
       overflow: hidden;
-      height: 500px;
-      width: 29%;
-      margin-bottom: 30px;
-      margin-left: 2%;
+      height: 550px;
+      width: 380px;
+      margin-bottom: 20px;
+      margin-left: 14px;
+      position: relative;
+      &:hover {
+        border: 4px solid var(--color);
+      }
+      .start-card-item-wrap-labels {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-size: 100% 100%;
+        height: 26px;
+        background-repeat: no-repeat;
+        span {
+          position: relative;
+          top: -2px;
+          height: 100%;
+          display: inline-block;
+          width: 94px;
+          text-align: center;
+          font-size: 12px;
+        }
+      }
     }
     .start-card-item-wrap:nth-child(3n + 1) {
       margin-left: 0%;

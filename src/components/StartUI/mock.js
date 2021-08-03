@@ -8,6 +8,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        flags: ["测试A", "测试B"],
         detailInfo: [
           {
             title: "AAAA",
@@ -50,6 +51,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        flags: ["测试A"],
         detailInfo: [
           {
             title: "AAAA",
@@ -118,6 +120,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        flags: ["测试A", "测试B"],
         detailInfo: [
           {
             title: "AAAA",
@@ -165,6 +168,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        flags: ["测试A"],
         detailInfo: [
           {
             title: "AAAA",

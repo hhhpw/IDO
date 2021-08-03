@@ -70,22 +70,13 @@ export default {
   },
   methods: {
     handleSelect(key) {
-      console.log("key", key);
-      if (key === this.activeIndex) return;
-      if (key === "home") {
-        this.$router.push({
-          path: "/",
-        });
-      }
-      if (key === "exchange") {
-        this.$router.push({
-          path: "exchange",
-        });
-      }
+      this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
+        status: "home-list",
+      });
       this.activeIndex = key;
     },
     hanldeChangeLang(value) {
-      let currLang = session.getItem("lang");
+      let currLang = this.language;
       if (currLang === value) return;
       if (currLang !== value) {
         session.setItem("lang", value);
@@ -93,10 +84,13 @@ export default {
       }
     },
   },
-  computed: mapState("StoreApp", {
-    headerItems: (state) => state.headerItems,
-    activeHeaderItem: (state) => state.activeHeaderItem,
-  }),
+  computed: {
+    ...mapState("StoreApp", {
+      headerItems: (state) => state.headerItems,
+      activeHeaderItem: (state) => state.activeHeaderItem,
+      language: (state) => state.language,
+    }),
+  },
   beforeDestroy() {},
 };
 </script>
@@ -117,6 +111,7 @@ export default {
   .start-menu {
     background-color: transparent;
     border-bottom: none;
+    margin-left: 50px;
   }
   .start-menu-item {
     width: 100px;

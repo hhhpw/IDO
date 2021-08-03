@@ -2,6 +2,7 @@
 
 // import { fetchList } from "@api/currency.js";
 import i18n from "../../i18n/index";
+import session from "@utils/session";
 const StoreApp = {
   namespaced: true,
   state: {
@@ -14,7 +15,11 @@ const StoreApp = {
       },
     ],
     activeHeaderItem: "home",
+    language: session.getItem("lang"),
   },
+  // getters: {
+  //   currLang: state => state.
+  // },
   mutations: {
     SET_LOGIN_STATE(state, flag) {
       state.loginState = flag;

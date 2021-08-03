@@ -13,37 +13,31 @@ const StoreHome = {
   mutations: {
     [types.STORE_HOME_CHANGE_STATUS](state, info) {
       const { cardType, status } = info;
-      if (cardType === "open") {
-        state.colorInfo = {
-          "list-bg-color": "#192A51",
-          "common-color": "#2afefe",
-          "label-text-color": "#23B0B4",
-        };
+      if (cardType) {
+        if (cardType === "open") {
+          state.colorInfo = {
+            "list-bg-color": "#192A51",
+            "common-color": "#2afefe",
+            "label-text-color": "#23B0B4",
+          };
+        }
+        if (cardType === "will") {
+          state.colorInfo = {
+            "list-bg-color": "#303244",
+            "common-color": "#bbff8a",
+            "label-text-color": "#86B66B",
+          };
+        }
+        if (cardType === "closed") {
+          state.colorInfo = {
+            "list-bg-color": "#303352",
+            "common-color": "#A6DFE6",
+            "label-text-color": "#7DA2B3",
+          };
+        }
+        state.detailCardType = cardType;
       }
-      if (cardType === "will") {
-        state.colorInfo = {
-          "list-bg-color": "#303244",
-          "common-color": "#bbff8a",
-          "label-text-color": "#86B66B",
-        };
-      }
-      if (cardType === "closed") {
-        state.colorInfo = {
-          "list-bg-color": "#303352",
-          "common-color": "#A6DFE6",
-          "label-text-color": "#7DA2B3",
-        };
-      }
-      state.detailCardType = cardType;
       state.status = status;
-
-      // console.log(
-      //   "=====>=====    state.status ",
-      //   state.status,
-      //   state.detailCardType,
-      //   state.colorInfo
-      // );
-      // home-detail
     },
   },
   actions: {

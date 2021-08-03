@@ -2,7 +2,9 @@
   <div class="start-input">
     <el-input v-bind="{ ...$attrs }" @input="inputEvent">
       <div slot="suffix" class="start-input-suffix">
-        <span class="start-input-suffix-max">MAX</span>
+        <span class="start-input-suffix-max" :style="{ color: maxColor }"
+          >MAX</span
+        >
         <span>|</span>
         <span class="start-input-suffix-usdt">USDT</span>
       </div>
@@ -17,6 +19,7 @@ export default {
     };
   },
   components: {},
+  // value不用props接，因为事件出发会导致子组件直接修改了父组件
   props: {
     inputType: {
       type: String,
@@ -30,6 +33,7 @@ export default {
       type: String,
       default: "number",
     },
+    maxColor: String,
   },
   methods: {
     inputEvent(val) {
