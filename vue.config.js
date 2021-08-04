@@ -28,7 +28,8 @@ module.exports = {
       .set("@styles", resolve("src/styles"))
       .set("@scripts", resolve("src/scripts"))
       .set("@constant", resolve("src/constant"))
-      .set("@mixins", resolve("src/mixins"));
+      .set("@mixins", resolve("src/mixins"))
+      .set("@contactLogic", resolve("src/contactLogic"));
 
     // set svg-sprite-loader
     config.module.rule("svg").exclude.add(resolve("src/icons")).end();

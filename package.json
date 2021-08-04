@@ -30,6 +30,8 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-prettier": "^6.0.0",
+    "@starcoin/starcoin": "^1.4.3",
+    "@starcoin/starmask-onboarding": "^1.0.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-component": "^1.1.1",
     "babel-preset-es2015": "^6.24.1",
