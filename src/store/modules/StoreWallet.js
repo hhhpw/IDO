@@ -5,6 +5,7 @@ const StoreWallet = {
   moduleName: "StoreWallet",
   state: {
     token: "STC",
+    stcProvider: "",
     stcAccounts: [],
     onboarding: "",
   },
@@ -15,6 +16,9 @@ const StoreWallet = {
     [types.SET_STARMASK_ONBOARDING](state, onboarding) {
       state.onboarding = onboarding;
     },
+    [types.SET_STARMASK_PROVIDER](state, provider) {
+      state.stcProvider = provider;
+    },
   },
   actions: {
     setStcAccounts({ commit }, accounts) {
@@ -22,6 +26,9 @@ const StoreWallet = {
     },
     setOnboarding({ commit }, onboarding) {
       commit(types.SET_STARMASK_ONBOARDING, onboarding);
+    },
+    setStcProvider({ commit }, provider) {
+      commit(types.SET_STARMASK_PROVIDER, provider);
     },
   },
 };

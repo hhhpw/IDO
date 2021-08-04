@@ -83,7 +83,20 @@ export default {
     this.currLang = currLang;
   },
   methods: {
-    ...mapActions("StoreWallet", ["setOnboarding", "setStcAccounts"]),
+    ...mapActions("StoreWallet", [
+      "setOnboarding",
+      "setStcAccounts",
+      "setStcProvider",
+    ]),
+    init() {
+      this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+      if (!this.onboarding) {
+        const onboarding = Wallet.createStarMaskOnboarding();
+        if (onboarding) this.setOnboarding(onboarding);
+      }
+      const stcProvider = Wallet.createStcProvider();
+      this.setStcProvider(stcProvider);
+    },
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
@@ -102,13 +115,25 @@ export default {
     onClickInstallStarMask() {
       this.onboarding.startOnboarding();
     },
+    async getAccountBalance() {
+      if (this.stcProvider) {
+        const params = {
+          provider: this.stcProvider,
+          account: this.stcAccounts[0],
+        };
+        const balance = await Wallet.getAccountBalance(params);
+        console.log(balance, 3333);
+      }
+    },
     async onClickConnect() {
       if (this.isStarMaskInstalled) {
         if (this.stcAccounts && this.stcAccounts.length) {
           if (this.onboarding) this.onboarding.stopOnboarding();
+          this.getAccountBalance();
         } else {
           const accounts = await Wallet.connect();
           this.setStcAccounts(accounts);
+          this.getAccountBalance();
         }
       }
     },
@@ -120,15 +145,11 @@ export default {
   },
   computed: {
     ...mapState("StoreApp", ["headerItems", "activeHeaderItem", "language"]),
-    ...mapState("StoreWallet", ["stcAccounts", "onboarding"]),
+    ...mapState("StoreWallet", ["stcAccounts", "onboarding", "stcProvider"]),
   },
   beforeDestroy() {},
   created() {
-    this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-    if (!this.onboarding) {
-      const onboarding = Wallet.createStarMaskOnboarding();
-      if (onboarding) this.setOnboarding(onboarding);
-    }
+    this.init();
   },
 };
 </script>

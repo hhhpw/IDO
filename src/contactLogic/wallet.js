@@ -1,4 +1,21 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
+import { providers } from "@starcoin/starcoin";
+
+/**
+ *  StarMaskOnboarding 实例化
+ * */
+const createStcProvider = () => {
+  let stcProvider;
+  try {
+    if (window.starcoin) {
+      // We must specify the network as 'any' for starcoin to allow network changes
+      stcProvider = new providers.Web3Provider(window.starcoin, "any");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  return stcProvider;
+};
 
 /**
  *  StarMaskOnboarding 实例化
@@ -40,8 +57,31 @@ const connect = async () => {
   return newAccounts;
 };
 
+/**
+ * Get account balance
+ *
+ * */
+const getAccountBalance = async ({ provider, account, token }) => {
+  let balance;
+  try {
+    if (token === undefined) {
+      token = "0x1::STC::STC";
+    }
+    const result = await provider.getResource(
+      account,
+      `0x1::Account::Balance<${token}>`
+    );
+    balance = result.token.value;
+  } catch (error) {
+    console.error(error);
+  }
+  return balance;
+};
+
 export default {
+  createStcProvider,
   connect,
   createStarMaskOnboarding,
   checkStarMaskInstalled,
+  getAccountBalance,
 };
