@@ -1,5 +1,21 @@
 <template>
-  <div class="detail-card">
+  <div
+    class="detail-card"
+    :set="(colorsInfo = cardTypeColorInfo(detailCardType))"
+  >
+    <div
+      v-if="flags"
+      class="detail-card-labels-top"
+      :style="mixinSetLabelsBg(detailCardType, flags.length)"
+    >
+      <span
+        v-for="(l, ix) in flags"
+        :key="ix"
+        :style="{ color: colorsInfo['common-color'] }"
+      >
+        {{ $t(`${l}`) }}
+      </span>
+    </div>
     <div class="detail-card-header">
       <img class="detail-card-header-logo" src="../../assets/header/logo.png" />
       <!-- <start-space :size="30" :horizontal="true"></start-space> -->
@@ -27,7 +43,12 @@
         v-for="(d, i) in labels"
         :key="i"
         light
-        :style="setStyle(colorInfo)"
+        :style="
+          mixinLabelColor(
+            colorsInfo['label-text-color'],
+            colorsInfo['common-color']
+          )
+        "
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
@@ -37,7 +58,12 @@
         v-for="(d, i) in labels"
         :key="i"
         light
-        :style="setStyle(colorInfo)"
+        :style="
+          mixinLabelColor(
+            colorsInfo['label-text-color'],
+            colorsInfo['common-color']
+          )
+        "
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
@@ -47,7 +73,7 @@
         :value="tabCategory"
         @input="hanleTabChange"
         :items="tabItmes"
-        :color="colorInfo['common-color']"
+        :color="colorsInfo['common-color']"
       >
       </start-tab-bar>
       <div class="detail-card-tabs-list">
@@ -56,7 +82,7 @@
           :key="index"
           :data="d"
           :type="tabCategory"
-          :bgColor="colorInfo['list-bg-color']"
+          :bgColor="colorsInfo['list-bg-color']"
         >
         </start-list>
       </div>
@@ -78,11 +104,13 @@ import StartList from "@startUI/StartList.vue";
 // import clipboard from "clipboard-polyfill";
 import * as clipboard from "clipboard-polyfill/text";
 import { listpro } from "@startUI/mock.js";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
+import mixinHome from "@mixins/home.js";
 export default {
   data() {
     return {
       labels: ["label one", "label two", "label three"],
+      flags: ["AA", "bb"],
       colorType: "red",
       tabCategory: "prodetail",
       listpro: listpro,
@@ -98,6 +126,7 @@ export default {
       ],
     };
   },
+  mixins: [mixinHome],
   components: {
     StartSpace,
     SvgIcon,
@@ -122,19 +151,10 @@ export default {
     },
   },
   computed: {
-    setStyle() {
-      return function (colors) {
-        // console.log("colors", colors);
-        return {
-          color: colors["label-text-color"],
-          border: `1px solid ${colors["common-color"]}`,
-        };
-      };
-    },
     ...mapState("StoreHome", {
-      colorInfo: (state) => state.colorInfo,
       detailCardType: (state) => state.detailCardType,
     }),
+    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
   },
   beforeDestroy() {},
 };
@@ -143,6 +163,24 @@ export default {
 @import "~@/styles/variables.scss";
 .detail-card {
   padding: 40px 20px;
+  position: relative;
+  .detail-card-labels-top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-size: 100% 100%;
+    height: 26px;
+    background-repeat: no-repeat;
+    span {
+      position: relative;
+      top: -2px;
+      height: 100%;
+      display: inline-block;
+      width: 94px;
+      text-align: center;
+      font-size: 12px;
+    }
+  }
   .detail-card-header {
     display: flex;
     .detail-card-header-logo {

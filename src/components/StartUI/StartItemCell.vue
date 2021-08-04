@@ -24,8 +24,6 @@
 <script>
 import StartSpace from "@startUI/StartSpace.vue";
 import utilsNumber from "@utils/number.js";
-// import utilsNumber from '@/utils/utilsNumber';
-console.log("utilsNumber", utilsNumber);
 export default {
   data() {
     return {

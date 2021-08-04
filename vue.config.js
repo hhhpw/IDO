@@ -27,7 +27,8 @@ module.exports = {
       .set("@store", resolve("src/store"))
       .set("@styles", resolve("src/styles"))
       .set("@scripts", resolve("src/scripts"))
-      .set("@constant", resolve("src/constant"));
+      .set("@constant", resolve("src/constant"))
+      .set("@mixins", resolve("src/mixins"));
 
     // set svg-sprite-loader
     config.module.rule("svg").exclude.add(resolve("src/icons")).end();
@@ -44,14 +45,14 @@ module.exports = {
       .end();
   },
   // css: {
-  //   requireModuleExtension: false,
-  //   loaderOptions: {
-  //     css: {
-  //       modules: {
-  //         localIdentName: "[name]-[hash]",
-  //       },
-  //       localsConvention: "camelCaseOnly",
-  //     },
+  // loaderOptions: {
+
+  // css: {
+  //   modules: {
+  //     localIdentName: "[name]-[hash]",
   //   },
+  //   localsConvention: "camelCaseOnly",
+  // },
+  // },
   // },
 };

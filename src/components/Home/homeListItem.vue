@@ -1,34 +1,40 @@
 <template>
-  <div class="start-card-item" @click="emit">
-    <div v-if="cardDetailTyoe === 'rough'" class="start-card-item-rough">
-      <div class="start-card-item-rough-header">
+  <div class="home-list-item" @click="emit">
+    <div class="home-list-item-rough">
+      <div class="home-list-item-rough-header">
         <start-item-cell cellType="vertical">
+          <!-- 项目logo -->
           <img :src="data.imgUrl" />
           <span>{{ $t(`${data.currencyPad}`) }}</span>
           <span>{{ $t(`${data.currency}`) }}</span>
         </start-item-cell>
       </div>
       <start-space :size="20"></start-space>
-      <div class="start-card-item-rough-labels">
+      <div class="home-list-item-rough-labels">
         <start-button
           v-for="(d, i) in data.labels"
           :key="i"
           light
-          :style="setStyle"
+          :style="
+            mixinLabelColor(
+              colorsInfo['label-text-color'],
+              colorsInfo['common-color']
+            )
+          "
           >{{ $t(`${d}`) }}</start-button
         >
       </div>
       <start-space :size="30"></start-space>
-      <div class="start-card-item-rough-icons">
+      <div class="home-list-item-rough-icons">
         <svg-icon
           v-for="(iconkey, index) in data.icons"
           :key="index"
           :name="iconkey + '-' + cardType"
-          class="start-card-item-rough-icons-icon"
+          class="home-list-item-rough-icons-icon"
         ></svg-icon>
       </div>
       <start-space :size="30"></start-space>
-      <div class="start-card-item-rough-infos">
+      <div class="home-list-item-rough-infos">
         <start-item-cell
           v-for="(d, i) in details"
           :key="i"
@@ -43,9 +49,11 @@ import StartSpace from "@startUI/StartSpace.vue";
 import StartButton from "@startUI/StartButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
 import StartItemCell from "@startUI/StartItemCell.vue";
-// import variables from "@styles/variables.scss";
+import { mapGetters } from "vuex";
+import mixinHome from "@/mixins/home.js";
 export default {
   components: { StartButton, StartSpace, SvgIcon, StartItemCell },
+  mixins: [mixinHome],
   data() {
     return {
       details: [
@@ -65,13 +73,8 @@ export default {
     };
   },
   props: {
+    colorsInfo: { type: Object },
     cardType: {
-      type: String,
-    },
-    cardDetailTyoe: {
-      type: String, // rough、 detail
-    },
-    colorType: {
       type: String,
     },
     data: {
@@ -83,17 +86,11 @@ export default {
     emit() {
       this.$emit("clickMethod", {
         cardType: this.cardType,
-        colorType: this.colorType,
       });
     },
   },
   computed: {
-    setStyle() {
-      return {
-        color: this.colorType,
-        border: `1px solid ${this.colorType}`,
-      };
-    },
+    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
   },
   beforeDestroy() {},
 };
@@ -104,12 +101,12 @@ export default {
   top: 0;
   right: 0;
 }
-.start-card-item {
+.home-list-item {
   width: 100%;
-  .start-card-item-rough {
+  .home-list-item-rough {
     width: 100%;
     position: relative;
-    .start-card-item-rough-header {
+    .home-list-item-rough-header {
       img {
         display: inline-block;
         width: 48px;
@@ -122,29 +119,29 @@ export default {
         margin-left: 20px;
       }
     }
-    .start-card-item-rough-labels {
+    .home-list-item-rough-labels {
       .start-button {
         border-radius: 2px;
         padding: 5px 10px;
       }
     }
-    .start-card-item-rough-icons {
-      .start-card-item-rough-icons-icon {
+    .home-list-item-rough-icons {
+      .home-list-item-rough-icons-icon {
         width: 24px;
         height: 24px;
       }
-      .start-card-item-rough-icons-icon + .start-card-item-rough-icons-icon {
+      .home-list-item-rough-icons-icon + .home-list-item-rough-icons-icon {
         margin-left: 10px;
       }
     }
-    .start-card-item-rough-infos {
-      .start-card-item-rough-infos-title {
+    .home-list-item-rough-infos {
+      .home-list-item-rough-infos-title {
         font-size: 12px;
         font-weight: 400;
         color: #ffffff;
         opacity: 0.7;
       }
-      .start-card-item-rough-infos-amount {
+      .home-list-item-rough-infos-amount {
         font-size: 16px;
         font-weight: 500;
         color: #ffffff;

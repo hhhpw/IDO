@@ -1,5 +1,5 @@
 <template>
-  <div class="start-home">
+  <div class="start-home ddd">
     <div class="start-home-banner">
       <div class="start-home-banner-content">
         <p class="start-home-banner-title">STATPAD</p>
@@ -18,14 +18,14 @@
     </div>
     <div class="start-container">
       <template v-if="status === 'home-list'">
-        <start-card
+        <home-list
           v-for="(d, index) in cardData"
           :key="index"
           :cardType="d.cardType"
           :data="d"
           style="margin-top: 70px"
           @clickMethod="clickMethod"
-        ></start-card>
+        ></home-list>
       </template>
       <template v-if="status === 'home-detail'">
         <home-detail></home-detail>
@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import StartCard from "@startUI/StartCard.vue";
+import HomeList from "./homeList.vue";
 import StartButton from "@startUI/StartButton.vue";
 import support from "./support.vue";
 import { cardData } from "@startUI/mock.js";
@@ -46,21 +46,22 @@ export default {
   data() {
     return {
       cardData,
-      // cardInfo: {},
       colorInfo: {},
-      // stautus: "home-list",
     };
   },
   components: {
-    StartCard,
+    // StartCard,
     StartButton,
     support,
     HomeDetail,
+    HomeList,
     StartSpace,
   },
   mounted() {},
   methods: {
     clickMethod(value) {
+      // 防止footer展露出来
+      window.scrollTo(0, 500);
       this.$store.commit(
         "StoreHome/STORE_HOME_CHANGE_STATUS",
         Object.assign(
@@ -86,10 +87,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 .ddd {
-  padding: 10px;
-  background: #000;
-  display: flex;
-  justify-content: center;
+  box-shadow: 0 0 5px red;
 }
 .aa {
   font-family: Rigelstar;

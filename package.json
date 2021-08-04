@@ -12,6 +12,7 @@
     "@formatjs/intl-locale": "^2.4.8",
     "@formatjs/intl-numberformat": "^5.7.5",
     "@formatjs/intl-pluralrules": "^4.0.0",
+    "animate.css": "^4.1.1",
     "bignumber": "^1.1.0",
     "bignumber.js": "^9.0.1",
     "clipboard-polyfill": "^3.0.3",

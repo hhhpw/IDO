@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-wrap">
+  <div class="detail-wrap animate__animated animate__fadeInUp">
     <start-space :size="30"></start-space>
     <div class="detail-wrap-content">
       <div
@@ -65,7 +65,7 @@ export default {
       background-size: 100% 100%;
     }
     .detail-wrap-content-right {
-      width: 50%;
+      width: 55%;
       // height: 600px;
       background-repeat: no-repeat;
       background-image: url("../../assets/home/open-right-bg.png");

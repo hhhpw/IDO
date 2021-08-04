@@ -1,22 +1,28 @@
 <template>
-  <div class="start-card" :style="getBg(cardType)">
+  <div
+    class="home-list animate__animated animate__fadeInUp"
+    :style="getBg(cardType)"
+    :set="(cardsInfo = cardTypeColorInfo(cardType))"
+  >
     <slot name="title"> </slot>
-    <p class="start-card-title">{{ $t("我要买") }}</p>
+    <p class="home-list-title">{{ $t("我要买") }} {{ cardType }}</p>
     <slot name=""> </slot>
-    <div class="start-card-content" :style="{ '--color': colorType }">
+    <div
+      class="home-list-content"
+      :style="{ '--color': cardsInfo['common-color'] }"
+    >
       <div
-        class="start-card-item-wrap"
+        class="home-list-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
         :key="index"
-        :style="`background-image: url(${require(`../../assets/card/${cardType}-card-item.png`)})`"
         @click="emit"
+        :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
-        {{ cardData && cardData.flags && cardData.flags.length }}
         <div
           v-if="cardData.flags"
-          class="start-card-item-wrap-labels"
+          class="home-list-item-wrap-labels"
           :style="
-            setLabelsBg(
+            mixinSetLabelsBg(
               cardType,
               cardData && cardData.flags && cardData.flags.length
             )
@@ -25,18 +31,26 @@
           <span v-for="(l, ix) in cardData.flags" :key="ix">
             {{ $t(`${l}`) }}
           </span>
-          <!-- <img src="../../assets/home/33.png" class="xxx" /> -->
-          <!-- :style="`background-image: url(${require(`../../assets/home/${cardType}-card-label-${cardData.flags.length}.png`)})`" -->
         </div>
-
-        <start-card-item
-          cardDetailTyoe="rough"
+        <home-list-item
           :cardType="cardType"
           :colorType="colorType"
+          :colorsInfo="cardsInfo"
           :data="cardData"
-        ></start-card-item>
+        ></home-list-item>
         <start-space :size="40"></start-space>
-        <div class="start-card-item-wrap-footer">on-going</div>
+        <div class="home-list-item-wrap-footer">
+          <span v-if="cardType === 'open'">
+            {{ $t("正在进行中") }}
+            <!-- {{ countDown(1628070041834, data.cardInfoList).start() }} -->
+          </span>
+          <span v-if="cardType === 'will'">
+            {{ $t("敬请期待") }}
+          </span>
+          <span v-if="cardType === 'closed'">
+            {{ $t("已结束") }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -46,17 +60,22 @@ const OPEN_BG = require("../../assets/card/open-wrap.png");
 const WILL_BG = require("../../assets/card/will-wrap.png");
 const CLOSED_BG = require("../../assets/card/closed-wrap.png");
 import variables from "@styles/variables.scss";
-import StartCardItem from "@startUI/StartCardItem.vue";
+import homeListItem from "@components/Home/homeListItem.vue";
 import StartSpace from "@startUI/StartSpace.vue";
+import mixinHome from "@mixins/home.js";
+import { mapGetters } from "vuex";
+import dayjs from "dayjs";
 export default {
-  name: "StartCard",
+  name: "homelist",
   data() {
     return {
       colorType: "",
+      dayjs,
     };
   },
+  mixins: [mixinHome],
   components: {
-    StartCardItem,
+    homeListItem,
     StartSpace,
   },
   props: {
@@ -75,19 +94,11 @@ export default {
     emit() {
       this.$emit("clickMethod", {
         cardType: this.cardType,
-        colorType: this.colorType,
       });
     },
   },
   computed: {
-    setLabelsBg() {
-      return function (type, len) {
-        if (len && Number(len) > 0)
-          return {
-            "background-image": `url(${require(`../../assets/home/${type}-card-label-${len}.png`)})`,
-          };
-      };
-    },
+    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
     getBg() {
       return function (type) {
         let bg = null,
@@ -120,23 +131,23 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.start-card {
+.home-list {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   min-height: 550px;
   width: 100%;
   overflow: hidden;
-  .start-card-title {
+  .home-list-title {
     font-size: 32px;
     margin-top: 30px;
     margin-left: 40px;
   }
-  .start-card-content {
+  .home-list-content {
     cursor: pointer;
     overflow: hidden;
     margin-top: 20px;
     padding: 30px 40px;
-    .start-card-item-wrap {
+    .home-list-item-wrap {
       padding: 60px 30px 0px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
@@ -149,9 +160,10 @@ export default {
       margin-left: 14px;
       position: relative;
       &:hover {
+        transition: border ease 0.15s;
         border: 4px solid var(--color);
       }
-      .start-card-item-wrap-labels {
+      .home-list-item-wrap-labels {
         position: absolute;
         top: 0;
         right: 0;
@@ -169,13 +181,13 @@ export default {
         }
       }
     }
-    .start-card-item-wrap:nth-child(3n + 1) {
+    .home-list-item-wrap:nth-child(3n + 1) {
       margin-left: 0%;
     }
-    .start-card-item-wrap-footer {
+    .home-list-item-wrap-footer {
+      margin-top: 8px;
       text-align: center;
       font-size: 16px;
-      margin-left: -10%;
     }
   }
 }

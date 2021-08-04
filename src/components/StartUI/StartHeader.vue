@@ -22,7 +22,8 @@
 
     <div class="start-header-right">
       <start-button dark class="start-header-right-btn">
-        {{ $t("连接钱包") }}
+        {{ $t("constants.连接钱包") }}
+        <!-- {{ $t("constant.name") }} -->
       </start-button>
       <start-drop-down
         trigger="click"
@@ -32,7 +33,7 @@
       >
         <template #tag>
           <start-button light>
-            {{ $t("切换语言") }}
+            {{ $t("constants.切换语言") }}
           </start-button>
         </template>
       </start-drop-down>
@@ -73,6 +74,7 @@ export default {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
       });
+      window.scrollTo(0, 0);
       this.activeIndex = key;
     },
     hanldeChangeLang(value) {

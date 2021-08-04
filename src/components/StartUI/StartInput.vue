@@ -1,24 +1,30 @@
 <template>
   <div class="start-input">
-    <el-input v-bind="{ ...$attrs }" @input="inputEvent">
+    <Input v-bind="{ ...$attrs }" @input="inputEvent">
       <div slot="suffix" class="start-input-suffix">
-        <span class="start-input-suffix-max" :style="{ color: maxColor }"
+        <span
+          class="start-input-suffix-max"
+          :style="{ color: maxColor }"
+          @click.stop="maxEvent"
           >MAX</span
         >
         <span>|</span>
         <span class="start-input-suffix-usdt">USDT</span>
       </div>
-    </el-input>
+    </Input>
   </div>
 </template>
 <script>
+import { Input } from "element-ui";
 export default {
   data() {
     return {
       inputValue: "",
     };
   },
-  components: {},
+  components: {
+    Input,
+  },
   // value不用props接，因为事件出发会导致子组件直接修改了父组件
   props: {
     inputType: {
@@ -36,6 +42,9 @@ export default {
     maxColor: String,
   },
   methods: {
+    maxEvent() {
+      this.$emit("maxEvent");
+    },
     inputEvent(val) {
       if (this.type === "number" && this.precision > 0) {
         val = val.toString();
@@ -63,6 +72,10 @@ export default {
     }
     .el-input__inner {
       width: 80%;
+      border: none;
+      background: none;
+      color: #fff;
+      line-height: 54px;
     }
   }
   .start-input-suffix {
@@ -71,6 +84,7 @@ export default {
     height: 100%;
     .start-input-suffix-max {
       margin-right: 10px;
+      cursor: pointer;
     }
     .start-input-suffix-usdt {
       margin-left: 10px;

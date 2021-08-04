@@ -1,19 +1,20 @@
 <template>
-  <div>
+  <div :set="(cardsInfo = cardTypeColorInfo(detailCardType))">
     <div
       v-if="detailCardType !== 'closed'"
       class="detail-input-wrap"
-      :style="`background-image: url(${require(`../../assets/home/${detailCardType}-input-border.png`)})`"
+      :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
     >
       <start-input
         class="detail-input"
         :precision="9"
         :value="inputValue"
-        :maxColor="colorInfo['common-color']"
+        :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
+        @maxEvent="maxEvent"
       ></start-input>
     </div>
-    <start-space :size="20"></start-space>
+    <start-space :size="12"></start-space>
     <div
       class="detail-wrap-content-left-info"
       v-if="detailCardType !== 'closed'"
@@ -27,21 +28,26 @@
         <span>12--321312STC</span>
       </div>
     </div>
-    <start-space :size="20"></start-space>
+    <start-space :size="24"></start-space>
+    <div class="detail-wrap-content-left-error">
+      <p>出错了啊</p>
+    </div>
+    <start-space :size="12"></start-space>
     <start-button
       class="detail-wrap-content-button"
-      :style="`background-image: url(${require(`../../assets/home/${detailCardType}-button.png`)})`"
+      :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
-      <p :style="{ color: colorInfo['common-color'] }">购买啊</p>
+      <p :style="{ color: cardsInfo['common-color'] }">购买啊</p>
     </start-button>
+
     <start-space :size="20"></start-space>
     <p
       class="detail-wrap-content-left-unstake"
-      :style="{ color: colorInfo['common-color'] }"
+      :style="{ color: cardsInfo['common-color'] }"
     >
       {{ $t("UNSTAKE") }}
     </p>
-    <start-space :size="40"></start-space>
+    <start-space :size="35"></start-space>
     <div class="detail-wrap-content-left-rule">
       <p>
         {{ $t("参与规则") }}
@@ -61,7 +67,7 @@
 import StartButton from "@startUI/StartButton.vue";
 import StartInput from "@startUI/StartInput.vue";
 import StartSpace from "@startUI/StartSpace.vue";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -74,11 +80,17 @@ export default {
     inputEvent(e) {
       this.inputValue = e;
     },
+    maxEvent() {
+      console.log("maxEvent");
+    },
   },
-  computed: mapState("StoreHome", {
-    detailCardType: (state) => state.detailCardType,
-    colorInfo: (state) => state.colorInfo,
-  }),
+  computed: {
+    ...mapState("StoreHome", {
+      detailCardType: (state) => state.detailCardType,
+      colorInfo: (state) => state.colorInfo,
+    }),
+    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
+  },
   beforeDestroy() {},
 };
 </script>
@@ -116,10 +128,17 @@ export default {
     font-size: 24px;
   }
 }
+.detail-wrap-content-left-error {
+  font-size: 14px;
+  color: $text_error_color;
+  font-weight: 500;
+  text-align: center;
+}
 .detail-wrap-content-left-unstake {
   color: $text_light_color;
   font-size: 16px;
   font-weight: 500;
+  cursor: pointer;
 }
 .detail-wrap-content-left-rule {
   color: #fff;
