@@ -22,8 +22,16 @@
 
     <div class="start-header-right">
       <start-button dark class="start-header-right-btn">
-        {{ $t("constants.连接钱包") }}
-        <!-- {{ $t("constant.name") }} -->
+        <span v-if="!isStarMaskInstalled" @click="onClickInstallStarMask">
+          Click here to install StarMask!
+        </span>
+        <span v-else @click="onClickConnect">
+          {{
+            this.stcAccounts.length
+              ? format.shortAddress(this.stcAccounts[0])
+              : $t("constants.连接钱包")
+          }}
+        </span>
       </start-button>
       <start-drop-down
         trigger="click"
@@ -45,18 +53,23 @@ import { Menu, MenuItem } from "element-ui";
 import StartButton from "@startUI/StartButton.vue";
 import StartDropDown from "@startUI/StartDropDown.vue";
 import session from "@utils/session.js";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 // import StoreApp from "@store/StoreApp"
+import { Wallet } from "@contactLogic";
+import format from "@utils/format";
+
 export default {
   name: "StartHeader",
   data() {
     return {
       // activeIndex: "home",
+      isStarMaskInstalled: false,
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
         { text: "ENG", value: "en" },
       ],
+      format,
     };
   },
   components: {
@@ -70,6 +83,20 @@ export default {
     this.currLang = currLang;
   },
   methods: {
+    ...mapActions("StoreWallet", [
+      "setOnboarding",
+      "setStcAccounts",
+      "setStcProvider",
+    ]),
+    init() {
+      this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+      if (!this.onboarding) {
+        const onboarding = Wallet.createStarMaskOnboarding();
+        if (onboarding) this.setOnboarding(onboarding);
+      }
+      const stcProvider = Wallet.createStcProvider();
+      this.setStcProvider(stcProvider);
+    },
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
@@ -85,15 +112,45 @@ export default {
         window.location.reload();
       }
     },
+    onClickInstallStarMask() {
+      this.onboarding.startOnboarding();
+    },
+    async getAccountBalance() {
+      if (this.stcProvider) {
+        const params = {
+          provider: this.stcProvider,
+          account: this.stcAccounts[0],
+        };
+        const balance = await Wallet.getAccountBalance(params);
+        console.log(balance, 3333);
+      }
+    },
+    async onClickConnect() {
+      if (this.isStarMaskInstalled) {
+        if (this.stcAccounts && this.stcAccounts.length) {
+          if (this.onboarding) this.onboarding.stopOnboarding();
+          this.getAccountBalance();
+        } else {
+          const accounts = await Wallet.connect();
+          this.setStcAccounts(accounts);
+          this.getAccountBalance();
+        }
+      }
+    },
+  },
+  watch: {
+    isStarMaskInstalled(value) {
+      if (value) this.onClickConnect();
+    },
   },
   computed: {
-    ...mapState("StoreApp", {
-      headerItems: (state) => state.headerItems,
-      activeHeaderItem: (state) => state.activeHeaderItem,
-      language: (state) => state.language,
-    }),
+    ...mapState("StoreApp", ["headerItems", "activeHeaderItem", "language"]),
+    ...mapState("StoreWallet", ["stcAccounts", "onboarding", "stcProvider"]),
   },
   beforeDestroy() {},
+  created() {
+    this.init();
+  },
 };
 </script>
 <style lang="scss" scoped>
