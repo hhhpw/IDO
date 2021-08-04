@@ -25,12 +25,11 @@
         <span v-if="!isStarMaskInstalled" @click="onClickInstallStarMask">
           Click here to install StarMask!
         </span>
+        <span v-else-if="this.stcAccounts.length">
+          {{ format.shortAddress(this.stcAccounts[0]) }}
+        </span>
         <span v-else @click="onClickConnect">
-          {{
-            this.stcAccounts.length
-              ? format.shortAddress(this.stcAccounts[0])
-              : $t("constants.连接钱包")
-          }}
+          {{ $t("constants.连接钱包") }}
         </span>
       </start-button>
       <start-drop-down
@@ -122,18 +121,26 @@ export default {
           account: this.stcAccounts[0],
         };
         const balance = await Wallet.getAccountBalance(params);
-        console.log(balance, 3333);
+        console.log("balance", balance);
       }
+    },
+    async setPermissions() {
+      const permArr = await Wallet.permissions();
+      console.log("permissions:", permArr);
     },
     async onClickConnect() {
       if (this.isStarMaskInstalled) {
         if (this.stcAccounts && this.stcAccounts.length) {
           if (this.onboarding) this.onboarding.stopOnboarding();
-          this.getAccountBalance();
+
+          await this.setPermissions();
+          await this.getAccountBalance();
         } else {
           const accounts = await Wallet.connect();
           this.setStcAccounts(accounts);
-          this.getAccountBalance();
+
+          await this.setPermissions();
+          await this.getAccountBalance();
         }
       }
     },
