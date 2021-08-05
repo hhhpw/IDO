@@ -5,8 +5,9 @@
     v-bind="$attrs"
     :style="{ color: color }"
     v-on="$listeners"
+    title=""
   >
-    <use :xlink:href="iconName" />
+    <use :xlink:href="iconName" title="" />
   </svg>
 </template>
 

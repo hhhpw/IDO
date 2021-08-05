@@ -1,12 +1,21 @@
 <template>
   <div
     class="detail-card"
-    :set="(colorsInfo = cardTypeColorInfo(detailCardType))"
+    :set="
+      ((colorsInfo = cardTypeColorInfo(detailCardType)),
+      (cardInfo = detailCardInfo(detailCardId)))
+    "
   >
+    <div>{{ cardInfo.proTimeList }}</div>
     <div
-      v-if="flags"
+      v-if="cardInfo.attribute"
       class="detail-card-labels-top"
-      :style="mixinSetLabelsBg(detailCardType, flags.length)"
+      :style="
+        mixinSetLabelsBg(
+          detailCardType,
+          cardInfo.attribute.length > 2 ? 2 : cardInfo.attribute.length
+        )
+      "
     >
       <span
         v-for="(l, ix) in flags"
@@ -17,30 +26,37 @@
       </span>
     </div>
     <div class="detail-card-header">
-      <img class="detail-card-header-logo" src="../../assets/header/logo.png" />
+      <img class="detail-card-header-logo" :src="cardInfo.icon" />
       <!-- <start-space :size="30" :horizontal="true"></start-space> -->
       <div class="detail-card-header-info">
         <div class="detail-card-header-info-currency">
           <span>
-            {{ $t("StartPad") }}
+            {{ $t(`${cardInfo.prdName}`) }}
           </span>
-          <span> ({{ $t("STP") }}) </span>
+          <span> ({{ $t(`${cardInfo.currency}`) }}) </span>
         </div>
         <div>
           <span class="detail-card-header-info-hash">
-            0x123131311331321313131999023x0012
+            {{ cardInfo.address }}
           </span>
-          <svg-icon
-            :name="`copy-${detailCardType}`"
-            @click="clipHash('====我复制了啊====')"
-          ></svg-icon>
+
+          <start-tool-tip
+            :content="copyContent"
+            placement="top"
+            class="detail-card-header-info-copy"
+          >
+            <svg-icon
+              :name="`copy-${detailCardType}`"
+              @click="clipHash(cardInfo.address)"
+            ></svg-icon>
+          </start-tool-tip>
         </div>
       </div>
     </div>
     <start-space :size="20"></start-space>
     <div class="detail-card-labels">
       <start-button
-        v-for="(d, i) in labels"
+        v-for="(d, i) in cardInfo.label"
         :key="i"
         light
         :style="
@@ -52,20 +68,14 @@
         >{{ $t(`${d}`) }}></start-button
       >
     </div>
-    <start-space :size="40"></start-space>
+    <start-space :size="20"></start-space>
     <div class="detail-card-icons">
-      <start-button
-        v-for="(d, i) in labels"
-        :key="i"
-        light
-        :style="
-          mixinLabelColor(
-            colorsInfo['label-text-color'],
-            colorsInfo['common-color']
-          )
-        "
-        >{{ $t(`${d}`) }}></start-button
-      >
+      <svg-icon
+        v-for="(iconkey, index) in cardInfo.links"
+        :key="index"
+        :name="iconkey.name + '-' + detailCardType"
+        class="detail-card-icons-icon"
+      ></svg-icon>
     </div>
     <start-space :size="20"></start-space>
     <div class="detail-card-tabs">
@@ -77,14 +87,25 @@
       >
       </start-tab-bar>
       <div class="detail-card-tabs-list">
-        <start-list
-          v-for="(d, index) in listpro"
-          :key="index"
-          :data="d"
-          :type="tabCategory"
-          :bgColor="colorsInfo['list-bg-color']"
-        >
-        </start-list>
+        <template v-if="tabCategory === 'prodetail'">
+          <start-list
+            v-for="(d, index) in listpro"
+            :key="index"
+            :data="d"
+            type="prodetail"
+            :bgColor="colorsInfo['list-bg-color']"
+          >
+          </start-list>
+        </template>
+        <template v-if="tabCategory === 'time'">
+          <start-list
+            v-for="(d, index) in cardInfo.proTimeList"
+            :key="index"
+            :data="d"
+            type="time"
+            :bgColor="colorsInfo['list-bg-color']"
+          ></start-list>
+        </template>
       </div>
     </div>
     <start-space :size="30"></start-space>
@@ -101,14 +122,18 @@ import SvgIcon from "@components/SvgIcon/index.vue";
 import StartButton from "@startUI/StartButton.vue";
 import StartTabBar from "@startUI/StartTabBar.vue";
 import StartList from "@startUI/StartList.vue";
+import StartToolTip from "@startUI/StartToolTip.vue";
 // import clipboard from "clipboard-polyfill";
 import * as clipboard from "clipboard-polyfill/text";
 import { listpro } from "@startUI/mock.js";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
+// import i18n from "../../i18n/index.js";
 export default {
   data() {
     return {
+      copyContent: this.$t("复制"),
+      // disabledCopy: false,
       labels: ["label one", "label two", "label three"],
       flags: ["AA", "bb"],
       colorType: "red",
@@ -128,21 +153,45 @@ export default {
   },
   mixins: [mixinHome],
   components: {
+    StartToolTip,
     StartSpace,
     SvgIcon,
     StartButton,
     StartTabBar,
     StartList,
   },
+  watch: {
+    // disabledCopy(val) {
+    //   if (!val) {
+    //     this.copyContent = this.$t("复制");
+    //   }
+    //   // if (val) {
+    //   //   this.copyContent = "";
+    //   // } else {
+    //   //   this.copyContent = "das";
+    //   //   // i18n.$t("复制");
+    //   // }
+    // },
+  },
   mounted() {},
   methods: {
+    // renderTip() {
+    //   if (this.disabledCopy) {
+    //     return "";
+    //   }
+    //   return this.$t("复制");
+    //   // return "复制";
+    // },
     hanleTabChange(val) {
       this.tabCategory = val;
     },
     clipHash(val) {
       clipboard.writeText(val).then(
         () => {
-          console.log("yes");
+          this.copyContent = this.$t("复制成功");
+          setTimeout(() => {
+            this.copyContent = this.$t("复制");
+          }, 1500);
         },
         () => {
           console.log("err0r");
@@ -153,8 +202,9 @@ export default {
   computed: {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
+      detailCardId: (state) => state.detailCardId,
     }),
-    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
+    ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
   beforeDestroy() {},
 };
@@ -198,6 +248,24 @@ export default {
         color: $text_gray_color;
         margin-right: 5px;
       }
+      .detail-card-header-info-copy {
+        display: inline-block;
+      }
+    }
+  }
+  .detail-card-labels {
+    .start-button {
+      border-radius: 2px;
+      padding: 5px 10px;
+    }
+  }
+  .detail-card-icons {
+    .detail-card-icons-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .detail-card-icons-icon + .detail-card-icons-icon {
+      margin-left: 10px;
     }
   }
   .detail-card-tabs-list {

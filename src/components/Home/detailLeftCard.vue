@@ -115,9 +115,7 @@ export default {
   color: $btn_base_bgcolor;
   height: 54px;
   text-align: center;
-  // width: calc(100% - 40px);
   width: 100%;
-  // background-image: url("../../assets/detail/open-button.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-color: transparent;

@@ -6,10 +6,11 @@
       :style="setStyle()"
     >
       <span class="title">
-        {{ data.title }}
+        {{ $t(`${data.title}`) }}
       </span>
       <span class="amount">
-        {{ data.amount }}
+        <!-- {{ data.amount }} -->
+        {{ utilsNumber.formatNumberMeta(data.amount, { grouped: true }).text }}
       </span>
     </div>
     <div
@@ -18,30 +19,36 @@
       :style="setStyle()"
     >
       <span class="title">
-        {{ data.title }}
+        {{ $t(`${data.title}`) }}
       </span>
       <div class="time-info">
-        <p>
+        <p v-if="data.startDate">
           <span>
             {{ $t("始") }}
           </span>
           <span>{{ data.startDate }}</span>
         </p>
-        <p>
+        <p v-if="data.endDate">
           <span>
             {{ $t("至") }}
           </span>
           <!-- <span> 2021 08 12 / 12:00:00 </span> -->
           <span>{{ data.endDate }}</span>
         </p>
+        <p v-else>
+          <span>{{ data.date }}</span>
+        </p>
       </div>
     </div>
   </div>
 </template>
 <script>
+import utilsNumber from "@utils/number";
 export default {
   data() {
-    return {};
+    return {
+      utilsNumber,
+    };
   },
   props: {
     data: {

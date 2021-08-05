@@ -2,10 +2,11 @@
   <div
     class="home-list animate__animated animate__fadeInUp"
     :style="getBg(cardType)"
-    :set="(cardsInfo = cardTypeColorInfo(cardType))"
   >
     <slot name="title"> </slot>
-    <p class="home-list-title">{{ $t("我要买") }} {{ cardType }}</p>
+    <p class="home-list-title">
+      {{ renderTitle(cardType) }}
+    </p>
     <slot name=""> </slot>
     <div
       class="home-list-content"
@@ -15,20 +16,20 @@
         class="home-list-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
         :key="index"
-        @click="emit"
+        @click="emit(cardData.cardType, cardData.id)"
         :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
         <div
-          v-if="cardData.flags"
+          v-if="cardData.attribute"
           class="home-list-item-wrap-labels"
           :style="
             mixinSetLabelsBg(
               cardType,
-              cardData && cardData.flags && cardData.flags.length
+              cardData.attribute.length > 2 ? 2 : cardData.attribute.length
             )
           "
         >
-          <span v-for="(l, ix) in cardData.flags" :key="ix">
+          <span v-for="(l, ix) in cardData.attribute" :key="ix">
             {{ $t(`${l}`) }}
           </span>
         </div>
@@ -41,14 +42,18 @@
         <start-space :size="40"></start-space>
         <div class="home-list-item-wrap-footer">
           <span v-if="cardType === 'open'">
-            {{ $t("正在进行中") }}
-            <!-- {{ countDown(1628070041834, data.cardInfoList).start() }} -->
+            {{ $t("constants.进行中") }}
+            <span v-if="timers">
+              {{ timers[index].countdowm }}
+            </span>
+            <!-- {{ cardData.tt }} -->
           </span>
           <span v-if="cardType === 'will'">
-            {{ $t("敬请期待") }}
+            {{ $t("constants.即将推出") }}
+            {{ cardData.countdowm }}
           </span>
           <span v-if="cardType === 'closed'">
-            {{ $t("已结束") }}
+            {{ $t("constants.已经结束") }}
           </span>
         </div>
       </div>
@@ -63,14 +68,19 @@ import variables from "@styles/variables.scss";
 import homeListItem from "@components/Home/homeListItem.vue";
 import StartSpace from "@startUI/StartSpace.vue";
 import mixinHome from "@mixins/home.js";
-import { mapGetters } from "vuex";
-import dayjs from "dayjs";
+// import { mapGetters } from "vuex";
+import { cloneDeep } from "lodash";
+import { countdown } from "@utils/date.js";
+// import dayjs from "dayjs";
 export default {
   name: "homelist",
   data() {
     return {
       colorType: "",
-      dayjs,
+      timer: null,
+      tt: 0,
+      cardList: null,
+      timers: null,
     };
   },
   mixins: [mixinHome],
@@ -79,6 +89,7 @@ export default {
     StartSpace,
   },
   props: {
+    cardsInfo: Object,
     cardType: {
       type: String,
     },
@@ -86,19 +97,43 @@ export default {
       type: Object,
     },
   },
-  // 'background-image': 'url(' require('../../assets/card/' + `${cardType}` +'-card-item') + ')'
-  // 'background-image': url()
-  // `url(${require(`../../assets/card/${t}-card-item`)})`
-  mounted() {},
+  mounted() {
+    this.timers = cloneDeep(this.data.cardInfoList);
+    if (this.data.cardType === "open" || this.data.cardType === "will") {
+      this.timers.map((d) => {
+        this.$set(d, "countdowm", 0);
+      });
+      this.playTimer();
+    }
+  },
   methods: {
-    emit() {
+    renderTitle(type) {
+      if (type === "open") {
+        return this.$t("constants.进行中");
+      }
+      if (type === "will") {
+        return this.$t("constants.即将推出");
+      }
+      if (type === "closed") {
+        return this.$t("constants.已经结束");
+      }
+    },
+    playTimer() {
+      this.timer = setInterval(() => {
+        for (let key in this.timers) {
+          this.timers[key].countdowm = countdown(this.timers[key].time);
+        }
+      }, 1000);
+    },
+    emit(cardType, id) {
+      console.log("cardType", cardType, "id", id);
       this.$emit("clickMethod", {
-        cardType: this.cardType,
+        cardType: cardType,
+        cardId: id,
       });
     },
   },
   computed: {
-    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
     getBg() {
       return function (type) {
         let bg = null,
@@ -127,7 +162,10 @@ export default {
       };
     },
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    console.log("====>");
+    clearInterval(this.timer);
+  },
 };
 </script>
 <style lang="scss" scoped>

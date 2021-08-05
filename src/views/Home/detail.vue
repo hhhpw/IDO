@@ -44,10 +44,11 @@ export default {
       this.inputValue = e;
     },
   },
-  computed: mapState("StoreHome", {
-    detailCardType: (state) => state.detailCardType,
-    colorInfo: (state) => state.colorInfo,
-  }),
+  computed: {
+    ...mapState("StoreHome", {
+      detailCardType: (state) => state.detailCardType,
+    }),
+  },
   beforeDestroy() {},
 };
 </script>

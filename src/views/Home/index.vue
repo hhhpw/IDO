@@ -1,18 +1,20 @@
 <template>
-  <div class="start-home ddd">
-    <div class="start-home-banner">
-      <div class="start-home-banner-content">
-        <p class="start-home-banner-title">STATPAD</p>
-        <p class="start-home-banner-subtitle">{{ $t("你的第一步stc") }}</p>
-        <div class="start-home-banner-btns">
-          <start-button blborder class="start-home-banner-btns-btn">
-            {{ $t("加入我们") }}
+  <div class="home">
+    <div class="home-banner">
+      <div class="home-banner-content">
+        <p class="home-banner-title">ATLASPAD</p>
+        <p class="home-banner-subtitle">
+          {{ $t("constants.连接stc生态第一步") }}
+        </p>
+        <div class="home-banner-btns">
+          <start-button blborder class="home-banner-btns-btn">
+            {{ $t("constants.加入我们") }}
           </start-button>
-          <start-button trborder dark class="start-home-banner-btns-btn">
-            {{ $t("购买STC") }}
+          <start-button trborder dark class="home-banner-btns-btn">
+            {{ $t("constants.购买STC") }}
           </start-button>
         </div>
-        <p class="start-home-banner-desc">{{ $t("你的第一步stc") }}</p>
+        <!-- <p class="home-banner-desc">{{ $t("你的第一步stc") }}</p> -->
       </div>
       <support> </support>
     </div>
@@ -24,6 +26,7 @@
           :cardType="d.cardType"
           :data="d"
           style="margin-top: 70px"
+          :cardsInfo="cardTypeColorInfo(d.cardType)"
           @clickMethod="clickMethod"
         ></home-list>
       </template>
@@ -38,15 +41,16 @@
 import HomeList from "./homeList.vue";
 import StartButton from "@startUI/StartButton.vue";
 import support from "./support.vue";
-import { cardData } from "@startUI/mock.js";
+// import { cardData } from "@startUI/mock.js";
 import HomeDetail from "./detail.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import StartSpace from "@startUI/StartSpace.vue";
 export default {
   data() {
     return {
-      cardData,
+      cardTTTData: null,
       colorInfo: {},
+      loading: true,
     };
   },
   components: {
@@ -57,8 +61,15 @@ export default {
     HomeList,
     StartSpace,
   },
-  mounted() {},
+  mounted() {
+    // this.cardTTTData = cardData;
+    this.getDataList();
+    // setTimeout(() => {
+    //   this.cardTTTData = cardData;
+    // }, 2000);
+  },
   methods: {
+    ...mapActions("StoreHome", ["getDataList"]),
     clickMethod(value) {
       // 防止footer展露出来
       window.scrollTo(0, 500);
@@ -67,14 +78,17 @@ export default {
         Object.assign(
           {},
           { status: "home-detail" },
-          { cardType: value.cardType }
+          { ...value }
+          // { cardType: value.cardType }
         )
       );
     },
   },
   computed: {
+    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
     ...mapState("StoreHome", {
       status: (state) => state.status,
+      cardData: (state) => state.cardData,
     }),
     ...mapState("StoreApp", {
       language: (state) => state.language,
@@ -86,52 +100,42 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
-.ddd {
-  box-shadow: 0 0 5px red;
-}
-.aa {
-  font-family: Rigelstar;
-  color: red;
-}
-
-.start-home-banner {
+.home-banner {
   width: 100%;
   background-image: url("../../assets/home/bg.png");
   background-size: 100% 100%;
-  // background-color: green;
-  // border: 2px solid yellow;
   overflow: hidden;
   background-repeat: no-repeat;
   height: 740px;
   background-origin: content-box;
   position: relative;
-  .start-home-banner-content {
+  .home-banner-content {
     margin-left: 12%;
     margin-top: 130px;
     color: #fff;
-    .start-home-banner-title {
+    .home-banner-title {
       @include fontRigelstar();
       font-weight: 400;
       font-size: 100px;
     }
-    .start-home-banner-subtitle {
+    .home-banner-subtitle {
       font-size: 26px;
       margin-top: 25px;
     }
-    .start-home-banner-btns {
+    .home-banner-btns {
       margin-top: 30px;
-      .start-home-banner-btns-btn {
+      .home-banner-btns-btn {
         width: 260px;
         height: 80px;
         line-height: 80px;
         font-size: 30px;
         font-weight: bold;
       }
-      .start-home-banner-btns-btn + .start-home-banner-btns-btn {
+      .home-banner-btns-btn + .home-banner-btns-btn {
         margin-left: 30px;
       }
     }
-    .start-home-banner-desc {
+    .home-banner-desc {
       font-size: 14px;
       margin-top: 30px;
     }

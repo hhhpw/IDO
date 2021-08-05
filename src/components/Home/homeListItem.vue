@@ -1,18 +1,18 @@
 <template>
-  <div class="home-list-item" @click="emit">
+  <div class="home-list-item">
     <div class="home-list-item-rough">
       <div class="home-list-item-rough-header">
         <start-item-cell cellType="vertical">
           <!-- 项目logo -->
-          <img :src="data.imgUrl" />
-          <span>{{ $t(`${data.currencyPad}`) }}</span>
+          <img :src="data.icon" />
+          <span>{{ $t(`${data.prdName}`) }}</span>
           <span>{{ $t(`${data.currency}`) }}</span>
         </start-item-cell>
       </div>
       <start-space :size="20"></start-space>
       <div class="home-list-item-rough-labels">
         <start-button
-          v-for="(d, i) in data.labels"
+          v-for="(d, i) in data.label"
           :key="i"
           light
           :style="
@@ -27,19 +27,17 @@
       <start-space :size="30"></start-space>
       <div class="home-list-item-rough-icons">
         <svg-icon
-          v-for="(iconkey, index) in data.icons"
+          v-for="(iconkey, index) in data.links"
           :key="index"
-          :name="iconkey + '-' + cardType"
+          :name="iconkey.name + '-' + cardType"
           class="home-list-item-rough-icons-icon"
         ></svg-icon>
       </div>
       <start-space :size="30"></start-space>
       <div class="home-list-item-rough-infos">
-        <start-item-cell
-          v-for="(d, i) in details"
-          :key="i"
-          :data="d"
-        ></start-item-cell>
+        <start-item-cell :data="cellData('raiseTotal')"> </start-item-cell>
+        <start-item-cell :data="cellData('rate')"> </start-item-cell>
+        <start-item-cell :data="cellData('capTotal')"> </start-item-cell>
       </div>
     </div>
   </div>
@@ -55,22 +53,7 @@ export default {
   components: { StartButton, StartSpace, SvgIcon, StartItemCell },
   mixins: [mixinHome],
   data() {
-    return {
-      details: [
-        {
-          title: "AAAA",
-          amount: "231231 USDT",
-        },
-        {
-          title: "BBBB",
-          amount: "231231 USDT",
-        },
-        {
-          title: "CCCC",
-          amount: "231231 USDT",
-        },
-      ],
-    };
+    return {};
   },
   props: {
     colorsInfo: { type: Object },
@@ -83,11 +66,17 @@ export default {
   },
   mounted() {},
   methods: {
-    emit() {
-      this.$emit("clickMethod", {
-        cardType: this.cardType,
-      });
+    cellData(key) {
+      /////  这里写key
+      return { title: "xxx", amount: this.data[key] };
+      // return data.
     },
+    // emit() {
+    //   this.$emit("clickMethod", {
+    //     cardType: this.cardType,
+    //     // id: this.data.id,
+    //   });
+    // },
   },
   computed: {
     ...mapGetters("StoreHome", ["cardTypeColorInfo"]),

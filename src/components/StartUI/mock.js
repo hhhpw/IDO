@@ -9,6 +9,7 @@ export const cardData = [
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
         flags: ["测试A", "测试B"],
+        time: "1628142020000",
         detailInfo: [
           {
             title: "AAAA",
@@ -30,6 +31,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        time: "1628744960000",
         detailInfo: [
           {
             title: "AAAA",
@@ -48,6 +50,7 @@ export const cardData = [
       {
         imgUrl: require("../../assets/header/logo.png"),
         currencyPad: "StartPad",
+        time: "1628744960000",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -73,6 +76,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        time: "1628744960000",
         detailInfo: [
           {
             title: "AAAA",
@@ -94,6 +98,7 @@ export const cardData = [
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
+        time: "1628744960000",
         detailInfo: [
           {
             title: "AAAA",
@@ -191,37 +196,37 @@ export const cardData = [
 export const listpro = [
   {
     title: "我的质押",
-    amount: "12,000,000,000 STC",
+    amount: "123123213213",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },
   {
     title: "代币销售数量",
-    amount: "12,000,000,000 STC",
+    amount: "31232130",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },
   {
     title: "代币总量",
-    amount: "12,000,000,000 STC",
+    amount: "131312321",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },
   {
     title: "总质押",
-    amount: "12,000,000,000 STC",
+    amount: "312312312",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },
   {
     title: "售价",
-    amount: "12,000,000,000 STC",
+    amount: "141231212",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },
   {
     title: "目标筹款",
-    amount: "12,000,000,000 STC",
+    amount: "312312312",
     startDate: "321321321321312312",
     endDate: "321321312412312099779",
   },

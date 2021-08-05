@@ -15,7 +15,7 @@
           :key="index"
           :class="{ 'start-menu-item-active': activeHeaderItem === d.value }"
         >
-          {{ $t(d.label) }}
+          {{ $t(`constants.${d.label}`) }}
         </MenuItem>
       </Menu>
     </div>
@@ -174,13 +174,14 @@ export default {
 @import "~@/styles/variables.scss";
 .start-header {
   height: 80px;
-  width: calc(100% - 60px);
+  width: calc(100% - 80px);
   display: flex;
   align-items: center;
   background-image: url("../../assets/header/header.png");
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0px 30px;
+  padding-left: 50px;
   box-sizing: content-box;
   display: flex;
   justify-content: space-between;
