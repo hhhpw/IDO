@@ -22,14 +22,12 @@
 
     <div class="start-header-right">
       <start-button dark class="start-header-right-btn">
-        <span v-if="!isStarMaskInstalled" @click="onClickInstallStarMask">
-          Click here to install StarMask!
-        </span>
-        <span v-else-if="this.stcAccounts.length">
-          {{ format.shortAddress(this.stcAccounts[0]) }}
-        </span>
-        <span v-else @click="onClickConnect">
-          {{ $t("constants.连接钱包") }}
+        <span @click="onClickConnect">
+          {{
+            walletStatus === "Connected"
+              ? format.shortAddress(this.stcAccounts[0])
+              : walletStatus
+          }}
         </span>
       </start-button>
       <start-drop-down
@@ -62,7 +60,7 @@ export default {
   data() {
     return {
       // activeIndex: "home",
-      isStarMaskInstalled: false,
+      walletStatus: "",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
@@ -87,15 +85,6 @@ export default {
       "setStcAccounts",
       "setStcProvider",
     ]),
-    init() {
-      this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-      if (!this.onboarding) {
-        const onboarding = Wallet.createStarMaskOnboarding();
-        if (onboarding) this.setOnboarding(onboarding);
-      }
-      const stcProvider = Wallet.createStcProvider();
-      this.setStcProvider(stcProvider);
-    },
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
@@ -111,8 +100,15 @@ export default {
         window.location.reload();
       }
     },
-    onClickInstallStarMask() {
-      this.onboarding.startOnboarding();
+    // onClickInstallStarMask() {
+    //   this.onboarding.startOnboarding();
+    // },
+    async loadData() {
+      const permissions = await Wallet.getPermissions();
+      if (!permissions.length) {
+        this.setPermissions();
+      }
+      this.getAccountBalance();
     },
     async getAccountBalance() {
       if (this.stcProvider) {
@@ -125,29 +121,33 @@ export default {
       }
     },
     async setPermissions() {
-      const permArr = await Wallet.permissions();
+      const permArr = await Wallet.setPermissions();
       console.log("permissions:", permArr);
     },
     async onClickConnect() {
-      if (this.isStarMaskInstalled) {
-        if (this.stcAccounts && this.stcAccounts.length) {
-          if (this.onboarding) this.onboarding.stopOnboarding();
-
-          await this.setPermissions();
-          await this.getAccountBalance();
-        } else {
-          const accounts = await Wallet.connect();
-          this.setStcAccounts(accounts);
-
-          await this.setPermissions();
-          await this.getAccountBalance();
-        }
+      const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+      const isStarMaskConnected =
+        this.stcAccounts && this.stcAccounts.length > 0;
+      if (!isStarMaskInstalled) {
+        this.walletStatus = "Click here to install StarMask!";
+        this.onboarding.startOnboarding();
+      } else if (isStarMaskConnected) {
+        this.walletStatus = "Connected";
+        if (this.onboarding) this.onboarding.stopOnboarding();
+        this.loadData();
+      } else {
+        this.walletStatus = "Connect";
+        const accounts = await Wallet.connect();
+        this.setStcAccounts(accounts);
       }
     },
   },
   watch: {
-    isStarMaskInstalled(value) {
-      if (value) this.onClickConnect();
+    stcAccounts(value) {
+      if (value && value.length) {
+        this.walletStatus = "Connected";
+        this.loadData();
+      }
     },
   },
   computed: {
@@ -156,7 +156,14 @@ export default {
   },
   beforeDestroy() {},
   created() {
-    this.init();
+    if (!this.onboarding) {
+      const onboarding = Wallet.createStarMaskOnboarding();
+      if (onboarding) this.setOnboarding(onboarding);
+    }
+    const stcProvider = Wallet.createStcProvider();
+    this.setStcProvider(stcProvider);
+
+    this.onClickConnect();
   },
 };
 </script>
