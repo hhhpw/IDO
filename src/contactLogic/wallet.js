@@ -78,10 +78,45 @@ const getAccountBalance = async ({ provider, account, token }) => {
   return balance;
 };
 
+/**
+ * Set Account permissions
+ *
+ * */
+const setPermissions = async () => {
+  let permissionsArray;
+  try {
+    permissionsArray = await window.starcoin.request({
+      method: "wallet_requestPermissions",
+      params: [{ stc_accounts: {} }],
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return permissionsArray.map((perm) => perm.parentCapability);
+};
+
+/**
+ * Get permissions
+ *
+ * */
+const getPermissions = async () => {
+  let permissionsArray;
+  try {
+    permissionsArray = await window.starcoin.request({
+      method: "wallet_getPermissions",
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return permissionsArray.map((perm) => perm.parentCapability);
+};
+
 export default {
   createStcProvider,
   connect,
   createStarMaskOnboarding,
   checkStarMaskInstalled,
   getAccountBalance,
+  setPermissions,
+  getPermissions,
 };

@@ -22,14 +22,11 @@
 
     <div class="start-header-right">
       <start-button dark class="start-header-right-btn">
-        <span v-if="!isStarMaskInstalled" @click="onClickInstallStarMask">
-          Click here to install StarMask!
-        </span>
-        <span v-else @click="onClickConnect">
+        <span @click="onClickConnect">
           {{
-            this.stcAccounts.length
+            walletStatus === "Connected"
               ? format.shortAddress(this.stcAccounts[0])
-              : $t("constants.连接钱包")
+              : walletStatus
           }}
         </span>
       </start-button>
@@ -63,7 +60,7 @@ export default {
   data() {
     return {
       // activeIndex: "home",
-      isStarMaskInstalled: false,
+      walletStatus: "Connect",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
@@ -88,15 +85,6 @@ export default {
       "setStcAccounts",
       "setStcProvider",
     ]),
-    init() {
-      this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-      if (!this.onboarding) {
-        const onboarding = Wallet.createStarMaskOnboarding();
-        if (onboarding) this.setOnboarding(onboarding);
-      }
-      const stcProvider = Wallet.createStcProvider();
-      this.setStcProvider(stcProvider);
-    },
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
@@ -112,8 +100,15 @@ export default {
         window.location.reload();
       }
     },
-    onClickInstallStarMask() {
-      this.onboarding.startOnboarding();
+    // onClickInstallStarMask() {
+    //   this.onboarding.startOnboarding();
+    // },
+    async loadData() {
+      const permissions = await Wallet.getPermissions();
+      if (!permissions.length) {
+        this.setPermissions();
+      }
+      this.getAccountBalance();
     },
     async getAccountBalance() {
       if (this.stcProvider) {
@@ -122,25 +117,37 @@ export default {
           account: this.stcAccounts[0],
         };
         const balance = await Wallet.getAccountBalance(params);
-        console.log(balance, 3333);
+        console.log("balance", balance);
       }
     },
+    async setPermissions() {
+      const permArr = await Wallet.setPermissions();
+      console.log("permissions:", permArr);
+    },
     async onClickConnect() {
-      if (this.isStarMaskInstalled) {
-        if (this.stcAccounts && this.stcAccounts.length) {
-          if (this.onboarding) this.onboarding.stopOnboarding();
-          this.getAccountBalance();
-        } else {
-          const accounts = await Wallet.connect();
-          this.setStcAccounts(accounts);
-          this.getAccountBalance();
-        }
+      const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+      const isStarMaskConnected =
+        this.stcAccounts && this.stcAccounts.length > 0;
+      if (!isStarMaskInstalled) {
+        this.walletStatus = "Install StarMask";
+        this.onboarding.startOnboarding();
+      } else if (isStarMaskConnected) {
+        this.walletStatus = "Connected";
+        if (this.onboarding) this.onboarding.stopOnboarding();
+        this.loadData();
+      } else {
+        this.walletStatus = "Connect";
+        const accounts = await Wallet.connect();
+        this.setStcAccounts(accounts);
       }
     },
   },
   watch: {
-    isStarMaskInstalled(value) {
-      if (value) this.onClickConnect();
+    stcAccounts(value) {
+      if (value && value.length) {
+        this.walletStatus = "Connected";
+        this.loadData();
+      }
     },
   },
   computed: {
@@ -149,7 +156,17 @@ export default {
   },
   beforeDestroy() {},
   created() {
-    this.init();
+    if (!this.onboarding) {
+      const onboarding = Wallet.createStarMaskOnboarding();
+      if (onboarding) this.setOnboarding(onboarding);
+    }
+    const stcProvider = Wallet.createStcProvider();
+    this.setStcProvider(stcProvider);
+
+    const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+    if (!isStarMaskInstalled) {
+      this.walletStatus = "Install StarMask";
+    }
   },
 };
 </script>
