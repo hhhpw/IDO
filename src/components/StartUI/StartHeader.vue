@@ -129,7 +129,7 @@ export default {
       const isStarMaskConnected =
         this.stcAccounts && this.stcAccounts.length > 0;
       if (!isStarMaskInstalled) {
-        this.walletStatus = "Click here to install StarMask!";
+        this.walletStatus = "Install StarMask";
         this.onboarding.startOnboarding();
       } else if (isStarMaskConnected) {
         this.walletStatus = "Connected";
@@ -162,6 +162,11 @@ export default {
     }
     const stcProvider = Wallet.createStcProvider();
     this.setStcProvider(stcProvider);
+
+    const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+    if (!isStarMaskInstalled) {
+      this.walletStatus = "Install StarMask";
+    }
   },
 };
 </script>
