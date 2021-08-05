@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       // activeIndex: "home",
-      walletStatus: "",
+      walletStatus: "Connect",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
@@ -162,8 +162,6 @@ export default {
     }
     const stcProvider = Wallet.createStcProvider();
     this.setStcProvider(stcProvider);
-
-    this.onClickConnect();
   },
 };
 </script>
