@@ -261,8 +261,8 @@ export default {
   }
   .detail-card-icons {
     .detail-card-icons-icon {
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
     }
     .detail-card-icons-icon + .detail-card-icons-icon {
       margin-left: 10px;

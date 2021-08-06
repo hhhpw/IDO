@@ -4,12 +4,16 @@
   "锁仓时间": "锁仓时间",
   "支付时间": "支付时间",
   "代币分配时间": "代币分配时间",
+  "wallet": {
+    "download-tip": "英文=》下载提示"
+  },
   "constants": {
     "连接stc生态第一步": "Your First Step To Starcoin Ecosystem ",
     "项目": "Project",
-    "连接钱包": "Connect",
-    "中文": "中文",
-    "切换语言": "中文（繁）",
+    "连接钱包": "Connect to wallet",
+    "中文": "中文（繁）",
+    "ENG": "ENG",
+    "切换语言": "切换语言",
     "加入我们": "Join Us",
     "购买STC": "Buy STC",
     "进行中": "Live pools",

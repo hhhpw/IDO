@@ -22,10 +22,12 @@ const createStcProvider = () => {
  * */
 const createStarMaskOnboarding = () => {
   const currentUrl = new URL(window.location.href);
+  console.log("currentUrl", currentUrl);
   const forwarderOrigin =
     currentUrl.hostname === "localhost" ? "http://localhost:9032" : undefined;
 
   let onboarding;
+  console.log("forwarderOrigin", forwarderOrigin);
   try {
     onboarding = new StarMaskOnboarding({ forwarderOrigin });
   } catch (error) {
@@ -75,6 +77,8 @@ const getAccountBalance = async ({ provider, account, token }) => {
   } catch (error) {
     console.error(error);
   }
+  getPrecision(provider);
+  // console.log("provider", provider, provider.getResource);
   return balance;
 };
 
@@ -111,6 +115,18 @@ const getPermissions = async () => {
   return permissionsArray.map((perm) => perm.parentCapability);
 };
 
+const getPrecision = async (provider) => {
+  let precisions;
+  try {
+    precisions = await provider.contract.call_v2({
+      // method: "contract.call_v2",
+    });
+  } catch (err) {
+    console.log("err");
+  }
+  return precisions;
+};
+
 export default {
   createStcProvider,
   connect,
@@ -119,4 +135,5 @@ export default {
   getAccountBalance,
   setPermissions,
   getPermissions,
+  getPrecision,
 };

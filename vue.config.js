@@ -27,7 +27,7 @@ module.exports = {
       .set("@store", resolve("src/store"))
       .set("@styles", resolve("src/styles"))
       .set("@scripts", resolve("src/scripts"))
-      .set("@constant", resolve("src/constant"))
+      .set("@constants", resolve("src/constants"))
       .set("@mixins", resolve("src/mixins"))
       .set("@contactLogic", resolve("src/contactLogic"));
 

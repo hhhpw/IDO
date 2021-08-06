@@ -9,7 +9,7 @@
           >MAX</span
         >
         <span>|</span>
-        <span class="start-input-suffix-usdt">USDT</span>
+        <span class="start-input-suffix-usdt">STC</span>
       </div>
     </Input>
   </div>
@@ -89,6 +89,7 @@ export default {
     .start-input-suffix-usdt {
       margin-left: 10px;
       margin-right: 5px;
+      cursor: pointer;
     }
   }
 }

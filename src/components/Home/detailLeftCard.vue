@@ -30,14 +30,14 @@
     </div>
     <start-space :size="24"></start-space>
     <div class="detail-wrap-content-left-error">
-      <p>出错了啊</p>
+      <p>出错了的文案</p>
     </div>
     <start-space :size="12"></start-space>
     <start-button
       class="detail-wrap-content-button"
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
-      <p :style="{ color: cardsInfo['common-color'] }">购买啊</p>
+      <p :style="{ color: cardsInfo['common-color'] }">按钮文案</p>
     </start-button>
 
     <start-space :size="20"></start-space>

@@ -1,3 +1,5 @@
+// import { SMART_CONTRACTS_API } from "@constants";
+
 function proxyRule(key, targetUrl) {
   return {
     target: targetUrl,
@@ -23,6 +25,9 @@ function devServer() {
     proxy: {
       "/api": {
         ...proxyRule("/api", "......"),
+      },
+      "/smart-contracts": {
+        ...proxyRule("/smart-contracts", "https://barnard-seed.starcoin.org"),
       },
     },
   };

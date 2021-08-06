@@ -2,13 +2,15 @@ import axios from "axios";
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000, // request timeout
 });
 
 // request interceptor
 service.interceptors.request.use(
   (config) => {
+    console.log("config", config);
+    // config.headers["Content-Type"] = "application/json";
     // do something before request is sent
 
     // let each request carry token

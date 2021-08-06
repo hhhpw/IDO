@@ -31,7 +31,6 @@ const StoreHome = {
   },
   getters: {
     cardTypeColorInfo: () => (type) => {
-      console.log("type", type);
       let obj = {};
       if (type === "open") {
         obj = {

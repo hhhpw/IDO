@@ -21,13 +21,17 @@
     </div>
 
     <div class="start-header-right">
+      <div style="color: red">{{ walletStatus }}</div>
       <start-button dark class="start-header-right-btn">
         <span @click="onClickConnect">
-          {{
+          <span v-if="walletStatus !== 'Connected'">
+            {{ $t("constants.连接钱包") }}
+          </span>
+          <!-- {{
             walletStatus === "Connected"
               ? format.shortAddress(this.stcAccounts[0])
               : walletStatus
-          }}
+          }} -->
         </span>
       </start-button>
       <start-drop-down
@@ -51,9 +55,12 @@ import StartButton from "@startUI/StartButton.vue";
 import StartDropDown from "@startUI/StartDropDown.vue";
 import session from "@utils/session.js";
 import { mapState, mapActions } from "vuex";
+// import { }
+import { Notification } from "element-ui";
 // import StoreApp from "@store/StoreApp"
 import { Wallet } from "@contactLogic";
 import format from "@utils/format";
+import utilsTool from "@utils/tool";
 
 export default {
   name: "StartHeader",
@@ -67,6 +74,9 @@ export default {
         { text: "ENG", value: "en" },
       ],
       format,
+      // 如果用户没下载插件  https://chrome.google.com/webstore/category/extensions?hl=zh-CN
+      pluginUrl:
+        "https://chrome.google.com/webstore/category/extensions?hl=zh-CN",
     };
   },
   components: {
@@ -84,6 +94,7 @@ export default {
       "setOnboarding",
       "setStcAccounts",
       "setStcProvider",
+      "getCurrencyPrecision",
     ]),
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
@@ -111,13 +122,15 @@ export default {
       this.getAccountBalance();
     },
     async getAccountBalance() {
+      console.log("stcAccounts", this.stcAccounts);
       if (this.stcProvider) {
         const params = {
           provider: this.stcProvider,
-          account: this.stcAccounts[0],
+          account: this.stcAccounts[0], // 默认取STC
         };
         const balance = await Wallet.getAccountBalance(params);
-        console.log("balance", balance);
+        console.log("balance", balance, typeof balance);
+        this.getCurrencyPrecision();
       }
     },
     async setPermissions() {
@@ -125,13 +138,91 @@ export default {
       console.log("permissions:", permArr);
     },
     async onClickConnect() {
+      // 检查是否下载
       const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-      const isStarMaskConnected =
-        this.stcAccounts && this.stcAccounts.length > 0;
       if (!isStarMaskInstalled) {
+        const h = this.$createElement;
+        Notification({
+          message: h(
+            "div",
+            {
+              style: {
+                position: "relative",
+                "font-size": "14px",
+                color: "#FFFFFF",
+              },
+            },
+            [
+              h("p", this.$t("wallet.download-tip")),
+              h(
+                "p",
+                {
+                  style: {
+                    color: "#29F3F6",
+                    cursor: "pointer",
+                    "word-break": "break-all",
+                    "margin-top": "8px",
+                  },
+                  on: {
+                    click: () => utilsTool.openNewWindow(this.pluginUrl),
+                  },
+                },
+                this.pluginUrl
+              ),
+              h(
+                "start-button",
+                {
+                  props: {
+                    light: true,
+                  },
+                  style: {
+                    padding: "5px",
+                    "margin-left": "200px",
+                    "margin-top": "20px",
+                  },
+                  on: {
+                    click: () => utilsTool.openNewWindow(this.pluginUrl),
+                  },
+                },
+                this.$t("前去下载")
+              ),
+            ]
+          ),
+          duration: 0,
+          offset: 100,
+          showClose: false,
+        });
+
         this.walletStatus = "Install StarMask";
         this.onboarding.startOnboarding();
-      } else if (isStarMaskConnected) {
+        return;
+      }
+      console.log("=====isStarMaskInstalled====", isStarMaskInstalled);
+      // 连接状态
+      // 账户一定会存在？
+      const isStarMaskConnected =
+        this.stcAccounts && this.stcAccounts.length > 0;
+      // this.walletStatus = "";
+      // 如果用户没下载插件  https://chrome.google.com/webstore/category/extensions?hl=zh-CN
+      // 需要提示
+      // 下载完成后需要用户手动去链接
+      // 不然会报错
+      // 考虑更好的交互提示
+      // 连接成功后如何交互
+      // if (!isStarMaskInstalled) {
+      //   this.walletStatus = "Install StarMask";
+      //   this.onboarding.startOnboarding();
+      // } else if (isStarMaskConnected) {
+      //   this.walletStatus = "Connected";
+      //   if (this.onboarding) this.onboarding.stopOnboarding();
+      //   this.loadData();
+      // } else {
+      //   this.walletStatus = "Connect";
+      //   const accounts = await Wallet.connect();
+      //   this.setStcAccounts(accounts);
+      // }
+
+      if (isStarMaskConnected) {
         this.walletStatus = "Connected";
         if (this.onboarding) this.onboarding.stopOnboarding();
         this.loadData();

@@ -10,7 +10,7 @@
           @click.native="emitClick(d.value)"
           :class="{ 'is-active': activeValue === d.value }"
         >
-          {{ $t(`${d.text}`) }}
+          {{ $t(`constants.${d.text}`) }}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

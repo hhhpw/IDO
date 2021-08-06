@@ -1,4 +1,5 @@
 import * as types from "../constants/wallet";
+import contractsApi from "@api/contracts.js";
 
 const StoreWallet = {
   namespaced: true,
@@ -8,6 +9,8 @@ const StoreWallet = {
     stcProvider: "",
     stcAccounts: [],
     onboarding: "",
+    precision: {}, // {STC: 1000000000}
+    balancesList: {}, // {STC: 21321312}
   },
   mutations: {
     [types.SET_STC_ACCOUNTS](state, accounts) {
@@ -29,6 +32,10 @@ const StoreWallet = {
     },
     setStcProvider({ commit }, provider) {
       commit(types.SET_STARMASK_PROVIDER, provider);
+    },
+    async getCurrencyPrecision() {
+      let t = await contractsApi.getCurrencyPrecision();
+      console.log("t", t);
     },
   },
 };
