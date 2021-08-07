@@ -95,6 +95,7 @@ export default {
       "setStcAccounts",
       "setStcProvider",
       "getCurrencyPrecision",
+      "setStcChianID",
     ]),
     handleSelect(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
@@ -115,6 +116,8 @@ export default {
     //   this.onboarding.startOnboarding();
     // },
     async loadData() {
+      const chianID = await Wallet.getStcChianID();
+      this.setStcChianID(chianID);
       const permissions = await Wallet.getPermissions();
       if (!permissions.length) {
         this.setPermissions();

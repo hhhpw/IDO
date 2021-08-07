@@ -6,6 +6,7 @@ const StoreWallet = {
   moduleName: "StoreWallet",
   state: {
     token: "STC",
+    stcChianID: "",
     stcProvider: "",
     stcAccounts: [],
     onboarding: "",
@@ -13,6 +14,9 @@ const StoreWallet = {
     balancesList: {}, // {STC: 21321312}
   },
   mutations: {
+    [types.SET_STC_CHIANID](state, chianID) {
+      state.stcChianID = chianID;
+    },
     [types.SET_STC_ACCOUNTS](state, accounts) {
       state.stcAccounts = accounts;
     },
@@ -24,6 +28,9 @@ const StoreWallet = {
     },
   },
   actions: {
+    setStcChianID({ commit }, chianID) {
+      commit(types.SET_STC_CHIANID, chianID);
+    },
     setStcAccounts({ commit }, accounts) {
       commit(types.SET_STC_ACCOUNTS, accounts);
     },

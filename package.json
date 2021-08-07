@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ethersproject/bytes": "^5.4.0",
     "@formatjs/intl-getcanonicallocales": "^1.5.2",
     "@formatjs/intl-locale": "^2.4.8",
     "@formatjs/intl-numberformat": "^5.7.5",
@@ -25,7 +26,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "@starcoin/starcoin": "^1.4.3",
+    "@starcoin/starcoin": "^1.4.4",
     "@starcoin/starmask-onboarding": "^1.0.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
