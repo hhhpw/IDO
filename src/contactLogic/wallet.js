@@ -150,10 +150,11 @@ const getPrecision = async (provider) => {
  *
  * */
 const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
-  const token = getTokenBySymbol(chianID, symbol);
+  const stcToken = getTokenBySymbol(chianID, symbol);
   try {
-    const functionId = `${token.address}::OfferingScript2::staking`;
-    const strTypeArgs = ["0x1::STC::STC"];
+    const functionId =
+      "0xd501465255d22d1751aae83651421198::OfferingScript2::staking";
+    const strTypeArgs = [stcToken.code];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
     const amountHex = (function () {
@@ -196,8 +197,8 @@ const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
 const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
   const token = getTokenBySymbol(chianID, symbol);
   try {
-    const functionId = `${token.address}::OfferingScript2::unstaking`;
-    const strTypeArgs = ["0x1::STC::STC"];
+    const functionId = `0xd501465255d22d1751aae83651421198::OfferingScript2::unstaking`;
+    const strTypeArgs = [token.code];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
     const amountHex = (function () {
