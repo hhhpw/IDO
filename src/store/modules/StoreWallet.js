@@ -1,5 +1,6 @@
 import * as types from "../constants/wallet";
 import contractsApi from "@api/contracts.js";
+// import { STC_PRECISION } from "@constants/index";
 
 const StoreWallet = {
   namespaced: true,
@@ -10,8 +11,9 @@ const StoreWallet = {
     stcProvider: "",
     stcAccounts: [],
     onboarding: "",
-    precision: {}, // {STC: 1000000000}
-    balancesList: {}, // {STC: 21321312}
+    precision: {}, // {stc: 1000000000}
+    balances: {}, // {stc: 21321312}
+    walletStatus: "unConnected", // 钱包链接状态 "unConnected", "connected"
   },
   mutations: {
     [types.SET_STC_CHIANID](state, chianID) {
@@ -25,6 +27,13 @@ const StoreWallet = {
     },
     [types.SET_STARMASK_PROVIDER](state, provider) {
       state.stcProvider = provider;
+    },
+    [types.SET_WALLET_BALANCE](state, payload) {
+      state.balances = Object.assign({}, state.balances, payload);
+    },
+    [types.SET_WALLET_CONNECT_STATUS](state, payload) {
+      console.log("payload", payload);
+      state.walletStatus = payload;
     },
   },
   actions: {
@@ -40,9 +49,15 @@ const StoreWallet = {
     setStcProvider({ commit }, provider) {
       commit(types.SET_STARMASK_PROVIDER, provider);
     },
-    async getCurrencyPrecision() {
-      let t = await contractsApi.getCurrencyPrecision();
-      console.log("t", t);
+    // 获取币种精度
+    // async getCurrencyPrecision() {
+    //   let t = await contractsApi.getCurrencyPrecision();
+    //   // console.log("t", t);
+    // },
+    // 当前质押额度
+    async getStakeAmount() {
+      let amount = await contractsApi.getStakeAmount();
+      console.log("amount", amount);
     },
   },
 };

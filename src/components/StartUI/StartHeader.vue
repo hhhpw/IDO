@@ -24,8 +24,11 @@
       <div style="color: red">{{ walletStatus }}</div>
       <start-button dark class="start-header-right-btn">
         <span @click="onClickConnect">
-          <span v-if="walletStatus !== 'Connected'">
+          <span v-if="walletStatus === 'unConnected'">
             {{ $t("constants.连接钱包") }}
+          </span>
+          <span v-if="walletStatus === 'connected'">
+            {{ $t("constants.已连接") }}
           </span>
           <!-- {{
             walletStatus === "Connected"
@@ -61,20 +64,20 @@ import { Notification } from "element-ui";
 import { Wallet } from "@contactLogic";
 import format from "@utils/format";
 import utilsTool from "@utils/tool";
+import { isNil } from "lodash";
 
 export default {
   name: "StartHeader",
   data() {
     return {
       // activeIndex: "home",
-      walletStatus: "Connect",
+      // walletStatus: "Connect",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
         { text: "ENG", value: "en" },
       ],
       format,
-      // 如果用户没下载插件  https://chrome.google.com/webstore/category/extensions?hl=zh-CN
       pluginUrl:
         "https://chrome.google.com/webstore/category/extensions?hl=zh-CN",
     };
@@ -94,7 +97,6 @@ export default {
       "setOnboarding",
       "setStcAccounts",
       "setStcProvider",
-      "getCurrencyPrecision",
       "setStcChianID",
     ]),
     handleSelect(key) {
@@ -131,9 +133,14 @@ export default {
           provider: this.stcProvider,
           account: this.stcAccounts[0], // 默认取STC
         };
+        // 获取钱包STC额度
         const balance = await Wallet.getAccountBalance(params);
-        console.log("balance", balance, typeof balance);
-        this.getCurrencyPrecision();
+        if (!isNil(balance)) {
+          this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
+            stc: balance,
+          });
+        }
+        // console.log("balance", balance, typeof balance);
       }
     },
     async setPermissions() {
@@ -195,8 +202,7 @@ export default {
           offset: 100,
           showClose: false,
         });
-
-        this.walletStatus = "Install StarMask";
+        // this.walletStatus = "Install StarMask";
         this.onboarding.startOnboarding();
         return;
       }
@@ -205,12 +211,6 @@ export default {
       // 账户一定会存在？
       const isStarMaskConnected =
         this.stcAccounts && this.stcAccounts.length > 0;
-      // this.walletStatus = "";
-      // 如果用户没下载插件  https://chrome.google.com/webstore/category/extensions?hl=zh-CN
-      // 需要提示
-      // 下载完成后需要用户手动去链接
-      // 不然会报错
-      // 考虑更好的交互提示
       // 连接成功后如何交互
       // if (!isStarMaskInstalled) {
       //   this.walletStatus = "Install StarMask";
@@ -226,11 +226,19 @@ export default {
       // }
 
       if (isStarMaskConnected) {
-        this.walletStatus = "Connected";
+        // this.walletStatus = "Connected";
+        this.$store.commit(
+          "StoreWallet/SET_WALLET_CONNECT_STATUS",
+          "connected"
+        );
         if (this.onboarding) this.onboarding.stopOnboarding();
         this.loadData();
       } else {
-        this.walletStatus = "Connect";
+        // this.walletStatus = "Connect";
+        this.$store.commit(
+          "StoreWallet/SET_WALLET_CONNECT_STATUS",
+          "unConnected"
+        );
         const accounts = await Wallet.connect();
         this.setStcAccounts(accounts);
       }
@@ -239,28 +247,38 @@ export default {
   watch: {
     stcAccounts(value) {
       if (value && value.length) {
-        this.walletStatus = "Connected";
+        // this.walletStatus = "Connected";
+        this.$store.commit(
+          "StoreWallet/SET_WALLET_CONNECT_STATUS",
+          "connected"
+        );
         this.loadData();
       }
     },
   },
   computed: {
     ...mapState("StoreApp", ["headerItems", "activeHeaderItem", "language"]),
-    ...mapState("StoreWallet", ["stcAccounts", "onboarding", "stcProvider"]),
+    ...mapState("StoreWallet", [
+      "stcAccounts",
+      "onboarding",
+      "stcProvider",
+      "walletStatus",
+    ]),
   },
   beforeDestroy() {},
   created() {
     if (!this.onboarding) {
       const onboarding = Wallet.createStarMaskOnboarding();
+      console.log("onboarding", onboarding);
       if (onboarding) this.setOnboarding(onboarding);
     }
     const stcProvider = Wallet.createStcProvider();
     this.setStcProvider(stcProvider);
 
-    const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-    if (!isStarMaskInstalled) {
-      this.walletStatus = "Install StarMask";
-    }
+    // const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+    // if (!isStarMaskInstalled) {
+    //   this.walletStatus = "Install StarMask";
+    // }
   },
 };
 </script>

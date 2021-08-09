@@ -1,7 +1,6 @@
 <template>
   <div :set="(cardsInfo = cardTypeColorInfo(detailCardType))">
     <div
-      v-if="detailCardType !== 'closed'"
       class="detail-input-wrap"
       :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
     >
@@ -12,20 +11,29 @@
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
         @maxEvent="maxEvent"
+        v-if="stakeStatus === 'stake'"
       ></start-input>
+
+      <start-input
+        class="detail-input"
+        v-if="stakeStatus === 'unstake'"
+        :precision="9"
+        :value="inputValue"
+        :maxColor="cardsInfo['common-color']"
+        @input="inputEvent"
+        @maxEvent="maxEvent"
+      >
+      </start-input>
     </div>
     <start-space :size="12"></start-space>
-    <div
-      class="detail-wrap-content-left-info"
-      v-if="detailCardType !== 'closed'"
-    >
+    <div class="detail-wrap-content-left-info">
       <div>
         <span>{{ $t("还可以质押") }}</span>
         <span>12--321312STC</span>
       </div>
       <div>
-        <span>{{ $t("余额") }}</span>
-        <span>12--321312STC</span>
+        <span>{{ $t("余额") }}：</span>
+        <span>{{ renderAmount(balances.stc) }} STC</span>
       </div>
     </div>
     <start-space :size="24"></start-space>
@@ -37,15 +45,40 @@
       class="detail-wrap-content-button"
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
-      <p :style="{ color: cardsInfo['common-color'] }">按钮文案</p>
+      <p :style="{ color: cardsInfo['common-color'] }">
+        <span v-if="stakeStatus === 'stake'">
+          {{ $t("STAKE") }}
+        </span>
+        <span v-if="stakeStatus === 'unstake'">
+          {{ $t("UNSTAKE") }}
+        </span>
+      </p>
     </start-button>
 
     <start-space :size="20"></start-space>
     <p
       class="detail-wrap-content-left-unstake"
       :style="{ color: cardsInfo['common-color'] }"
+      @click="changeStakeStatus"
     >
-      {{ $t("UNSTAKE") }}
+      <!-- <span v-if="detailCardType === ''">
+        {{ $t("UNSTAKE") }}
+      </span> -->
+      <template v-if="detailCardType === 'open'">
+        <template v-if="stakeStatus === 'stake'">
+          {{ $t("UNSTAKE") }}
+        </template>
+      </template>
+
+      <!-- <template v-if="detailCardType === 'open'">
+        <template v-if="stakeStatus === 'stake'"> </template>
+      </template>
+      <template v-if="detailCardType === 'open'">
+        <template v-if="stakeStatus === 'stake'"> </template>
+      </template>
+      <template v-if="detailCardType === 'open'">
+        <template v-if="stakeStatus === 'stake'"> </template>
+      </template> -->
     </p>
     <start-space :size="35"></start-space>
     <div class="detail-wrap-content-left-rule">
@@ -68,26 +101,53 @@ import StartButton from "@startUI/StartButton.vue";
 import StartInput from "@startUI/StartInput.vue";
 import StartSpace from "@startUI/StartSpace.vue";
 import { mapGetters, mapState } from "vuex";
+import utilsNumber from "@utils/number.js";
+import { STC_PRECISION } from "@constants";
+import { isNil } from "lodash";
+// import StartInput from '../StartUI/StartInput.vue';
 export default {
   data() {
     return {
       inputValue: "",
+      stakeStatus: "stake", // 质押状态 质押stake   解压unstake
     };
   },
   components: { StartInput, StartSpace, StartButton },
   mounted() {},
   methods: {
+    changeStakeStatus() {
+      this.stakeStatus = "unstake";
+    },
     inputEvent(e) {
       this.inputValue = e;
     },
     maxEvent() {
-      console.log("maxEvent");
+      this.inputValue = 0;
+      if (this.stakeStatus === "stake") {
+        this.inputValue = utilsNumber
+          .bigNum(this.balances.stc)
+          .div(STC_PRECISION)
+          .toNumber();
+      }
+      if (this.stakeStatus === "unstake") {
+        console.log("解压");
+      }
+    },
+    renderAmount(balance) {
+      if (isNil(balance)) return "--";
+      return utilsNumber.formatNumberMeta(
+        utilsNumber.bigNum(balance).div(STC_PRECISION).toNumber(),
+        { grouped: true }
+      ).text;
     },
   },
   computed: {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       colorInfo: (state) => state.colorInfo,
+    }),
+    ...mapState("StoreWallet", {
+      balances: (state) => state.balances,
     }),
     ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
   },
@@ -137,6 +197,10 @@ export default {
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  -webkit-user-select: none; /*webkit浏览器*/
+  -ms-user-select: none; /*IE10*/
+  -khtml-user-select: none; /*早期浏览器*/
+  user-select: none;
 }
 .detail-wrap-content-left-rule {
   color: #fff;

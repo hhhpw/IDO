@@ -1,0 +1,1 @@
+- tokens 里，key 是 chanelId。125: baranard，1:主网

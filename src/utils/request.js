@@ -64,9 +64,10 @@ service.interceptors.response.use(
       //   });
       // }
 
-      return Promise.reject(new Error(res.message || "Error"));
+      // return Promise.reject(new Error(res.message || "Error"));
+      return "error";
     } else {
-      return res.data;
+      return res;
     }
   },
   (error) => {

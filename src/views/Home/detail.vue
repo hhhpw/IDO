@@ -21,7 +21,7 @@
 import StartSpace from "@startUI/StartSpace.vue";
 import DetailRightCard from "@components/Home/detailRightCard.vue";
 import DetailLeftCard from "@components/Home/detailLeftCard.vue";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   components: {
     // StartInput,
@@ -38,16 +38,28 @@ export default {
   props: {
     cardInfo: Object,
   },
-  mounted() {},
+  mounted() {
+    this.getStakeAmount();
+    // console.log("stcAccounts", this.stcAccounts);
+    // if (!this.stcAccounts || this.stcAccounts.length < 1) {
+    //   console.error("账号不存在");
+    // } else {
+    //   this.getStakeAmount(this.stcAccounts[0]);
+    // }
+  },
   methods: {
     inputEvent(e) {
       this.inputValue = e;
     },
+    ...mapActions("StoreContracts", ["getStakeAmount"]),
   },
   computed: {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
     }),
+    // ...mapState("StoreWallet", {
+    //   stcAccounts: (state) => state.stcAccounts,
+    // }),
   },
   beforeDestroy() {},
 };

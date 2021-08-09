@@ -1,7 +1,13 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
 import { providers, utils, bcs } from "@starcoin/starcoin";
 import { arrayify, hexlify } from "@ethersproject/bytes";
-import { getTokenBySymbol } from "./tokens";
+import { getTokenByCurrency } from "./tokens";
+
+import {
+  STAKE_STC_FUNCTION_ID,
+  UNSTAKE_STC_FUNCTION_ID,
+  PAY_USDT_FUNCTION_ID,
+} from "@constants";
 
 /**
  *  StarMaskOnboarding 实例化
@@ -95,7 +101,6 @@ const getAccountBalance = async ({ provider, account, token }) => {
   } catch (error) {
     console.error(error);
   }
-  getPrecision(provider);
   // console.log("provider", provider, provider.getResource);
   return balance;
 };
@@ -133,27 +138,19 @@ const getPermissions = async () => {
   return permissionsArray.map((perm) => perm.parentCapability);
 };
 
-const getPrecision = async (provider) => {
-  let precisions;
-  try {
-    precisions = await provider.contract.call_v2({
-      // method: "contract.call_v2",
-    });
-  } catch (err) {
-    console.log("err");
-  }
-  return precisions;
-};
-
 /**
  * stake STC
  *
  * */
-const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
-  const stcToken = getTokenBySymbol(chianID, symbol);
+const stakeSTC = async ({ provider, chianID, currency = "DUMMY", amount }) => {
+  // gasLimit怎么去获得
+  console.log("provider", provider);
+  console.log("chianID", chianID);
+  console.log("currency", currency);
+  console.log("amount", amount);
+  const stcToken = getTokenByCurrency(chianID, currency);
   try {
-    const functionId =
-      "0xd501465255d22d1751aae83651421198::OfferingScript2::staking";
+    const functionId = STAKE_STC_FUNCTION_ID;
     const strTypeArgs = [stcToken.code];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
@@ -164,23 +161,26 @@ const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
     })();
 
     const args = [arrayify(amountHex)];
+    console.log("args", args);
 
     const scriptFunction = utils.tx.encodeScriptFunction(
       functionId,
       tyArgs,
       args
     );
+    console.log("scriptFunction", scriptFunction);
 
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
       scriptFunction.serialize(se);
       return hexlify(se.getBytes());
     })();
+    console.log("payloadInHex", payloadInHex);
 
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
-      gasLimit: 100000,
-      gasPrice: 1,
+      // gasLimit: 1000000,
+      // gasPrice: 1,
     });
 
     return txhash;
@@ -194,10 +194,15 @@ const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
  * unstake STC
  *
  * */
-const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
-  const token = getTokenBySymbol(chianID, symbol);
+const unstakeSTC = async ({
+  provider,
+  chianID,
+  currency = "DUMMY",
+  amount,
+}) => {
+  const token = getTokenByCurrency(chianID, currency);
   try {
-    const functionId = `0xd501465255d22d1751aae83651421198::OfferingScript2::unstaking`;
+    const functionId = UNSTAKE_STC_FUNCTION_ID;
     const strTypeArgs = [token.code];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
@@ -215,6 +220,8 @@ const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
       args
     );
 
+    console.log("=====scriptFunction======", scriptFunction);
+
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
       scriptFunction.serialize(se);
@@ -223,9 +230,10 @@ const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
 
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
-      gasLimit: 100000,
-      gasPrice: 1,
+      // gasLimit: 1000000,
+      // gasPrice: 1,
     });
+    console.log("=====unstakeSTC======", txhash);
 
     return txhash;
   } catch (error) {
@@ -233,6 +241,65 @@ const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
   }
   return false;
 };
+
+const payUSDT = async ({
+  provider,
+  chianID,
+  currency = "DUMMY",
+  // amount = 1,
+}) => {
+  const token = getTokenByCurrency(chianID, currency);
+  try {
+    const functionId = PAY_USDT_FUNCTION_ID;
+    const strTypeArgs = [token.code];
+    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
+    console.log("strTypeArgs", strTypeArgs);
+
+    console.log("tyArgs", tyArgs);
+
+    // const amountHex = (function () {
+    //   const se = new bcs.BcsSerializer();
+    //   se.serializeU128(amount.toString(10));
+    //   return hexlify(se.getBytes());
+    // })();
+
+    // const args = [arrayify(amountHex)];
+    // const args = {
+    //   args: [],
+    // };
+
+    const args = [];
+
+    const scriptFunction = utils.tx.encodeScriptFunction(
+      functionId,
+      tyArgs,
+      args
+    );
+
+    console.log("=====scriptFunction======", scriptFunction);
+
+    const payloadInHex = (function () {
+      const se = new bcs.BcsSerializer();
+      scriptFunction.serialize(se);
+      return hexlify(se.getBytes());
+    })();
+
+    const txhash = await provider.getSigner().sendUncheckedTransaction({
+      data: payloadInHex,
+      // gasLimit: 1000000,
+      // gasPrice: 1,
+    });
+    console.log("=====unstakeSTC======", txhash);
+
+    return txhash;
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
+};
+
+// const payUSDT = async({ provide, })
+//     const functionId = `0xd501465255d22d1751aae83651421198::OfferingScript3::unstaking`;
 
 export default {
   createStcProvider,
@@ -243,7 +310,7 @@ export default {
   getAccountBalance,
   setPermissions,
   getPermissions,
-  getPrecision,
   stakeSTC,
   unstakeSTC,
+  payUSDT,
 };

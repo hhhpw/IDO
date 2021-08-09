@@ -42,6 +42,7 @@ import HomeList from "./homeList.vue";
 import StartButton from "@startUI/StartButton.vue";
 import support from "./support.vue";
 // import { cardData } from "@startUI/mock.js";
+// import { Notification } from "element-ui";
 import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StartSpace from "@startUI/StartSpace.vue";
@@ -71,6 +72,26 @@ export default {
   methods: {
     ...mapActions("StoreHome", ["getDataList"]),
     clickMethod(value) {
+      // if (this.walletStatus !== "connected") {
+      //   const h = this.$createElement;
+      //   Notification({
+      //     message: h(
+      //       "div",
+      //       {
+      //         style: {
+      //           position: "relative",
+      //           "font-size": "14px",
+      //           color: "#FFFFFF",
+      //         },
+      //       },
+      //       [h("p", this.$t("wallet.请连接钱包"))]
+      //     ),
+      //     duration: 2000,
+      //     offset: 80,
+      //     showClose: false,
+      //   });
+      //   return;
+      // }
       // 防止footer展露出来
       window.scrollTo(0, 500);
       this.$store.commit(
@@ -92,6 +113,9 @@ export default {
     }),
     ...mapState("StoreApp", {
       language: (state) => state.language,
+    }),
+    ...mapState("StoreWallet", {
+      walletStatus: (state) => state.walletStatus,
     }),
   },
 
