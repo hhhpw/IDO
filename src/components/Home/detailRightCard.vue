@@ -89,7 +89,7 @@
       <div class="detail-card-tabs-list">
         <template v-if="tabCategory === 'prodetail'">
           <start-list
-            v-for="(d, index) in listpro"
+            v-for="(d, index) in cardInfo.decentralizedList"
             :key="index"
             :data="d"
             type="prodetail"
@@ -128,6 +128,7 @@ import * as clipboard from "clipboard-polyfill/text";
 import { listpro } from "@startUI/mock.js";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
+import { mapActions } from "vuex";
 // import i18n from "../../i18n/index.js";
 export default {
   data() {
@@ -173,15 +174,10 @@ export default {
     //   // }
     // },
   },
-  mounted() {},
+  mounted() {
+    this.getDataList();
+  },
   methods: {
-    // renderTip() {
-    //   if (this.disabledCopy) {
-    //     return "";
-    //   }
-    //   return this.$t("复制");
-    //   // return "复制";
-    // },
     hanleTabChange(val) {
       this.tabCategory = val;
     },
@@ -198,6 +194,7 @@ export default {
         }
       );
     },
+    ...mapActions("StoreHome", ["getDataList"]),
   },
   computed: {
     ...mapState("StoreHome", {

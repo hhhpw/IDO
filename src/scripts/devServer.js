@@ -24,7 +24,7 @@ function devServer() {
     },
     proxy: {
       "/api": {
-        ...proxyRule("/api", "......"),
+        ...proxyRule("/api", "https://mobile.sandbox-uni.876ex.com"),
       },
       "/smart-contracts": {
         ...proxyRule("/smart-contracts", "https://barnard-seed.starcoin.org"),

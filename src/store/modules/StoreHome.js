@@ -2,6 +2,7 @@ import * as types from "../constants/home.js";
 // import homeApi from "@api/home.js";
 import mockData from "./testdata";
 import dayjs from "dayjs";
+import homeApi from "../../api/home.js";
 import utilsNumber from "@utils/number.js";
 const mapKey = new Map([
   ["init", "open"],
@@ -74,7 +75,9 @@ const StoreHome = {
     },
   },
   actions: {
-    getDataList({ commit }) {
+    async getDataList({ commit }) {
+      let res = await homeApi.getDataList();
+      console.log(res.data);
       let results = [];
       const endStates = Object.keys(mockData.data);
       // 做个map，使得key对应，不然前端要该太多地方
@@ -84,18 +87,16 @@ const StoreHome = {
           const {
             raiseTotal,
             rate,
-            startTime,
-            pledgeEndTime,
-            lockEndTime,
-            payTime,
-            assignmentTime,
+            startTime, // 质押开始时间
+            pledgeEndTime, // 质押结束时间
+            lockStartTime, // 锁仓开始时间
+            lockEndTime, // 锁仓结束时间
+            payTime, // 支付时间
+            assignmentTime, // 代币分配时间
+            // 详情
+            currencyTotal, //代币发行总量
+            pledgeTotal, //总质押
           } = d;
-          // startTime: 1628160539076, //'项目开始时间', 质押开始时间
-          // pledgeEndTime: 111111111111, //'质押结束时间', 锁仓开始时间
-          // lockEndTime: 1628160539076, //'锁仓结束时间',
-          // endTime: 1628160539076, // '项目结束时间',
-          // payTime: 1628160539076, //'支付时间',
-          // assignmentTime: 111111111111, // '代币分配时间',
           const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toNumber();
           return {
             ...d,
@@ -109,16 +110,42 @@ const StoreHome = {
               },
               {
                 title: "锁仓时间",
-                startDate: dayjs(pledgeEndTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(lockStartTime).format("YYYY MM/DD HH:mm:ss"),
                 endDate: dayjs(lockEndTime).format("YYYY MM/DD HH:mm:ss"),
               },
               {
                 title: "支付时间",
-                date: dayjs(payTime).format("YYYY MM/DD HH:mm:ss"),
+                data: dayjs(payTime).format("YYYY MM/DD HH:mm:ss"),
               },
               {
                 title: "代币分配时间",
-                date: dayjs(assignmentTime).format("YYYY MM/DD HH:mm:ss"),
+                data: dayjs(assignmentTime).format("YYYY MM/DD HH:mm:ss"),
+              },
+            ],
+            decentralizedList: [
+              {
+                title: "我的质押",
+                amount: 12313123,
+              },
+              {
+                title: "代币销售数量",
+                amount: 32432432,
+              },
+              {
+                title: "代币总量",
+                amount: currencyTotal,
+              },
+              {
+                title: "总质押",
+                amount: pledgeTotal,
+              },
+              {
+                title: "售价",
+                amount: 453534534,
+              },
+              {
+                title: "目标筹款",
+                amount: 14488323434,
               },
             ],
             // raiseInfoList: {
