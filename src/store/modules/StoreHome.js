@@ -57,11 +57,11 @@ const StoreHome = {
       obj[
         "list-item-wrap-bg"
       ] = require(`../../assets/card/${type}-card-item.png`);
-      if (type !== "closed") {
-        obj[
-          "detail-input-wrap-bg"
-        ] = require(`../../assets/home/${type}-input-border.png`);
-      }
+      // if (type !== "closed") {
+      obj[
+        "detail-input-wrap-bg"
+      ] = require(`../../assets/home/${type}-input-border.png`);
+      // }
 
       obj[
         "detail-wrap-content-button"

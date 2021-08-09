@@ -6,7 +6,7 @@
       (cardInfo = detailCardInfo(detailCardId)))
     "
   >
-    <div>{{ cardInfo.proTimeList }}</div>
+    <!-- <div>{{ cardInfo.proTimeList }}</div> -->
     <div
       v-if="cardInfo.attribute"
       class="detail-card-labels-top"
@@ -201,6 +201,7 @@ export default {
       detailCardType: (state) => state.detailCardType,
       detailCardId: (state) => state.detailCardId,
     }),
+
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
   beforeDestroy() {},

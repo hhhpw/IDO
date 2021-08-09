@@ -1,0 +1,1 @@
+export const SET_STAKE_AMOUNT = "SET_STAKE_AMOUNT";

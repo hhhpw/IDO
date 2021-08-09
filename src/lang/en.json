@@ -8,6 +8,7 @@
     "download-tip": "英文=》下载提示"
   },
   "constants": {
+    "已连接": "Connected",
     "连接stc生态第一步": "Your First Step To Starcoin Ecosystem ",
     "项目": "Project",
     "连接钱包": "Connect to wallet",
