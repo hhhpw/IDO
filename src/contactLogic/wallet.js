@@ -1,5 +1,7 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
-import { providers } from "@starcoin/starcoin";
+import { providers, utils, bcs } from "@starcoin/starcoin";
+import { arrayify, hexlify } from "@ethersproject/bytes";
+import { getTokenBySymbol } from "./tokens";
 
 /**
  *  StarMaskOnboarding 实例化
@@ -59,6 +61,22 @@ const connect = async () => {
   return newAccounts;
 };
 
+/**
+ * Get chianID
+ *
+ * */
+const getStcChianID = async () => {
+  let chianID;
+  try {
+    const { id } = await window.starcoin.request({
+      method: "chain.id",
+    });
+    chianID = id;
+  } catch (error) {
+    console.error(error);
+  }
+  return chianID;
+};
 /**
  * Get account balance
  *
@@ -127,13 +145,105 @@ const getPrecision = async (provider) => {
   return precisions;
 };
 
+/**
+ * stake STC
+ *
+ * */
+const stakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
+  const stcToken = getTokenBySymbol(chianID, symbol);
+  try {
+    const functionId =
+      "0xd501465255d22d1751aae83651421198::OfferingScript2::staking";
+    const strTypeArgs = [stcToken.code];
+    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
+
+    const amountHex = (function () {
+      const se = new bcs.BcsSerializer();
+      se.serializeU128(amount);
+      return hexlify(se.getBytes());
+    })();
+
+    const args = [arrayify(amountHex)];
+
+    const scriptFunction = utils.tx.encodeScriptFunction(
+      functionId,
+      tyArgs,
+      args
+    );
+
+    const payloadInHex = (function () {
+      const se = new bcs.BcsSerializer();
+      scriptFunction.serialize(se);
+      return hexlify(se.getBytes());
+    })();
+
+    const txhash = await provider.getSigner().sendUncheckedTransaction({
+      data: payloadInHex,
+      gasLimit: 100000,
+      gasPrice: 1,
+    });
+
+    return txhash;
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
+};
+
+/**
+ * unstake STC
+ *
+ * */
+const unstakeSTC = async ({ provider, chianID, symbol = "STC", amount }) => {
+  const token = getTokenBySymbol(chianID, symbol);
+  try {
+    const functionId = `0xd501465255d22d1751aae83651421198::OfferingScript2::unstaking`;
+    const strTypeArgs = [token.code];
+    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
+
+    const amountHex = (function () {
+      const se = new bcs.BcsSerializer();
+      se.serializeU128(amount.toString(10));
+      return hexlify(se.getBytes());
+    })();
+
+    const args = [arrayify(amountHex)];
+
+    const scriptFunction = utils.tx.encodeScriptFunction(
+      functionId,
+      tyArgs,
+      args
+    );
+
+    const payloadInHex = (function () {
+      const se = new bcs.BcsSerializer();
+      scriptFunction.serialize(se);
+      return hexlify(se.getBytes());
+    })();
+
+    const txhash = await provider.getSigner().sendUncheckedTransaction({
+      data: payloadInHex,
+      gasLimit: 100000,
+      gasPrice: 1,
+    });
+
+    return txhash;
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
+};
+
 export default {
   createStcProvider,
   connect,
   createStarMaskOnboarding,
   checkStarMaskInstalled,
+  getStcChianID,
   getAccountBalance,
   setPermissions,
   getPermissions,
   getPrecision,
+  stakeSTC,
+  unstakeSTC,
 };

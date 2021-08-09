@@ -14,6 +14,11 @@ const routes = [
     name: "Exchange",
     component: () => import("../views/Exchange/index.vue"),
   },
+  {
+    path: "/playground",
+    name: "Playground",
+    component: () => import("../views/playground/index.vue"),
+  },
   // {
   //   path: "/detail",
   //   name: "Detail",
