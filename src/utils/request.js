@@ -9,7 +9,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   (config) => {
-    console.log("config", config);
+    // console.log("config", config);
     // config.headers["Content-Type"] = "application/json";
     // do something before request is sent
 
@@ -39,7 +39,7 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   (response) => {
-    console.log("===response===", response);
+    // console.log("===response===", response);
 
     const res = response.data;
 

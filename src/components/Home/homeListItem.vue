@@ -69,7 +69,6 @@ export default {
   mounted() {},
   methods: {
     cellData(key) {
-      console.log(this.data);
       /////  这里写key
       return {
         title: key,

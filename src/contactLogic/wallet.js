@@ -150,17 +150,6 @@ const stakeWithSTC = async ({
   currency = "DUMMY",
   amount,
 }) => {
-  console.log(
-    "chianID",
-    chianID,
-    "amount",
-    amount,
-    typeof amount,
-    "provider",
-    provider,
-    "currency",
-    currency
-  );
   const stcToken = getTokenByCurrency(chianID, currency);
   console.log("====stcToken=====", stcToken);
   try {
@@ -183,22 +172,20 @@ const stakeWithSTC = async ({
       args
     );
     console.log("scriptFunction", scriptFunction);
-    return scriptFunction;
 
-    // const payloadInHex = (function () {
-    //   const se = new bcs.BcsSerializer();
-    //   scriptFunction.serialize(se);
-    //   return hexlify(se.getBytes());
-    // })();
-    // console.log("payloadInHex", payloadInHex);
+    const payloadInHex = (function () {
+      const se = new bcs.BcsSerializer();
+      scriptFunction.serialize(se);
+      return hexlify(se.getBytes());
+    })();
 
-    // const txhash = await provider.getSigner().sendUncheckedTransaction({
-    //   data: payloadInHex,
-    //   // gasLimit: 1000000,
-    //   // gasPrice: 1,
-    // });
+    const txhash = await provider.getSigner().sendUncheckedTransaction({
+      data: payloadInHex,
+      // gasLimit: 1000000,
+      // gasPrice: 1,
+    });
 
-    // return txhash;
+    return txhash;
   } catch (error) {
     console.error(error);
   }
@@ -209,7 +196,7 @@ const stakeWithSTC = async ({
  * unstake STC
  *
  * */
-const unstakeSTC = async ({
+const unstakeWithSTC = async ({
   provider,
   chianID,
   currency = "DUMMY",
@@ -234,16 +221,12 @@ const unstakeSTC = async ({
       tyArgs,
       args
     );
-
     console.log("=====scriptFunction======", scriptFunction);
-    // return scriptFunction;
-
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
       scriptFunction.serialize(se);
       return hexlify(se.getBytes());
     })();
-
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
       // gasLimit: 1000000,
@@ -269,10 +252,6 @@ const payUSDT = async ({
     const functionId = PAY_USDT_FUNCTION_ID;
     const strTypeArgs = [token.code];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-    console.log("strTypeArgs", strTypeArgs);
-
-    console.log("tyArgs", tyArgs);
-
     // const amountHex = (function () {
     //   const se = new bcs.BcsSerializer();
     //   se.serializeU128(amount.toString(10));
@@ -305,7 +284,6 @@ const payUSDT = async ({
       // gasLimit: 1000000,
       // gasPrice: 1,
     });
-    console.log("=====unstakeSTC======", txhash);
 
     return txhash;
   } catch (error) {
@@ -313,9 +291,6 @@ const payUSDT = async ({
   }
   return false;
 };
-
-// const payUSDT = async({ provide, })
-//     const functionId = `0xd501465255d22d1751aae83651421198::OfferingScript3::unstaking`;
 
 export default {
   createStcProvider,
@@ -327,6 +302,6 @@ export default {
   setPermissions,
   getPermissions,
   stakeWithSTC,
-  unstakeSTC,
+  unstakeWithSTC,
   payUSDT,
 };
