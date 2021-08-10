@@ -39,8 +39,10 @@ export default {
     cardInfo: Object,
   },
   mounted() {
-    this.getStakeAmount();
-    this.getContractsProjectInfo("STC");
+    // this.loadInfo();
+    // this.getStakeAmount();
+    // this.getContractsProjectInfo("STC");
+    this.loadInfo({ currency: "DUMMY" });
     // console.log("stcAccounts", this.stcAccounts);
     // if (!this.stcAccounts || this.stcAccounts.length < 1) {
     //   console.error("账号不存在");
@@ -55,6 +57,7 @@ export default {
     ...mapActions("StoreContracts", [
       "getStakeAmount",
       "getContractsProjectInfo",
+      "loadInfo",
     ]),
   },
   computed: {

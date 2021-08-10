@@ -1,8 +1,8 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
 import { providers, utils, bcs } from "@starcoin/starcoin";
 import { arrayify, hexlify } from "@ethersproject/bytes";
-import getTokenByCurrency from "./tokens";
-
+// import getTokenByCurrency from "./tokens";
+import { getTokenByCurrency } from "@utils/tokens";
 import {
   STAKE_STC_FUNCTION_ID,
   UNSTAKE_STC_FUNCTION_ID,
@@ -99,12 +99,11 @@ const getAccountBalance = async ({ provider, account, token }) => {
       account,
       `0x1::Account::Balance<${token}>`
     );
-    balance = utilsNumber.bigNum(result.token.value);
+    balance = utilsNumber.bigNum(result.token.value).toString();
     console.log("balance", balance);
   } catch (error) {
     console.error(error);
   }
-  // console.log("provider", provider, provider.getResource);
   return balance;
 };
 
@@ -145,13 +144,25 @@ const getPermissions = async () => {
  * stake STC
  *
  * */
-const stakeSTC = async ({ provider, chianID, currency = "DUMMY", amount }) => {
-  // gasLimit怎么去获得
-  console.log("provider", provider);
-  console.log("chianID", chianID);
-  console.log("currency", currency);
-  console.log("amount", amount);
+const stakeWithSTC = async ({
+  provider,
+  chianID,
+  currency = "DUMMY",
+  amount,
+}) => {
+  console.log(
+    "chianID",
+    chianID,
+    "amount",
+    amount,
+    typeof amount,
+    "provider",
+    provider,
+    "currency",
+    currency
+  );
   const stcToken = getTokenByCurrency(chianID, currency);
+  console.log("====stcToken=====", stcToken);
   try {
     const functionId = STAKE_STC_FUNCTION_ID;
     const strTypeArgs = [stcToken.code];
@@ -172,21 +183,22 @@ const stakeSTC = async ({ provider, chianID, currency = "DUMMY", amount }) => {
       args
     );
     console.log("scriptFunction", scriptFunction);
+    return scriptFunction;
 
-    const payloadInHex = (function () {
-      const se = new bcs.BcsSerializer();
-      scriptFunction.serialize(se);
-      return hexlify(se.getBytes());
-    })();
-    console.log("payloadInHex", payloadInHex);
+    // const payloadInHex = (function () {
+    //   const se = new bcs.BcsSerializer();
+    //   scriptFunction.serialize(se);
+    //   return hexlify(se.getBytes());
+    // })();
+    // console.log("payloadInHex", payloadInHex);
 
-    const txhash = await provider.getSigner().sendUncheckedTransaction({
-      data: payloadInHex,
-      // gasLimit: 1000000,
-      // gasPrice: 1,
-    });
+    // const txhash = await provider.getSigner().sendUncheckedTransaction({
+    //   data: payloadInHex,
+    //   // gasLimit: 1000000,
+    //   // gasPrice: 1,
+    // });
 
-    return txhash;
+    // return txhash;
   } catch (error) {
     console.error(error);
   }
@@ -224,6 +236,7 @@ const unstakeSTC = async ({
     );
 
     console.log("=====scriptFunction======", scriptFunction);
+    // return scriptFunction;
 
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
@@ -313,7 +326,7 @@ export default {
   getAccountBalance,
   setPermissions,
   getPermissions,
-  stakeSTC,
+  stakeWithSTC,
   unstakeSTC,
   payUSDT,
 };
