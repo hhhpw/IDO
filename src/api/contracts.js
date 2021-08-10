@@ -1,6 +1,28 @@
-import { SMART_CONTRACTS_API } from "@constants";
+import {
+  SMART_CONTRACTS_API,
+  SMART_CONTRACTS_TEST_API,
+  CONTRACTS_TEST_ADDRESS,
+  CONTRACTS_ADDRESS,
+} from "@constants/contracts";
+// import session from "@utils/session.js";
 // 合约相关接口
 import request from "@utils/request";
+// import { getTokenByCurrency } from "@utils/tokens";
+
+// setTimeout(() => {
+//   console.log("store", store);
+// });
+
+let CONTRACTS_URL, CONTRACTS_ADD;
+if (process.env.NODE_ENV !== "development") {
+  // 开发
+  CONTRACTS_URL = SMART_CONTRACTS_API;
+  CONTRACTS_ADD = CONTRACTS_ADDRESS;
+} else {
+  // 线上
+  CONTRACTS_URL = SMART_CONTRACTS_TEST_API;
+  CONTRACTS_ADD = CONTRACTS_TEST_ADDRESS;
+}
 
 // 获取币种精度
 // stc 1000000000
@@ -21,30 +43,40 @@ function getCurrencyPrecision() {
     headers: {
       "content-type": "application/json",
     },
-    url: SMART_CONTRACTS_API,
+    url: CONTRACTS_URL,
     method: "POST",
     data: JSON.stringify(v),
   });
 }
 
 // 合约项目详情
-function getContractsProjectInfo() {
-  let t = {
+function getContractsProjectInfo({
+  // currency = "STC",
+  // chainID = session.getItem("chainID"),
+  // chainID = "251",
+  token,
+}) {
+  if (!token) return;
+  // const token = getTokenByCurrency(chainID, currency);
+  // console.log("token", token);
+  let params = {
     id: 101,
     jsonrpc: "2.0",
     method: "contract.get_resource",
     params: [
-      "0xd501465255d22d1751aae83651421198", //合约地址
-      "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
+      CONTRACTS_ADD, //合约地址
+      // "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
+      `${CONTRACTS_ADD}::Offering::Offering<${token.code}>`,
     ],
   };
+  console.log("params", params);
   return request({
     headers: {
       "content-type": "application/json",
     },
-    url: SMART_CONTRACTS_API,
+    url: CONTRACTS_URL,
     method: "post",
-    data: JSON.stringify(t),
+    data: JSON.stringify(params),
   });
 }
 
@@ -63,7 +95,7 @@ function getStakeAmount(accountToken) {
     headers: {
       "content-type": "application/json",
     },
-    url: SMART_CONTRACTS_API,
+    url: CONTRACTS_URL,
     method: "post",
     data: JSON.stringify(params),
   });

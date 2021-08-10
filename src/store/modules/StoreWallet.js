@@ -1,5 +1,5 @@
 import * as types from "../constants/wallet";
-import contractsApi from "@api/contracts.js";
+// import contractsApi from "@api/contracts.js";
 // import { STC_PRECISION } from "@constants/index";
 
 const StoreWallet = {
@@ -12,7 +12,7 @@ const StoreWallet = {
     stcAccounts: [],
     onboarding: "",
     precision: {}, // {stc: 1000000000}
-    balances: {}, // {stc: 21321312}
+    balances: {}, // {stc: bigNumber}
     walletStatus: "unConnected", // 钱包链接状态 "unConnected", "connected"
   },
   mutations: {
@@ -32,7 +32,6 @@ const StoreWallet = {
       state.balances = Object.assign({}, state.balances, payload);
     },
     [types.SET_WALLET_CONNECT_STATUS](state, payload) {
-      console.log("payload", payload);
       state.walletStatus = payload;
     },
   },
@@ -55,10 +54,10 @@ const StoreWallet = {
     //   // console.log("t", t);
     // },
     // 当前质押额度
-    async getStakeAmount() {
-      let amount = await contractsApi.getStakeAmount();
-      console.log("amount", amount);
-    },
+    // async getStakeAmount() {
+    //   let amount = await contractsApi.getStakeAmount();
+    //   console.log("amount", amount);
+    // },
   },
 };
 

@@ -1,3 +1,7 @@
+export const CONTRACTS_TEST_ADDRESS = "0xd501465255d22d1751aae83651421198";
+
+export const CONTRACTS_ADDRESS = "null";
+
 export const SMART_CONTRACTS_TEST_API = "https://barnard-seed.starcoin.org"; // 测试网络
 
 export const SMART_CONTRACTS_API = "https://starcoin.org";

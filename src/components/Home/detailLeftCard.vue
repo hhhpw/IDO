@@ -102,7 +102,7 @@ import StartInput from "@startUI/StartInput.vue";
 import StartSpace from "@startUI/StartSpace.vue";
 import { mapGetters, mapState } from "vuex";
 import utilsNumber from "@utils/number.js";
-import { STC_PRECISION } from "@constants";
+import { STC_PRECISION } from "@constants/contracts";
 import { isNil } from "lodash";
 // import StartInput from '../StartUI/StartInput.vue';
 export default {
