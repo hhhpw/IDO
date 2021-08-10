@@ -13,13 +13,15 @@ const StoreWallet = {
     stakeAmount: null, // 个人已质押额度
     personStakeAmount: null, // 个人质押上限
     restStakeAmount: null, // 个人还可质押总额
+    proState: null, // 1未开始 2进行中 3质押中 4待支付 5已结束
   },
   mutations: {
     [types.SET_STAKE_AMOUNT](state, payload) {
       state.stakeAmount = payload;
     },
-    [types.SET_PERSONAL_LIMIT_AMOUNT](state, payload) {
-      state.personStakeAmount = payload;
+    [types.SET_PROJECT_INFO](state, payload) {
+      state.personStakeAmount = payload.amount;
+      state.proState = payload.proState;
     },
     [types.SET_REST_STAKE_AMOUNT](state, payload) {
       state.restStakeAmount = payload;
@@ -27,13 +29,16 @@ const StoreWallet = {
   },
   actions: {
     async loadInfo({ rootState, commit, state }, payload) {
-      console.log("payload", payload);
-      debugger;
       let currency = payload.currency || "DUMMY";
       const chainID = rootState.StoreWallet.stcChianID;
       const token = getTokenByCurrency(chainID, currency);
       Promise.allSettled([
-        contractsApi.getStakeAmount(rootState.StoreWallet.stcAccounts[0]),
+        // 获取质押额度
+        contractsApi.getStakeAmount(
+          rootState.StoreWallet.stcAccounts[0],
+          token
+        ),
+        // 获取项目详情
         contractsApi.getContractsProjectInfo({
           token,
         }),
@@ -47,8 +52,9 @@ const StoreWallet = {
           }
           if (result[1].status === "fulfilled") {
             let res = fromPairs(result[1].value.result.value);
-            let value = res.personal_stc_staking_limit.U128;
-            commit(types.SET_PERSONAL_LIMIT_AMOUNT, value);
+            let amount = res.personal_stc_staking_limit.U128;
+            let proState = res.state.U8;
+            commit(types.SET_PROJECT_INFO, { amount, proState });
           }
           if (
             result[0].status === "fulfilled" &&

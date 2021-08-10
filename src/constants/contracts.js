@@ -9,10 +9,10 @@ export const SMART_CONTRACTS_API = "https://starcoin.org";
 export const STC_PRECISION = 1000000000; // STC精度
 
 export const STAKE_STC_FUNCTION_ID =
-  "0xd501465255d22d1751aae83651421198::OfferingScript3::staking";
+  "0xd501465255d22d1751aae83651421198::OfferingScript4::staking";
 
 export const UNSTAKE_STC_FUNCTION_ID =
-  "0xd501465255d22d1751aae83651421198::OfferingScript3::unstaking";
+  "0xd501465255d22d1751aae83651421198::OfferingScript4::unstaking";
 
 export const PAY_USDT_FUNCTION_ID =
-  "0xd501465255d22d1751aae83651421198::OfferingScript3::exchange";
+  "0xd501465255d22d1751aae83651421198::OfferingScript4::exchange";

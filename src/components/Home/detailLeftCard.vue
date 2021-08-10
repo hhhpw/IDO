@@ -16,7 +16,7 @@
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
         @maxEvent="maxEvent"
-        v-if="stakeStatus === 'stake'"
+        v-if="stakeStatus === 'stake' && proState === 2"
       ></start-input>
 
       <start-input
@@ -30,8 +30,19 @@
       >
       </start-input>
     </div>
+    <p>{{ proState }}</p>
     <start-space :size="12"></start-space>
-    <div class="detail-wrap-content-left-info">
+    <div v-if="stakeStatus === 'unstake'" class="detail-wrap-content-left-info">
+      <span>{{ $t("还可解押") }}: {{ renderAmount(stakeAmount) }}</span>
+    </div>
+    <div
+      class="detail-wrap-content-left-info"
+      v-if="
+        detailCardType === 'open' &&
+        (proState === 2 || proState === 3) &&
+        stakeStatus === 'stake'
+      "
+    >
       <div>
         <span>{{ $t("还可质押") }}：</span>
         <span>{{ renderRestAmount() }} STC</span>
@@ -43,19 +54,51 @@
       </div>
     </div>
     <start-space :size="24"></start-space>
-    <div class="detail-wrap-content-left-error">
-      <p>出错了的文案</p>
+
+    <div
+      class="detail-wrap-conent-left-amount-text"
+      v-if="
+        detailCardType === 'open' && proState === 4 && stakeStatus === 'stake'
+      "
+    >
+      <p>{{ $t("我的份额") }}</p>
+      <start-space :size="8"></start-space>
+      <p class="detail-wrap-conent-left-amount-text-amount">后端提供接口STC</p>
+    </div>
+    <div class="detail-wrap-content-left-error" v-if="errorText">
+      <p>{{ errorText }}</p>
     </div>
     <start-space :size="12"></start-space>
     <start-button
       class="detail-wrap-content-button"
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
-      <p :style="{ color: cardsInfo['common-color'] }">
-        <span v-if="stakeStatus === 'stake'" @click="onStakeClick">
+      <p
+        :style="{ color: cardsInfo['common-color'] }"
+        class="detail-wrap-content-button-text"
+      >
+        <span
+          v-if="
+            stakeStatus === 'stake' &&
+            detailCardType === 'open' &&
+            proState === 2
+          "
+          @click="onStakeClick"
+        >
           {{ $t("STAKE") }}
         </span>
-        <span v-if="stakeStatus === 'unstake'">
+        <span
+          v-if="
+            detailCardType === 'open' &&
+            proState === 4 &&
+            stakeStatus === 'stake'
+          "
+          @click="payUSDT"
+        >
+          {{ $t("待支付") }}
+        </span>
+
+        <span v-if="stakeStatus === 'unstake'" @click="onUnstakeClick">
           {{ $t("UNSTAKE") }}
         </span>
       </p>
@@ -66,28 +109,9 @@
       class="detail-wrap-content-left-unstake"
       :style="{ color: cardsInfo['common-color'] }"
       @click="changeStakeStatus"
+      v-if="stakeStatus === 'stake'"
     >
-      <!-- <span v-if="detailCardType === ''">
-        {{ $t("UNSTAKE") }}
-      </span> -->
-      <template v-if="detailCardType === 'open'">
-        <template v-if="stakeStatus === 'stake'">
-          {{ $t("UNSTAKE") }}
-        </template>
-        <template v-if="stakeStatus === 'unstake'">
-          {{ $t("STAKE") }}
-        </template>
-      </template>
-
-      <!-- <template v-if="detailCardType === 'open'">
-        <template v-if="stakeStatus === 'stake'"> </template>
-      </template>
-      <template v-if="detailCardType === 'open'">
-        <template v-if="stakeStatus === 'stake'"> </template>
-      </template>
-      <template v-if="detailCardType === 'open'">
-        <template v-if="stakeStatus === 'stake'"> </template>
-      </template> -->
+      {{ $t("UNSTAKE") }}
     </p>
     <start-space :size="35"></start-space>
     <div class="detail-wrap-content-left-rule">
@@ -132,12 +156,11 @@ export default {
       };
     },
     changeStakeStatus() {
-      // if (detailCardType) {
-      //
-      // }
       this.stakeStatus = "unstake";
+      this.errorText = "";
     },
     inputEvent(e) {
+      this.errorText = "";
       this.inputValue = e;
     },
     maxEvent() {
@@ -157,7 +180,10 @@ export default {
         }
       }
       if (this.stakeStatus === "unstake") {
-        console.log("解压");
+        this.inputValue = utilsNumber
+          .bigNum(this.stakeAmount)
+          .div(STC_PRECISION)
+          .toString();
       }
     },
     renderRestAmount() {
@@ -176,16 +202,7 @@ export default {
         { grouped: true }
       ).text;
     },
-    validteUnstake() {
-      if (
-        utilsNumber
-          .bigNum(this.inputValue)
-          .gt(utilsNumber.bigNum(this.balances.stc).div(STC_PRECISION))
-      ) {
-        this.errorText = this.$t("可解压量不足");
-        return false;
-      }
-    },
+
     validteStake() {
       if (
         utilsNumber
@@ -208,13 +225,7 @@ export default {
     },
     async onStakeClick() {
       if (!this.validteStake()) return;
-      console.log("A");
       const params = this.getParams();
-      console.log(
-        "bbbb",
-        params,
-        utilsNumber.bigNum(this.inputValue).times(STC_PRECISION).toString()
-      );
       const res = await Wallet.stakeWithSTC({
         ...params,
         amount: utilsNumber
@@ -222,12 +233,44 @@ export default {
           .times(STC_PRECISION)
           .toString(),
       });
-      console.log("stake result:", res);
+      // 质押成功
+      if (res) {
+        console.log("=====质押成功=====");
+        console.log("stake result:", res);
+      }
+    },
+    validteUnstake() {
+      if (
+        utilsNumber
+          .bigNum(this.inputValue)
+          .gt(utilsNumber.bigNum(this.stakeAmount).div(STC_PRECISION))
+      ) {
+        this.errorText = this.$t("可解押量不足");
+        return false;
+      }
+      return true;
     },
     async onUnstakeClick() {
+      console.log("A");
       if (!this.validteUnstake()) return;
+      const params = this.getParams();
+      const res = await Wallet.unstakeWithSTC({
+        ...params,
+        amount: utilsNumber
+          .bigNum(this.inputValue)
+          .times(STC_PRECISION)
+          .toString(),
+      });
+      console.log("unstake result:", res);
     },
-    // ...mapState("StoreWallet", ["stcProvider", "stcAccounts", "stcChianID"]),
+    async payUSDT() {
+      // if (!this.validtePay()) return;
+      const params = this.getParams();
+      const res = await Wallet.payUSDT({
+        ...params,
+      });
+      console.log("payUSDT result:", res);
+    },
   },
   computed: {
     ...mapState("StoreHome", {
@@ -244,6 +287,7 @@ export default {
     ...mapState("StoreContracts", {
       restStakeAmount: (state) => state.restStakeAmount,
       stakeAmount: (state) => state.stakeAmount,
+      proState: (state) => state.proState,
     }),
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
@@ -276,16 +320,42 @@ export default {
   background-color: transparent;
   line-height: 54px;
   padding: 0;
-  p {
+  .detail-wrap-content-button-text {
     font-weight: 500;
     font-size: 24px;
+    -webkit-user-select: none; /*webkit浏览器*/
+    -ms-user-select: none; /*IE10*/
+    -khtml-user-select: none; /*早期浏览器*/
+    user-select: none;
+    span {
+      display: inline-block;
+      width: 100%;
+      -webkit-user-select: none; /*webkit浏览器*/
+      -ms-user-select: none; /*IE10*/
+      -khtml-user-select: none; /*早期浏览器*/
+      user-select: none;
+    }
   }
+  // p {
+  // }
 }
 .detail-wrap-content-left-error {
   font-size: 14px;
   color: $text_error_color;
   font-weight: 500;
   text-align: center;
+}
+.detail-wrap-conent-left-amount-text {
+  text-align: center;
+  p:nth-child(1) {
+    color: #959fa1;
+
+    font-size: 14px;
+  }
+  .detail-wrap-conent-left-amount-text-amount {
+    color: #fff;
+    font-size: 18px;
+  }
 }
 .detail-wrap-content-left-unstake {
   color: $text_light_color;
