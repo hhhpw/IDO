@@ -58,9 +58,7 @@ import StartButton from "@startUI/StartButton.vue";
 import StartDropDown from "@startUI/StartDropDown.vue";
 import session from "@utils/session.js";
 import { mapState, mapActions } from "vuex";
-// import { }
 import { Notification } from "element-ui";
-// import StoreApp from "@store/StoreApp"
 import { Wallet } from "@contactLogic";
 import format from "@utils/format";
 import utilsTool from "@utils/tool";
@@ -119,8 +117,11 @@ export default {
     // },
     async loadData() {
       const chianID = await Wallet.getStcChianID();
+      session.setItem("chianID", chianID);
       this.setStcChianID(chianID);
+
       const permissions = await Wallet.getPermissions();
+      console.log("permissions", permissions);
       if (!permissions.length) {
         this.setPermissions();
       }
@@ -198,33 +199,16 @@ export default {
               ),
             ]
           ),
-          duration: 0,
+          duration: 1200,
           offset: 100,
           showClose: false,
         });
-        // this.walletStatus = "Install StarMask";
         this.onboarding.startOnboarding();
         return;
       }
       console.log("=====isStarMaskInstalled====", isStarMaskInstalled);
-      // 连接状态
-      // 账户一定会存在？
       const isStarMaskConnected =
         this.stcAccounts && this.stcAccounts.length > 0;
-      // 连接成功后如何交互
-      // if (!isStarMaskInstalled) {
-      //   this.walletStatus = "Install StarMask";
-      //   this.onboarding.startOnboarding();
-      // } else if (isStarMaskConnected) {
-      //   this.walletStatus = "Connected";
-      //   if (this.onboarding) this.onboarding.stopOnboarding();
-      //   this.loadData();
-      // } else {
-      //   this.walletStatus = "Connect";
-      //   const accounts = await Wallet.connect();
-      //   this.setStcAccounts(accounts);
-      // }
-
       if (isStarMaskConnected) {
         // this.walletStatus = "Connected";
         this.$store.commit(

@@ -40,6 +40,7 @@ export default {
   },
   mounted() {
     this.getStakeAmount();
+    this.getContractsProjectInfo("STC");
     // console.log("stcAccounts", this.stcAccounts);
     // if (!this.stcAccounts || this.stcAccounts.length < 1) {
     //   console.error("账号不存在");
@@ -51,7 +52,10 @@ export default {
     inputEvent(e) {
       this.inputValue = e;
     },
-    ...mapActions("StoreContracts", ["getStakeAmount"]),
+    ...mapActions("StoreContracts", [
+      "getStakeAmount",
+      "getContractsProjectInfo",
+    ]),
   },
   computed: {
     ...mapState("StoreHome", {

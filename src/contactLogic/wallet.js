@@ -1,13 +1,15 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
 import { providers, utils, bcs } from "@starcoin/starcoin";
 import { arrayify, hexlify } from "@ethersproject/bytes";
-import { getTokenByCurrency } from "./tokens";
+import getTokenByCurrency from "./tokens";
 
 import {
   STAKE_STC_FUNCTION_ID,
   UNSTAKE_STC_FUNCTION_ID,
   PAY_USDT_FUNCTION_ID,
-} from "@constants";
+} from "@constants/contracts";
+// import BigNumber from "bignumber.js";
+import utilsNumber from "@utils/number.js";
 
 /**
  *  StarMaskOnboarding 实例化
@@ -97,7 +99,8 @@ const getAccountBalance = async ({ provider, account, token }) => {
       account,
       `0x1::Account::Balance<${token}>`
     );
-    balance = result.token.value;
+    balance = utilsNumber.bigNum(result.token.value);
+    console.log("balance", balance);
   } catch (error) {
     console.error(error);
   }
