@@ -2,14 +2,14 @@ import request from "@utils/request";
 
 function getDataList() {
   return request({
-    url: "/api/v1/ido/dx/product/getAll",
+    url: "/v1/ido/dx/product/getAll",
     method: "GET",
   });
 }
 
 function getCardInfo(pId) {
   return request({
-    url: "/api/v1/ido/dx/product/get?pId=" + pId,
+    url: "/v1/ido/dx/product/get?pId=" + pId,
     method: "GET",
   });
 }

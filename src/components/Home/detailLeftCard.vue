@@ -225,7 +225,7 @@ export default {
         .bigNum(this.myStakeAmount)
         .times(this.currencyTotalAmount)
         .div(this.stakeTotalAmount)
-        .times(100000) // 这里需要动态换
+        .div(STC_PRECISION) // 这里需要动态换
         .toString();
     },
     changeStakeStatus() {
