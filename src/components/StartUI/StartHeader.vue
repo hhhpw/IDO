@@ -62,7 +62,7 @@ import { Notification } from "element-ui";
 import { Wallet } from "@contactLogic";
 import format from "@utils/format";
 import utilsTool from "@utils/tool";
-import { isNil } from "lodash";
+import { isNil, isUndefined } from "lodash";
 
 export default {
   name: "StartHeader",
@@ -136,7 +136,7 @@ export default {
         };
         // 获取钱包STC额度
         const balance = await Wallet.getAccountBalance(params);
-        if (!isNil(balance)) {
+        if (!isNil(balance) || !isUndefined(balance)) {
           this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
             stc: balance,
           });

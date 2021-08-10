@@ -33,11 +33,12 @@
     <start-space :size="12"></start-space>
     <div class="detail-wrap-content-left-info">
       <div>
-        <span>{{ $t("还可以质押") }}</span>
-        <span>12--321312STC</span>
+        <span>{{ $t("还可质押") }}：</span>
+        <span>{{ renderRestAmount() }} STC</span>
       </div>
       <div>
         <span>{{ $t("余额") }}：</span>
+        <!-- 钱包的stc -->
         <span>{{ renderAmount(balances.stc) }} STC</span>
       </div>
     </div>
@@ -51,7 +52,7 @@
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
       <p :style="{ color: cardsInfo['common-color'] }">
-        <span v-if="stakeStatus === 'stake'">
+        <span v-if="stakeStatus === 'stake'" @click="onStakeClick">
           {{ $t("STAKE") }}
         </span>
         <span v-if="stakeStatus === 'unstake'">
@@ -72,6 +73,9 @@
       <template v-if="detailCardType === 'open'">
         <template v-if="stakeStatus === 'stake'">
           {{ $t("UNSTAKE") }}
+        </template>
+        <template v-if="stakeStatus === 'unstake'">
+          {{ $t("STAKE") }}
         </template>
       </template>
 
@@ -107,18 +111,30 @@ import { STC_PRECISION } from "@constants/contracts";
 import { isNil } from "lodash";
 // import StartInput from '../StartUI/StartInput.vue';
 import session from "@utils/session";
+import { Wallet } from "@contactLogic";
 export default {
   data() {
     return {
       inputValue: "",
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
       lang: session.getItem("lang"),
+      errorText: "",
     };
   },
   components: { StartInput, StartSpace, StartButton },
   mounted() {},
   methods: {
+    getParams() {
+      return {
+        provider: this.stcProvider,
+        account: this.stcAccounts[0],
+        chianID: this.stcChianID,
+      };
+    },
     changeStakeStatus() {
+      // if (detailCardType) {
+      //
+      // }
       this.stakeStatus = "unstake";
     },
     inputEvent(e) {
@@ -127,22 +143,91 @@ export default {
     maxEvent() {
       this.inputValue = 0;
       if (this.stakeStatus === "stake") {
-        this.inputValue = utilsNumber
-          .bigNum(this.balances.stc)
-          .div(STC_PRECISION)
-          .toNumber();
+        // 最大质押量、钱包余额做比较
+        if (utilsNumber.bigNum(this.restStakeAmount).gte(this.balances.stc)) {
+          this.inputValue = utilsNumber
+            .bigNum(this.balances.stc)
+            .div(STC_PRECISION)
+            .toString();
+        } else {
+          this.inputValue = utilsNumber
+            .bigNum(this.restStakeAmount)
+            .div(STC_PRECISION)
+            .toString();
+        }
       }
       if (this.stakeStatus === "unstake") {
         console.log("解压");
       }
     },
-    renderAmount(balance) {
-      if (isNil(balance)) return "--";
+    renderRestAmount() {
+      if (isNil(this.restStakeAmount)) return "--";
+      console.log("==renderRestAmount===", this.restStakeAmount);
       return utilsNumber.formatNumberMeta(
-        utilsNumber.bigNum(balance).div(STC_PRECISION).toNumber(),
+        utilsNumber.bigNum(this.restStakeAmount).div(STC_PRECISION).toString(),
         { grouped: true }
       ).text;
     },
+    renderAmount(balance) {
+      if (isNil(balance)) return "--";
+      console.log("==renderAmount===", balance);
+      return utilsNumber.formatNumberMeta(
+        utilsNumber.bigNum(balance).div(STC_PRECISION).toString(),
+        { grouped: true }
+      ).text;
+    },
+    validteUnstake() {
+      if (
+        utilsNumber
+          .bigNum(this.inputValue)
+          .gt(utilsNumber.bigNum(this.balances.stc).div(STC_PRECISION))
+      ) {
+        this.errorText = this.$t("可解压量不足");
+        return false;
+      }
+    },
+    validteStake() {
+      if (
+        utilsNumber
+          .bigNum(this.inputValue)
+          .gt(utilsNumber.bigNum(this.balances.stc).div(STC_PRECISION))
+      ) {
+        this.errorText = this.$t("账户余额不足");
+        return false;
+      }
+      if (
+        utilsNumber
+          .bigNum(this.inputValue)
+          .gt(utilsNumber.bigNum(this.restStakeAmount).div(STC_PRECISION))
+      ) {
+        this.errorText = this.$t("质押量超出个人额度上限！");
+        return false;
+      }
+
+      return true;
+    },
+    async onStakeClick() {
+      if (!this.validteStake()) return;
+      console.log("A");
+      const params = this.getParams();
+      console.log(
+        "bbbb",
+        params,
+        utilsNumber.bigNum(this.inputValue).times(STC_PRECISION).toString()
+      );
+      const res = await Wallet.stakeWithSTC({
+        ...params,
+        amount: utilsNumber
+          .bigNum(this.inputValue)
+          .times(STC_PRECISION)
+          .toString(),
+      });
+      console.log("stake result:", res);
+    },
+    async onUnstakeClick() {
+      if (!this.validteUnstake()) return;
+    },
+    // ...mapState("StoreWallet", ["stcProvider", "stcAccounts", "stcChianID"]),
   },
   computed: {
     ...mapState("StoreHome", {
@@ -152,6 +237,13 @@ export default {
     }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,
+      stcProvider: (state) => state.stcProvider,
+      stcAccounts: (state) => state.stcAccounts,
+      stcChianID: (state) => state.stcChianID,
+    }),
+    ...mapState("StoreContracts", {
+      restStakeAmount: (state) => state.restStakeAmount,
+      stakeAmount: (state) => state.stakeAmount,
     }),
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
@@ -162,7 +254,6 @@ export default {
 @import "~@/styles/variables.scss";
 .detail-input-wrap {
   background-repeat: no-repeat;
-  // background-image: url("../../assets/home/open-input-border.png");
   background-size: 100% 100%;
   .detail-input {
     width: 100%;

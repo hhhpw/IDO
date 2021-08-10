@@ -56,6 +56,7 @@ function getContractsProjectInfo({
   // chainID = "251",
   token,
 }) {
+  console.log("====t0ken====", token);
   if (!token) return;
   // const token = getTokenByCurrency(chainID, currency);
   // console.log("token", token);
@@ -66,7 +67,8 @@ function getContractsProjectInfo({
     params: [
       CONTRACTS_ADD, //合约地址
       // "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
-      `${CONTRACTS_ADD}::Offering::Offering<${token.code}>`,
+      // Offering3 也是个变量？
+      `${CONTRACTS_ADD}::Offering3::Offering<${token.code}>`,
     ],
   };
   console.log("params", params);
