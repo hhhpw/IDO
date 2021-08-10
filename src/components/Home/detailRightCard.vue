@@ -75,6 +75,7 @@
         :key="index"
         :name="iconkey.name + '-' + detailCardType"
         class="detail-card-icons-icon"
+        @click="handleToPath(iconkey)"
       ></svg-icon>
     </div>
     <start-space :size="20"></start-space>
@@ -167,6 +168,9 @@ export default {
   methods: {
     hanleTabChange(val) {
       this.tabCategory = val;
+    },
+    handleToPath(val) {
+      window.open(val.url, "_blank");
     },
     clipHash(val) {
       clipboard.writeText(val).then(
