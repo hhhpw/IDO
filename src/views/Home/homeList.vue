@@ -20,17 +20,17 @@
         :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
         <div
-          v-if="cardData.attribute"
+          v-if="cardData.attributes"
           class="home-list-item-wrap-labels"
           :style="
             mixinSetLabelsBg(
               cardType,
-              cardData.attribute.length > 2 ? 2 : cardData.attribute.length
+              cardData.attributes.length > 2 ? 2 : cardData.attributes.length
             )
           "
         >
-          <span v-for="(l, ix) in cardData.attribute" :key="ix">
-            {{ $t(`${l}`) }}
+          <span v-for="(l, ix) in cardData.attributes.slice(0, 2)" :key="ix">
+            {{ $t(`${l.name}`) }}
           </span>
         </div>
         <home-list-item

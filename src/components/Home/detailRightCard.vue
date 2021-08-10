@@ -8,21 +8,21 @@
   >
     <!-- <div>{{ cardInfo.proTimeList }}</div> -->
     <div
-      v-if="cardInfo.attribute"
+      v-if="cardInfo.attributes"
       class="detail-card-labels-top"
       :style="
         mixinSetLabelsBg(
           detailCardType,
-          cardInfo.attribute.length > 2 ? 2 : cardInfo.attribute.length
+          cardInfo.attributes.length > 2 ? 2 : cardInfo.attributes.length
         )
       "
     >
       <span
-        v-for="(l, ix) in flags"
+        v-for="(l, ix) in cardInfo.attributes.slice(0, 2)"
         :key="ix"
         :style="{ color: colorsInfo['common-color'] }"
       >
-        {{ $t(`${l}`) }}
+        {{ $t(`${l.name}`) }}
       </span>
     </div>
     <div class="detail-card-header">
@@ -56,7 +56,7 @@
     <start-space :size="20"></start-space>
     <div class="detail-card-labels">
       <start-button
-        v-for="(d, i) in cardInfo.label"
+        v-for="(d, i) in cardInfo.labels"
         :key="i"
         light
         :style="
@@ -65,7 +65,7 @@
             colorsInfo['common-color']
           )
         "
-        >{{ $t(`${d}`) }}></start-button
+        >{{ $t(`${d.label}`) }}</start-button
       >
     </div>
     <start-space :size="20"></start-space>
@@ -75,6 +75,7 @@
         :key="index"
         :name="iconkey.name + '-' + detailCardType"
         class="detail-card-icons-icon"
+        @click="handleToPath(iconkey)"
       ></svg-icon>
     </div>
     <start-space :size="20"></start-space>
@@ -167,6 +168,9 @@ export default {
   methods: {
     hanleTabChange(val) {
       this.tabCategory = val;
+    },
+    handleToPath(val) {
+      window.open(val.url, "_blank");
     },
     clipHash(val) {
       clipboard.writeText(val).then(

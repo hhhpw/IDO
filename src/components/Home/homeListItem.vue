@@ -12,7 +12,7 @@
       <start-space :size="20"></start-space>
       <div class="home-list-item-rough-labels">
         <start-button
-          v-for="(d, i) in data.label"
+          v-for="(d, i) in data.labels"
           :key="i"
           light
           :style="
@@ -21,7 +21,7 @@
               colorsInfo['common-color']
             )
           "
-          >{{ $t(`${d}`) }}</start-button
+          >{{ $t(`${d.label}`) }}</start-button
         >
       </div>
       <start-space :size="30"></start-space>
@@ -35,6 +35,7 @@
       </div>
       <start-space :size="30"></start-space>
       <div class="home-list-item-rough-infos">
+        <!-- utilsNumber.formatNumberMeta(data.amount, { grouped: true }).text -->
         <start-item-cell :data="cellData('raiseTotal')"> </start-item-cell>
         <start-item-cell :data="cellData('rate')"> </start-item-cell>
         <start-item-cell :data="cellData('capTotal')"> </start-item-cell>
@@ -49,6 +50,7 @@ import SvgIcon from "@components/SvgIcon/index.vue";
 import StartItemCell from "@startUI/StartItemCell.vue";
 import { mapGetters } from "vuex";
 import mixinHome from "@/mixins/home.js";
+import utilsNumber from "@utils/number.js";
 export default {
   components: { StartButton, StartSpace, SvgIcon, StartItemCell },
   mixins: [mixinHome],
@@ -68,7 +70,11 @@ export default {
   methods: {
     cellData(key) {
       /////  这里写key
-      return { title: key, amount: this.data[key] };
+      return {
+        title: key,
+        amount: utilsNumber.formatNumberMeta(this.data[key], { grouped: true })
+          .text,
+      };
       // return data.
     },
     // emit() {
