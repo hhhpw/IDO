@@ -110,9 +110,7 @@
     </div>
     <start-space :size="30"></start-space>
     <div class="detail-card-footer">
-      Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。
-      Starcoin继承了比特币卓越的安全机制，采用新PoW算法极大地增强了网络和智能合约的安全性和效率，目标是建立为普通用户提供服务的金融基础设施。Starcoin是一个为分布式金融而设计的区块链项目，
-      获得了币信、星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。Starcoin继承了比特币卓越的安全机制，采用新PoW算法极大地
+      {{ this.lang === "zh" ? cardInfo.prdDesc : cardInfo.prdDescEn }}
     </div>
   </div>
 </template>
@@ -129,7 +127,7 @@ import { listpro } from "@startUI/mock.js";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
 import { mapActions } from "vuex";
-// import i18n from "../../i18n/index.js";
+import session from "@utils/session";
 export default {
   data() {
     return {
@@ -150,6 +148,7 @@ export default {
           value: "time",
         },
       ],
+      lang: session.getItem("lang"),
     };
   },
   mixins: [mixinHome],
@@ -161,21 +160,9 @@ export default {
     StartTabBar,
     StartList,
   },
-  watch: {
-    // disabledCopy(val) {
-    //   if (!val) {
-    //     this.copyContent = this.$t("复制");
-    //   }
-    //   // if (val) {
-    //   //   this.copyContent = "";
-    //   // } else {
-    //   //   this.copyContent = "das";
-    //   //   // i18n.$t("复制");
-    //   // }
-    // },
-  },
+  watch: {},
   mounted() {
-    this.getDataList();
+    this.getCardInfo();
   },
   methods: {
     hanleTabChange(val) {
@@ -190,11 +177,11 @@ export default {
           }, 1500);
         },
         () => {
-          console.log("err0r");
+          console.log("error");
         }
       );
     },
-    ...mapActions("StoreHome", ["getDataList"]),
+    ...mapActions("StoreHome", ["getCardInfo"]),
   },
   computed: {
     ...mapState("StoreHome", {

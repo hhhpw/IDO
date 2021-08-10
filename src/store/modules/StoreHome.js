@@ -1,6 +1,5 @@
 import * as types from "../constants/home.js";
 // import homeApi from "@api/home.js";
-import mockData from "./testdata";
 import dayjs from "dayjs";
 import homeApi from "../../api/home.js";
 import utilsNumber from "@utils/number.js";
@@ -75,11 +74,15 @@ const StoreHome = {
     },
   },
   actions: {
+    async getCardInfo({ state }) {
+      let pId = state.detailCardId;
+      let res = await homeApi.getCardInfo(pId);
+      console.log(res);
+    },
     async getDataList({ commit }) {
       let res = await homeApi.getDataList();
-      console.log(res.data);
       let results = [];
-      const endStates = Object.keys(mockData.data);
+      const endStates = Object.keys(res.data);
       // 做个map，使得key对应，不然前端要该太多地方
       // init，processing，finish',
       // let newArr = arr.filter(function (item) {
@@ -89,7 +92,7 @@ const StoreHome = {
       // });
       // console.log(newArr);
       for (let i = 0; i < endStates.length; i++) {
-        const cardInfoList = mockData.data[endStates[i]].map((d) => {
+        const cardInfoList = res.data[endStates[i]].map((d) => {
           const {
             raiseTotal,
             rate,
@@ -97,8 +100,10 @@ const StoreHome = {
             pledgeEndTime, // 质押结束时间
             lockStartTime, // 锁仓开始时间
             lockEndTime, // 锁仓结束时间
-            payTime, // 支付时间
-            assignmentTime, // 代币分配时间
+            payStartTime, // 支付开始时间
+            payEndTime, // 支付结束时间
+            assignmentStartTime, // 代币分配开始时间
+            assignmentEndTime, // 代币分配结束时间
             // 详情
             currencyTotal, //代币发行总量
             pledgeTotal, //总质押
@@ -121,11 +126,15 @@ const StoreHome = {
               },
               {
                 title: "支付时间",
-                data: dayjs(payTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(payStartTime).format("YYYY MM/DD HH:mm:ss"),
+                endDate: dayjs(payEndTime).format("YYYY MM/DD HH:mm:ss"),
               },
               {
                 title: "代币分配时间",
-                data: dayjs(assignmentTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(assignmentStartTime).format(
+                  "YYYY MM/DD HH:mm:ss"
+                ),
+                endDate: dayjs(assignmentEndTime).format("YYYY MM/DD HH:mm:ss"),
               },
             ],
             decentralizedList: [
@@ -147,11 +156,11 @@ const StoreHome = {
               },
               {
                 title: "售价",
-                amount: 453534534,
+                amount: rate,
               },
               {
                 title: "目标筹款",
-                amount: 14488323434,
+                amount: raiseTotal,
               },
             ],
             // raiseInfoList: {

@@ -8,15 +8,10 @@ function getDataList() {
   });
 }
 
-function getCardInfo() {
-  let p = {
-    pid: "12323",
-    id: "123434",
-  };
+function getCardInfo(pId) {
   return request({
-    url: "/api/v1/ido/dx/product/get",
+    url: "/api/v1/ido/dx/product/get?pId=" + pId,
     method: "GET",
-    data: JSON.stringify(p),
   });
 }
 
