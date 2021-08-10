@@ -13,7 +13,10 @@ const StoreWallet = {
     stakeAmount: null, // 个人已质押额度
     personStakeAmount: null, // 个人质押上限
     restStakeAmount: null, // 个人还可质押总额
+    currencyTotalAmount: null, // 代币销售数量
     proState: null, // 1未开始 2进行中 3质押中 4待支付 5已结束
+    stakeTotalAmount: null, // 总质押
+    myStakeAmount: null, // 我的质押 列表展示
   },
   mutations: {
     [types.SET_STAKE_AMOUNT](state, payload) {
@@ -22,9 +25,14 @@ const StoreWallet = {
     [types.SET_PROJECT_INFO](state, payload) {
       state.personStakeAmount = payload.amount;
       state.proState = payload.proState;
+      state.currencyTotalAmount = payload.currencyTotalAmount;
+      state.stakeTotalAmount = payload.stakeTotalAmount;
     },
     [types.SET_REST_STAKE_AMOUNT](state, payload) {
       state.restStakeAmount = payload;
+    },
+    [types.SET_STAKE_MY_AMOUNT](state, payload) {
+      state.myStakeAmount = payload;
     },
   },
   actions: {
@@ -48,20 +56,27 @@ const StoreWallet = {
           if (result[0].status === "fulfilled") {
             let res = fromPairs(result[0].value.result.value);
             let value = res["stc_staking"]["Struct"]["value"][0][1]["U128"];
+            let myStake = res["stc_staking_amount"]["U128"];
             commit(types.SET_STAKE_AMOUNT, value);
+            commit(types.SET_STAKE_MY_AMOUNT, myStake);
           }
           if (result[1].status === "fulfilled") {
             let res = fromPairs(result[1].value.result.value);
             let amount = res.personal_stc_staking_limit.U128;
             let proState = res.state.U8;
-            commit(types.SET_PROJECT_INFO, { amount, proState });
+            let currencyTotalAmount = res.token_offering_amount.U128;
+            let stakeTotalAmount = res.stc_staking_amount.U128;
+            commit(types.SET_PROJECT_INFO, {
+              amount,
+              proState,
+              currencyTotalAmount,
+              stakeTotalAmount,
+            });
           }
           if (
             result[0].status === "fulfilled" &&
             result[1].status === "fulfilled"
           ) {
-            console.log("state.personStakeAmount", state.personStakeAmount);
-            console.log("state.stakeAmount", state.stakeAmount);
             const restStakeAmount = utilsNumber
               .bigNum(state.personStakeAmount)
               .minus(state.stakeAmount)

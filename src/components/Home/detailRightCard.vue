@@ -2,11 +2,11 @@
   <div
     class="detail-card"
     :set="
-      ((colorsInfo = cardTypeColorInfo(detailCardType)),
-      (cardInfo = detailCardInfo(detailCardId)))
+      (((colorsInfo = cardTypeColorInfo(detailCardType)),
+      (cardInfo = detailCardInfo(detailCardId))),
+      (detailListAmount = changeDisplayList(cardInfo.decentralizedList)))
     "
   >
-    <!-- <div>{{ cardInfo.proTimeList }}</div> -->
     <div
       v-if="cardInfo.attributes"
       class="detail-card-labels-top"
@@ -90,7 +90,7 @@
       <div class="detail-card-tabs-list">
         <template v-if="tabCategory === 'prodetail'">
           <start-list
-            v-for="(d, index) in cardInfo.decentralizedList"
+            v-for="(d, index) in detailListAmount"
             :key="index"
             :data="d"
             type="prodetail"
@@ -122,23 +122,19 @@ import StartButton from "@startUI/StartButton.vue";
 import StartTabBar from "@startUI/StartTabBar.vue";
 import StartList from "@startUI/StartList.vue";
 import StartToolTip from "@startUI/StartToolTip.vue";
-// import clipboard from "clipboard-polyfill";
 import * as clipboard from "clipboard-polyfill/text";
-import { listpro } from "@startUI/mock.js";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
 import { mapActions } from "vuex";
 import session from "@utils/session";
+import { cloneDeep } from "lodash";
+import utilsNumber from "@utils/number.js";
+import { STC_PRECISION } from "@constants/contracts";
 export default {
   data() {
     return {
       copyContent: this.$t("复制"),
-      // disabledCopy: false,
-      labels: ["label one", "label two", "label three"],
-      flags: ["AA", "bb"],
-      colorType: "red",
       tabCategory: "prodetail",
-      listpro: listpro,
       tabItmes: [
         {
           label: this.$t("项目详情"),
@@ -166,6 +162,20 @@ export default {
     this.getCardInfo();
   },
   methods: {
+    changeDisplayList(val) {
+      // 需要再次组合下数据
+      let list = cloneDeep(val);
+      list[0].amount = utilsNumber
+        .bigNum(this.myStakeAmount)
+        .div(STC_PRECISION)
+        .toString();
+      list[1].amount = this.currencyTotalAmount;
+      list[3].amount = utilsNumber
+        .bigNum(this.stakeTotalAmount)
+        .div(STC_PRECISION)
+        .toString();
+      return list;
+    },
     hanleTabChange(val) {
       this.tabCategory = val;
     },
@@ -191,6 +201,12 @@ export default {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       detailCardId: (state) => state.detailCardId,
+    }),
+    ...mapState("StoreContracts", {
+      stakeAmount: (state) => state.stakeAmount,
+      currencyTotalAmount: (state) => state.currencyTotalAmount,
+      myStakeAmount: (state) => state.myStakeAmount,
+      stakeTotalAmount: (state) => state.stakeTotalAmount,
     }),
 
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),

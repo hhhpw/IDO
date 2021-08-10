@@ -43,14 +43,10 @@
         <div class="home-list-item-wrap-footer">
           <span v-if="cardType === 'open'">
             {{ $t("constants.进行中") }}
-            <span v-if="timers">
-              {{ timers[index].countdowm }}
-            </span>
-            <!-- {{ cardData.tt }} -->
           </span>
           <span v-if="cardType === 'will'">
             {{ $t("constants.即将推出") }}
-            {{ cardData.countdowm }}
+            {{ timers[index].countdown }}
           </span>
           <span v-if="cardType === 'closed'">
             {{ $t("constants.已经结束") }}
@@ -68,10 +64,8 @@ import variables from "@styles/variables.scss";
 import homeListItem from "@components/Home/homeListItem.vue";
 import StartSpace from "@startUI/StartSpace.vue";
 import mixinHome from "@mixins/home.js";
-// import { mapGetters } from "vuex";
 import { cloneDeep } from "lodash";
 import { countdown } from "@utils/date.js";
-// import dayjs from "dayjs";
 export default {
   name: "homelist",
   data() {
@@ -99,9 +93,9 @@ export default {
   },
   mounted() {
     this.timers = cloneDeep(this.data.cardInfoList);
-    if (this.data.cardType === "open" || this.data.cardType === "will") {
+    if (this.data.cardType === "will") {
       this.timers.map((d) => {
-        this.$set(d, "countdowm", 0);
+        this.$set(d, "countdown", d.startTime);
       });
       this.playTimer();
     }
@@ -118,15 +112,20 @@ export default {
         return this.$t("constants.已经结束");
       }
     },
+    formateDate(obj) {
+      const { day, hour, minute, second } = obj;
+      return `${day}D ${hour}:${minute}:${second}`;
+    },
     playTimer() {
       this.timer = setInterval(() => {
         for (let key in this.timers) {
-          this.timers[key].countdowm = countdown(this.timers[key].time);
+          this.timers[key].countdown = this.formateDate(
+            countdown(this.timers[key].startTime)
+          );
         }
       }, 1000);
     },
     emit(cardType, id) {
-      console.log("cardType", cardType, "id", id);
       this.$emit("clickMethod", {
         cardType: cardType,
         cardId: id,
@@ -163,7 +162,6 @@ export default {
     },
   },
   beforeDestroy() {
-    console.log("====>");
     clearInterval(this.timer);
   },
 };

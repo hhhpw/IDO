@@ -1,8 +1,9 @@
 <template>
   <div
     :set="
-      ((cardsInfo = cardTypeColorInfo(detailCardType)),
-      (cardInfo = detailCardInfo(detailCardId)))
+      (((cardsInfo = cardTypeColorInfo(detailCardType)),
+      (cardContent = detailCardInfo(detailCardId))),
+      (cardCountDown = cardContent.startTime))
     "
   >
     <div
@@ -30,7 +31,7 @@
       >
       </start-input>
     </div>
-    <p>{{ proState }}</p>
+    <p style="color: red">{{ proState }}</p>
     <start-space :size="12"></start-space>
     <div v-if="stakeStatus === 'unstake'" class="detail-wrap-content-left-info">
       <span>{{ $t("还可解押") }}: {{ renderAmount(stakeAmount) }}</span>
@@ -38,9 +39,7 @@
     <div
       class="detail-wrap-content-left-info"
       v-if="
-        detailCardType === 'open' &&
-        (proState === 2 || proState === 3) &&
-        stakeStatus === 'stake'
+        detailCardType === 'open' && proState === 2 && stakeStatus === 'stake'
       "
     >
       <div>
@@ -53,20 +52,52 @@
         <span>{{ renderAmount(balances.stc) }} STC</span>
       </div>
     </div>
-    <start-space :size="24"></start-space>
+    <start-space
+      :size="24"
+      v-if="
+        detailCardType === 'open' &&
+        stakeStatus === 'stake' &&
+        proState !== 3 &&
+        proState !== 4
+      "
+    ></start-space>
 
     <div
       class="detail-wrap-conent-left-amount-text"
       v-if="
-        detailCardType === 'open' && proState === 4 && stakeStatus === 'stake'
+        detailCardType === 'open' &&
+        (proState === 4 || proState === 3) &&
+        stakeStatus === 'stake'
       "
     >
-      <p>{{ $t("我的份额") }}</p>
-      <start-space :size="8"></start-space>
-      <p class="detail-wrap-conent-left-amount-text-amount">后端提供接口STC</p>
+      <template v-if="proState === 3">
+        <p class="detail-wrap-conent-left-amount-text-ttile">
+          {{ $t("我的质押") }}
+        </p>
+        <start-space :size="8"></start-space>
+        <p class="detail-wrap-conent-left-amount-text-amount">
+          {{ renderAmount(stakeAmount) }} STC
+        </p>
+      </template>
+      <template v-if="proState === 4">
+        <p class="detail-wrap-conent-left-amount-text-ttile">
+          {{ $t("我的份额") }}
+        </p>
+        <start-space :size="8"></start-space>
+        <p class="detail-wrap-conent-left-amount-text-amount">
+          {{ getCurrencyShare() }} 币种名字
+        </p>
+      </template>
     </div>
     <div class="detail-wrap-content-left-error" v-if="errorText">
       <p>{{ errorText }}</p>
+    </div>
+    <div
+      class="detail-wrap-content-left-unstake-tips"
+      v-if="stakeStatus === 'unstake'"
+    >
+      <start-space :size="8"></start-space>
+      <p>{{ $t("现在全部解押将会失去您的额度") }}</p>
     </div>
     <start-space :size="12"></start-space>
     <start-button
@@ -90,12 +121,33 @@
         <span
           v-if="
             detailCardType === 'open' &&
+            proState === 3 &&
+            stakeStatus === 'stake'
+          "
+        >
+          {{ $t("锁仓中") }}
+        </span>
+        <span
+          v-if="
+            detailCardType === 'open' &&
             proState === 4 &&
             stakeStatus === 'stake'
           "
           @click="payUSDT"
         >
           {{ $t("待支付") }}
+        </span>
+        <span v-if="proState === 5 && stakeStatus === 'stake'">
+          {{ $t("已结束") }}
+        </span>
+        <span
+          v-if="
+            proState === 1 &&
+            stakeStatus === 'stake' &&
+            detailCardType === 'will'
+          "
+        >
+          {{ $t("未开始") }}: {{ countdowntime }}
         </span>
 
         <span v-if="stakeStatus === 'unstake'" @click="onUnstakeClick">
@@ -120,7 +172,7 @@
       </p>
       <start-space :size="10"></start-space>
       <p class="detail-wrap-content-left-rule-content">
-        {{ this.lang === "zh" ? cardInfo.ruleDesc : cardInfo.ruleDescEn }}
+        {{ this.lang === "zh" ? cardContent.ruleDesc : cardContent.ruleDescEn }}
       </p>
     </div>
   </div>
@@ -133,9 +185,9 @@ import { mapGetters, mapState } from "vuex";
 import utilsNumber from "@utils/number.js";
 import { STC_PRECISION } from "@constants/contracts";
 import { isNil } from "lodash";
-// import StartInput from '../StartUI/StartInput.vue';
 import session from "@utils/session";
 import { Wallet } from "@contactLogic";
+import { countdown } from "@utils/date.js";
 export default {
   data() {
     return {
@@ -143,11 +195,23 @@ export default {
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
       lang: session.getItem("lang"),
       errorText: "",
+      countdowntime: null,
     };
   },
   components: { StartInput, StartSpace, StartButton },
-  mounted() {},
+  mounted() {
+    if (this.detailCardType === "will") {
+      let time = this.detailCardInfo(this.detailCardId).startTime;
+      this.timer = setInterval(() => {
+        this.countdowntime = this.formateDate(countdown(time));
+      }, 1000);
+    }
+  },
   methods: {
+    formateDate(obj) {
+      const { day, hour, minute, second } = obj;
+      return `${day}D ${hour}:${minute}:${second}`;
+    },
     getParams() {
       return {
         provider: this.stcProvider,
@@ -155,15 +219,30 @@ export default {
         chianID: this.stcChianID,
       };
     },
+    // 获取代币份额
+    getCurrencyShare() {
+      return utilsNumber
+        .bigNum(this.myStakeAmount)
+        .times(this.currencyTotalAmount)
+        .div(this.stakeTotalAmount)
+        .times(100000) // 这里需要动态换
+        .toString();
+    },
     changeStakeStatus() {
       this.stakeStatus = "unstake";
       this.errorText = "";
     },
     inputEvent(e) {
+      if (this.detailCardType === "will") {
+        return;
+      }
       this.errorText = "";
       this.inputValue = e;
     },
     maxEvent() {
+      if (this.detailCardType === "will") {
+        return;
+      }
       this.inputValue = 0;
       if (this.stakeStatus === "stake") {
         // 最大质押量、钱包余额做比较
@@ -251,7 +330,9 @@ export default {
       return true;
     },
     async onUnstakeClick() {
-      console.log("A");
+      if (this.detailCardType === "will") {
+        return;
+      }
       if (!this.validteUnstake()) return;
       const params = this.getParams();
       const res = await Wallet.unstakeWithSTC({
@@ -288,6 +369,9 @@ export default {
       restStakeAmount: (state) => state.restStakeAmount,
       stakeAmount: (state) => state.stakeAmount,
       proState: (state) => state.proState,
+      currencyTotalAmount: (state) => state.currencyTotalAmount,
+      myStakeAmount: (state) => state.myStakeAmount,
+      stakeTotalAmount: (state) => state.stakeTotalAmount,
     }),
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
@@ -339,7 +423,8 @@ export default {
   // p {
   // }
 }
-.detail-wrap-content-left-error {
+.detail-wrap-content-left-error,
+.detail-wrap-content-left-unstake-tips {
   font-size: 14px;
   color: $text_error_color;
   font-weight: 500;
@@ -347,14 +432,13 @@ export default {
 }
 .detail-wrap-conent-left-amount-text {
   text-align: center;
-  p:nth-child(1) {
+  .detail-wrap-conent-left-amount-text-ttile {
     color: #959fa1;
-
     font-size: 14px;
   }
   .detail-wrap-conent-left-amount-text-amount {
     color: #fff;
-    font-size: 18px;
+    font-size: 22px;
   }
 }
 .detail-wrap-content-left-unstake {

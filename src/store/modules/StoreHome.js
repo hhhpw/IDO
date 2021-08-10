@@ -74,13 +74,14 @@ const StoreHome = {
     },
   },
   actions: {
-    async getCardInfo({ state }) {
-      let pId = state.detailCardId;
-      let res = await homeApi.getCardInfo(pId);
-      console.log(res);
+    async getCardInfo() {
+      // let pId = state.detailCardId;
+      // let res = await homeApi.getCardInfo(pId);
+      // console.log(res);
     },
     async getDataList({ commit }) {
       let res = await homeApi.getDataList();
+      console.log("res", res);
       let results = [];
       const endStates = Object.keys(res.data);
       // 做个map，使得key对应，不然前端要该太多地方
@@ -104,7 +105,6 @@ const StoreHome = {
             payEndTime, // 支付结束时间
             assignmentStartTime, // 代币分配开始时间
             assignmentEndTime, // 代币分配结束时间
-            // 详情
             currencyTotal, //代币发行总量
             pledgeTotal, //总质押
           } = d;
@@ -140,11 +140,11 @@ const StoreHome = {
             decentralizedList: [
               {
                 title: "我的质押",
-                amount: 12313123,
+                amount: 0,
               },
               {
                 title: "代币销售数量",
-                amount: 32432432,
+                amount: 0,
               },
               {
                 title: "代币总量",
@@ -163,11 +163,6 @@ const StoreHome = {
                 amount: raiseTotal,
               },
             ],
-            // raiseInfoList: {
-            //   raiseTotal,
-            //   rate,
-
-            // },
           };
         });
         let obj = {
@@ -176,8 +171,8 @@ const StoreHome = {
         };
         results.push(obj);
       }
+      results = [results[0]];
       commit(types.STORE_HOME_SET_DATA_LIST, results);
-      console.log("results", results);
     },
 
     // getTableList({ commit }) {
