@@ -1,5 +1,10 @@
 <template>
-  <div :set="(cardsInfo = cardTypeColorInfo(detailCardType))">
+  <div
+    :set="
+      ((cardsInfo = cardTypeColorInfo(detailCardType)),
+      (cardInfo = detailCardInfo(detailCardId)))
+    "
+  >
     <div
       class="detail-input-wrap"
       :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
@@ -91,11 +96,7 @@
       </p>
       <start-space :size="10"></start-space>
       <p class="detail-wrap-content-left-rule-content">
-        Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、
-        星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。Starcoin继承了比特币卓越的安全机制，
-        采用新PoW算法极大地增强了网络和智能合约的安全性和效率，目标是建立为普通用户提供服务的金融基础设施。
-        Starcoin是一个为分布式金融而设计的区块链项目，获得了币信、星辰资本、币印、Linkvc、嘉楠耘智等知名机构投资。
-        Starcoin继承了比特币卓越的安全机制，采用新PoW算法极大地
+        {{ this.lang === "zh" ? cardInfo.ruleDesc : cardInfo.ruleDescEn }}
       </p>
     </div>
   </div>
@@ -108,12 +109,15 @@ import { mapGetters, mapState } from "vuex";
 import utilsNumber from "@utils/number.js";
 import { STC_PRECISION } from "@constants/contracts";
 import { isNil } from "lodash";
+// import StartInput from '../StartUI/StartInput.vue';
+import session from "@utils/session";
 import { Wallet } from "@contactLogic";
 export default {
   data() {
     return {
       inputValue: "",
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
+      lang: session.getItem("lang"),
       errorText: "",
     };
   },
@@ -229,6 +233,7 @@ export default {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       colorInfo: (state) => state.colorInfo,
+      detailCardId: (state) => state.detailCardId,
     }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,
@@ -240,7 +245,7 @@ export default {
       restStakeAmount: (state) => state.restStakeAmount,
       stakeAmount: (state) => state.stakeAmount,
     }),
-    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
+    ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
   beforeDestroy() {},
 };
