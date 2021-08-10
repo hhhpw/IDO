@@ -63,21 +63,19 @@ import { Wallet } from "@contactLogic";
 import format from "@utils/format";
 import utilsTool from "@utils/tool";
 import { isNil, isUndefined } from "lodash";
+import { STAR_MASK_PLUGIN_URL } from "@constants/contracts";
 
 export default {
   name: "StartHeader",
   data() {
     return {
-      // activeIndex: "home",
-      // walletStatus: "Connect",
       currLang: null,
       langs: [
         { text: "中文", value: "zh" },
         { text: "ENG", value: "en" },
       ],
       format,
-      pluginUrl:
-        "https://chrome.google.com/webstore/category/extensions?hl=zh-CN",
+      // pluginUrl: STAR_MASK_PLUGIN_URL,
     };
   },
   components: {
@@ -112,14 +110,10 @@ export default {
         window.location.reload();
       }
     },
-    // onClickInstallStarMask() {
-    //   this.onboarding.startOnboarding();
-    // },
     async loadData() {
       const chianID = await Wallet.getStcChianID();
       session.setItem("chianID", chianID);
       this.setStcChianID(chianID);
-
       const permissions = await Wallet.getPermissions();
       console.log("permissions", permissions);
       if (!permissions.length) {
@@ -141,7 +135,6 @@ export default {
             stc: balance,
           });
         }
-        // console.log("balance", balance, typeof balance);
       }
     },
     async setPermissions() {
@@ -175,10 +168,12 @@ export default {
                     "margin-top": "8px",
                   },
                   on: {
-                    click: () => utilsTool.openNewWindow(this.pluginUrl),
+                    click: () => {
+                      utilsTool.openNewWindow(STAR_MASK_PLUGIN_URL);
+                    },
                   },
                 },
-                this.pluginUrl
+                STAR_MASK_PLUGIN_URL
               ),
               h(
                 "start-button",
@@ -192,25 +187,27 @@ export default {
                     "margin-top": "20px",
                   },
                   on: {
-                    click: () => utilsTool.openNewWindow(this.pluginUrl),
+                    click: () => {
+                      utilsTool.openNewWindow(STAR_MASK_PLUGIN_URL);
+                    },
                   },
                 },
                 this.$t("前去下载")
               ),
             ]
           ),
-          duration: 1200,
+          duration: 2000,
           offset: 100,
           showClose: false,
         });
-        this.onboarding.startOnboarding();
+        // 加上会直接跳转到chorme插件
+        // 推测是链接跳转
+        // this.onboarding.startOnboarding();
         return;
       }
-      console.log("=====isStarMaskInstalled====", isStarMaskInstalled);
       const isStarMaskConnected =
         this.stcAccounts && this.stcAccounts.length > 0;
       if (isStarMaskConnected) {
-        // this.walletStatus = "Connected";
         this.$store.commit(
           "StoreWallet/SET_WALLET_CONNECT_STATUS",
           "connected"
@@ -218,7 +215,10 @@ export default {
         if (this.onboarding) this.onboarding.stopOnboarding();
         this.loadData();
       } else {
-        // this.walletStatus = "Connect";
+        // 检测钱包账户切换
+        window.starcoin.on("accountsChanged", () => {
+          console.log("=====钱包账户切换=====");
+        });
         this.$store.commit(
           "StoreWallet/SET_WALLET_CONNECT_STATUS",
           "unConnected"

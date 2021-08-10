@@ -7,7 +7,7 @@ import {
 // import session from "@utils/session.js";
 // 合约相关接口
 import request from "@utils/request";
-const COUNT = 5;
+const COUNT = 6;
 // import { getTokenByCurrency } from "@utils/tokens";
 
 // setTimeout(() => {

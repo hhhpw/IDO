@@ -46,7 +46,8 @@
           </span>
           <span v-if="cardType === 'will'">
             {{ $t("constants.即将推出") }}
-            {{ timers[index].countdown }}
+
+            {{ timers && timers[index].countdown }}
           </span>
           <span v-if="cardType === 'closed'">
             {{ $t("constants.已经结束") }}

@@ -32,12 +32,12 @@ const createStcProvider = () => {
  * */
 const createStarMaskOnboarding = () => {
   const currentUrl = new URL(window.location.href);
-  console.log("currentUrl", currentUrl);
+  // console.log("currentUrl", currentUrl);
   const forwarderOrigin =
     currentUrl.hostname === "localhost" ? "http://localhost:9032" : undefined;
 
   let onboarding;
-  console.log("forwarderOrigin", forwarderOrigin);
+  // console.log("forwarderOrigin", forwarderOrigin);
   try {
     onboarding = new StarMaskOnboarding({ forwarderOrigin });
   } catch (error) {
@@ -99,7 +99,11 @@ const getAccountBalance = async ({ provider, account, token }) => {
       account,
       `0x1::Account::Balance<${token}>`
     );
-    balance = utilsNumber.bigNum(result.token.value).toString();
+    if (result) {
+      balance = utilsNumber.bigNum(result.token.value).toString();
+    } else {
+      balance = 0;
+    }
     console.log("balance", balance);
   } catch (error) {
     console.error(error);

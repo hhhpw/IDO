@@ -4,8 +4,8 @@ import dayjs from "dayjs";
 import homeApi from "../../api/home.js";
 import utilsNumber from "@utils/number.js";
 const mapKey = new Map([
-  ["init", "open"],
-  ["processing", "will"],
+  ["processing", "open"],
+  ["init", "will"],
   ["finish", "closed"],
 ]);
 const StoreHome = {
@@ -83,7 +83,9 @@ const StoreHome = {
       let res = await homeApi.getDataList();
       console.log("res", res);
       let results = [];
-      const endStates = Object.keys(res.data);
+      const endStates = ["processing", "init", "finish"];
+      //  Object.keys(res.data);
+      // console.log("endStates", endStates);
       // 做个map，使得key对应，不然前端要该太多地方
       // init，processing，finish',
       // let newArr = arr.filter(function (item) {
@@ -171,7 +173,8 @@ const StoreHome = {
         };
         results.push(obj);
       }
-      results = [results[0]];
+      console.log("results", results);
+      // results = [results[0]];
       commit(types.STORE_HOME_SET_DATA_LIST, results);
     },
 

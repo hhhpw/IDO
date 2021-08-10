@@ -54,17 +54,20 @@ const StoreWallet = {
         .then((result) => {
           console.log("result", result);
           if (result[0].status === "fulfilled") {
-            let res = fromPairs(result[0].value.result.value);
-            let value = res["stc_staking"]["Struct"]["value"][0][1]["U128"];
-            let myStake = res["stc_staking_amount"]["U128"];
-            commit(types.SET_STAKE_AMOUNT, value);
-            commit(types.SET_STAKE_MY_AMOUNT, myStake);
+            if (result[0].value.result) {
+              let res = fromPairs(result[0].value.result.value);
+              let value = res["stc_staking"]["Struct"]["value"][0][1]["U128"];
+              let myStake = res["stc_staking_amount"]["U128"];
+              commit(types.SET_STAKE_AMOUNT, value);
+              commit(types.SET_STAKE_MY_AMOUNT, myStake);
+            }
           }
           if (result[1].status === "fulfilled") {
             let res = fromPairs(result[1].value.result.value);
             let amount = res.personal_stc_staking_limit.U128;
             let proState = res.state.U8;
-            let currencyTotalAmount = res.token_offering_amount.U128;
+            let currencyTotalAmount = res.token_total_amount.U128;
+            console.log("currencyTotalAmount", currencyTotalAmount);
             let stakeTotalAmount = res.stc_staking_amount.U128;
             commit(types.SET_PROJECT_INFO, {
               amount,
@@ -79,7 +82,7 @@ const StoreWallet = {
           ) {
             const restStakeAmount = utilsNumber
               .bigNum(state.personStakeAmount)
-              .minus(state.stakeAmount)
+              .minus(state.stakeAmount || 0)
               .toString();
             commit(types.SET_REST_STAKE_AMOUNT, restStakeAmount);
           }

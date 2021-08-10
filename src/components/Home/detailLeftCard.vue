@@ -58,7 +58,8 @@
         detailCardType === 'open' &&
         stakeStatus === 'stake' &&
         proState !== 3 &&
-        proState !== 4
+        proState !== 4 &&
+        proState !== 5
       "
     ></start-space>
 
@@ -85,7 +86,8 @@
         </p>
         <start-space :size="8"></start-space>
         <p class="detail-wrap-conent-left-amount-text-amount">
-          {{ getCurrencyShare() }} 币种名字
+          {{ getCurrencyShare(cardContent.tokenPrecision) }}
+          {{ cardContent.currency }}
         </p>
       </template>
     </div>
@@ -220,12 +222,12 @@ export default {
       };
     },
     // 获取代币份额
-    getCurrencyShare() {
+    getCurrencyShare(precision) {
       return utilsNumber
         .bigNum(this.myStakeAmount)
         .times(this.currencyTotalAmount)
         .div(this.stakeTotalAmount)
-        .div(STC_PRECISION) // 这里需要动态换
+        .div(Math.pow(10, precision)) // 这里需要动态换
         .toString();
     },
     changeStakeStatus() {
@@ -314,6 +316,7 @@ export default {
       });
       // 质押成功
       if (res) {
+        this.inputValue = "";
         console.log("=====质押成功=====");
         console.log("stake result:", res);
       }
@@ -342,7 +345,11 @@ export default {
           .times(STC_PRECISION)
           .toString(),
       });
-      console.log("unstake result:", res);
+      if (res) {
+        this.inputValue = "";
+        console.log("=====解押成功=====");
+        console.log("unstake result:", res);
+      }
     },
     async payUSDT() {
       // if (!this.validtePay()) return;
@@ -350,7 +357,10 @@ export default {
       const res = await Wallet.payUSDT({
         ...params,
       });
-      console.log("payUSDT result:", res);
+      if (res) {
+        console.log("=====支付成功=====");
+        console.log("payUSDT result:", res);
+      }
     },
   },
   computed: {

@@ -4,7 +4,11 @@
     :set="
       (((colorsInfo = cardTypeColorInfo(detailCardType)),
       (cardInfo = detailCardInfo(detailCardId))),
-      (detailListAmount = changeDisplayList(cardInfo.decentralizedList)))
+      (detailListAmount = changeDisplayList(
+        cardInfo.decentralizedList,
+        cardInfo.tokenPrecision,
+        cardInfo.currency
+      )))
     "
   >
     <div
@@ -162,18 +166,73 @@ export default {
     this.getCardInfo();
   },
   methods: {
-    changeDisplayList(val) {
+    changeDisplayList(val, precision, currency) {
       // 需要再次组合下数据
       let list = cloneDeep(val);
-      list[0].amount = utilsNumber
-        .bigNum(this.myStakeAmount)
-        .div(STC_PRECISION)
-        .toString();
-      list[1].amount = this.currencyTotalAmount;
-      list[3].amount = utilsNumber
-        .bigNum(this.stakeTotalAmount)
-        .div(STC_PRECISION)
-        .toString();
+      list = list.map((d, i) => {
+        if (i === 0) {
+          return {
+            ...d,
+            amount: this.myStakeAmount
+              ? utilsNumber
+                  .bigNum(this.myStakeAmount)
+                  .div(STC_PRECISION)
+                  .toString()
+              : 0,
+            unit: "STC",
+          };
+        }
+        if (i === 1) {
+          return {
+            ...d,
+            amount: utilsNumber
+              .bigNum(this.currencyTotalAmount)
+              .div(Math.pow(10, precision)), // 还需要除币种精度
+            unit: currency,
+          };
+        }
+        if (i === 2) {
+          return {
+            ...d,
+            unit: currency,
+          };
+        }
+        if (i === 3) {
+          return {
+            ...d,
+            amount: utilsNumber
+              .bigNum(this.stakeTotalAmount)
+              .div(STC_PRECISION)
+              .toString(),
+            unit: "STC",
+          };
+        }
+        if (i === 4) {
+          return {
+            ...d,
+            amount: utilsNumber
+              .bigNum(this.currencyTotalAmount)
+              .div(Math.pow(10, precision)), // 还需要除币种精度
+            unit: currency,
+          };
+        }
+        if (i === 4) {
+          return {
+            ...d,
+            unit: "USDT",
+          };
+        }
+      });
+      // list[0].amount = this.myStakeAmount
+      //   ? utilsNumber.bigNum(this.myStakeAmount).div(STC_PRECISION).toString()
+      //   : 0;
+      // list[1].amount = utilsNumber
+      //   .bigNum(this.currencyTotalAmount)
+      //   .div(Math.pow(10, precision)); // 还需要除币种精度
+      // list[3].amount = utilsNumber
+      //   .bigNum(this.stakeTotalAmount)
+      //   .div(STC_PRECISION)
+      //   .toString();
       return list;
     },
     hanleTabChange(val) {
