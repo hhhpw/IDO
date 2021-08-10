@@ -82,6 +82,12 @@ const StoreHome = {
       const endStates = Object.keys(mockData.data);
       // 做个map，使得key对应，不然前端要该太多地方
       // init，processing，finish',
+      // let newArr = arr.filter(function (item) {
+      //   return endStates.every(function (item1) {
+      //       return item.id != item1.id;
+      //   })
+      // });
+      // console.log(newArr);
       for (let i = 0; i < endStates.length; i++) {
         const cardInfoList = mockData.data[endStates[i]].map((d) => {
           const {
