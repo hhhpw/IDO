@@ -28,7 +28,6 @@ const StoreWallet = {
   actions: {
     async loadInfo({ rootState, commit, state }, payload) {
       console.log("payload", payload);
-      debugger;
       let currency = payload.currency || "DUMMY";
       const chainID = rootState.StoreWallet.stcChianID;
       const token = getTokenByCurrency(chainID, currency);
