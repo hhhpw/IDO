@@ -41,8 +41,7 @@
 import HomeList from "./homeList.vue";
 import StartButton from "@startUI/StartButton.vue";
 import support from "./support.vue";
-// import { cardData } from "@startUI/mock.js";
-// import { Notification } from "element-ui";
+import { Notification } from "element-ui";
 import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StartSpace from "@startUI/StartSpace.vue";
@@ -55,7 +54,6 @@ export default {
     };
   },
   components: {
-    // StartCard,
     StartButton,
     support,
     HomeDetail,
@@ -63,45 +61,36 @@ export default {
     StartSpace,
   },
   mounted() {
-    // this.cardTTTData = cardData;
     this.getDataList();
-    // setTimeout(() => {
-    //   this.cardTTTData = cardData;
-    // }, 2000);
   },
   methods: {
     ...mapActions("StoreHome", ["getDataList"]),
     clickMethod(value) {
-      // if (this.walletStatus !== "connected") {
-      //   const h = this.$createElement;
-      //   Notification({
-      //     message: h(
-      //       "div",
-      //       {
-      //         style: {
-      //           position: "relative",
-      //           "font-size": "14px",
-      //           color: "#FFFFFF",
-      //         },
-      //       },
-      //       [h("p", this.$t("wallet.请连接钱包"))]
-      //     ),
-      //     duration: 2000,
-      //     offset: 80,
-      //     showClose: false,
-      //   });
-      //   return;
-      // }
+      if (this.walletStatus !== "connected") {
+        const h = this.$createElement;
+        Notification({
+          message: h(
+            "div",
+            {
+              style: {
+                position: "relative",
+                "font-size": "14px",
+                color: "#FFFFFF",
+              },
+            },
+            [h("p", this.$t("wallet.connect-tip"))]
+          ),
+          duration: 2000,
+          offset: 80,
+          showClose: false,
+        });
+        return;
+      }
       // 防止footer展露出来
       window.scrollTo(0, 500);
       this.$store.commit(
         "StoreHome/STORE_HOME_CHANGE_STATUS",
-        Object.assign(
-          {},
-          { status: "home-detail" },
-          { ...value }
-          // { cardType: value.cardType }
-        )
+        Object.assign({}, { status: "home-detail" }, { ...value })
       );
     },
   },

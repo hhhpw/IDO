@@ -7,7 +7,7 @@ import {
 // import session from "@utils/session.js";
 // 合约相关接口
 import request from "@utils/request";
-const COUNT = 6;
+const COUNT = 8;
 // import { getTokenByCurrency } from "@utils/tokens";
 
 // setTimeout(() => {
@@ -51,12 +51,7 @@ function getCurrencyPrecision() {
 }
 
 // 合约项目详情
-function getContractsProjectInfo({
-  // currency = "STC",
-  // chainID = session.getItem("chainID"),
-  // chainID = "251",
-  token,
-}) {
+function getContractsProjectInfo({ token }) {
   console.log("====t0ken====", token);
   if (!token) return;
   // const token = getTokenByCurrency(chainID, currency);
@@ -69,7 +64,7 @@ function getContractsProjectInfo({
       CONTRACTS_ADD, //合约地址
       // "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
       // Offering3 也是个变量？
-      `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${token.code}>`,
+      `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${token}>`,
     ],
   };
   console.log("params", params);
@@ -91,7 +86,7 @@ function getStakeAmount(accountToken, token) {
     method: "contract.get_resource",
     params: [
       accountToken,
-      `${CONTRACTS_ADD}::Offering${COUNT}::Staking<${token.code}>`,
+      `${CONTRACTS_ADD}::Offering${COUNT}::Staking<${token}>`,
     ],
   };
   return request({

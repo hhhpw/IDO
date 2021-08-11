@@ -69,7 +69,7 @@
             colorsInfo['common-color']
           )
         "
-        >{{ $t(`${d.label}`) }}</start-button
+        >{{ $t(`constants.${d.label}`) }}</start-button
       >
     </div>
     <start-space :size="20"></start-space>
@@ -134,18 +134,19 @@ import session from "@utils/session";
 import { cloneDeep } from "lodash";
 import utilsNumber from "@utils/number.js";
 import { STC_PRECISION } from "@constants/contracts";
+import utilsTool from "@utils/tool";
 export default {
   data() {
     return {
-      copyContent: this.$t("复制"),
+      copyContent: this.$t("constants.复制"),
       tabCategory: "prodetail",
       tabItmes: [
         {
-          label: this.$t("项目详情"),
+          label: this.$t("constants.项目详情"),
           value: "prodetail",
         },
         {
-          label: this.$t("时间"),
+          label: this.$t("constants.时间"),
           value: "time",
         },
       ],
@@ -172,54 +173,71 @@ export default {
       list = list.map((d, i) => {
         if (i === 0) {
           return {
-            ...d,
-            amount: this.myStakeAmount
-              ? utilsNumber
-                  .bigNum(this.myStakeAmount)
-                  .div(STC_PRECISION)
-                  .toString()
-              : 0,
-            unit: "STC",
+            name: this.$t(`constants.我的质押`),
+            text: `${
+              this.myStakeAmount
+                ? utilsNumber.formatNumberMeta(
+                    utilsNumber
+                      .bigNum(this.myStakeAmount)
+                      .div(STC_PRECISION)
+                      .toString(),
+                    { grouped: true }
+                  ).text
+                : 0
+            } STC`,
           };
         }
         if (i === 1) {
           return {
-            ...d,
-            amount: utilsNumber
-              .bigNum(this.currencyTotalAmount)
-              .div(Math.pow(10, precision)), // 还需要除币种精度
-            unit: currency,
+            // ...d,
+            name: this.$t(`constants.总销售量`),
+            text:
+              utilsNumber.formatNumberMeta(
+                utilsNumber
+                  .bigNum(this.currencyTotalAmount)
+                  .div(Math.pow(10, precision)),
+                { grouped: true }
+              ).text +
+              " " +
+              currency,
           };
         }
         if (i === 2) {
           return {
-            ...d,
-            unit: currency,
+            name: this.$t(`constants.代币发行总量`),
+            text:
+              utilsNumber.formatNumberMeta(d, { grouped: true }).text +
+              " " +
+              currency,
           };
         }
         if (i === 3) {
           return {
-            ...d,
-            amount: utilsNumber
-              .bigNum(this.stakeTotalAmount)
-              .div(STC_PRECISION)
-              .toString(),
-            unit: "STC",
+            name: this.$t("constants.总质押"),
+            text:
+              utilsNumber.formatNumberMeta(
+                utilsNumber
+                  .bigNum(this.stakeTotalAmount)
+                  .div(STC_PRECISION)
+                  .toString(),
+                { grouped: true }
+              ).text + " STC",
           };
         }
         if (i === 4) {
           return {
-            ...d,
-            amount: utilsNumber
-              .bigNum(this.currencyTotalAmount)
-              .div(Math.pow(10, precision)), // 还需要除币种精度
-            unit: currency,
+            name: this.$t("constants.兑换比例"),
+            text: `1 ${currency} = ${
+              utilsNumber.formatNumberMeta(d, { grouped: true }).text
+            } USDT`,
           };
         }
-        if (i === 4) {
+        if (i === 5) {
           return {
-            ...d,
-            unit: "USDT",
+            name: this.$t("constants.总募资"),
+            text: `${
+              utilsNumber.formatNumberMeta(d, { grouped: true }).text
+            } USDT`,
           };
         }
       });
@@ -239,14 +257,14 @@ export default {
       this.tabCategory = val;
     },
     handleToPath(val) {
-      window.open(val.url, "_blank");
+      utilsTool.openNewWindow(val.url);
     },
     clipHash(val) {
       clipboard.writeText(val).then(
         () => {
-          this.copyContent = this.$t("复制成功");
+          this.copyContent = this.$t("constants.复制成功");
           setTimeout(() => {
-            this.copyContent = this.$t("复制");
+            this.copyContent = this.$t("constants.复制");
           }, 1500);
         },
         () => {

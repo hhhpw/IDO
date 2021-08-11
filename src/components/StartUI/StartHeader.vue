@@ -112,17 +112,17 @@ export default {
     },
     async loadData() {
       const chianID = await Wallet.getStcChianID();
-      session.setItem("chianID", chianID);
+      // session.setItem("chianID", chianID);
       this.setStcChianID(chianID);
       const permissions = await Wallet.getPermissions();
-      console.log("permissions", permissions);
+      // console.log("permissions", permissions);
       if (!permissions.length) {
         this.setPermissions();
       }
       this.getAccountBalance();
     },
     async getAccountBalance() {
-      console.log("stcAccounts", this.stcAccounts);
+      // console.log("stcAccounts", this.stcAccounts);
       if (this.stcProvider) {
         const params = {
           provider: this.stcProvider,

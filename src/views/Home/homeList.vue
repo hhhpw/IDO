@@ -3,11 +3,11 @@
     class="home-list animate__animated animate__fadeInUp"
     :style="getBg(cardType)"
   >
-    <slot name="title"> </slot>
+    <!-- <slot name="title"> </slot> -->
     <p class="home-list-title">
       {{ renderTitle(cardType) }}
     </p>
-    <slot name=""> </slot>
+    <!-- <slot name=""> </slot> -->
     <div
       class="home-list-content"
       :style="{ '--color': cardsInfo['common-color'] }"
@@ -16,7 +16,7 @@
         class="home-list-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
         :key="index"
-        @click="emit(cardData.cardType, cardData.id)"
+        @click="emit(cardData.cardType, cardData.id, cardData.address)"
         :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
         <div
@@ -30,7 +30,7 @@
           "
         >
           <span v-for="(l, ix) in cardData.attributes.slice(0, 2)" :key="ix">
-            {{ $t(`${l.name}`) }}
+            {{ $t(`constants.${l.name}`) }}
           </span>
         </div>
         <home-list-item
@@ -115,7 +115,7 @@ export default {
     },
     formateDate(obj) {
       const { day, hour, minute, second } = obj;
-      return `${day}D ${hour}:${minute}:${second}`;
+      return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
     },
     playTimer() {
       this.timer = setInterval(() => {
@@ -126,10 +126,11 @@ export default {
         }
       }, 1000);
     },
-    emit(cardType, id) {
+    emit(cardType, id, address) {
       this.$emit("clickMethod", {
         cardType: cardType,
         cardId: id,
+        token: address,
       });
     },
   },

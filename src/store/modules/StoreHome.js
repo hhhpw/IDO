@@ -15,12 +15,15 @@ const StoreHome = {
     detailCardType: "", // 详情页卡片类型,
     detailCardId: null, // 具体卡片的id
     cardData: null,
+    currencyToken: null,
   },
   mutations: {
     [types.STORE_HOME_CHANGE_STATUS](state, info) {
-      const { cardType, status, cardId } = info;
+      console.log("info", info);
+      const { cardType, status, cardId, token } = info;
       state.detailCardType = cardType;
       state.status = status;
+      state.currencyToken = token;
       if (cardId) {
         state.detailCardId = cardId;
       }
@@ -84,16 +87,6 @@ const StoreHome = {
       console.log("res", res);
       let results = [];
       const endStates = ["processing", "init", "finish"];
-      //  Object.keys(res.data);
-      // console.log("endStates", endStates);
-      // 做个map，使得key对应，不然前端要该太多地方
-      // init，processing，finish',
-      // let newArr = arr.filter(function (item) {
-      //   return endStates.every(function (item1) {
-      //       return item.id != item1.id;
-      //   })
-      // });
-      // console.log(newArr);
       for (let i = 0; i < endStates.length; i++) {
         const cardInfoList = res.data[endStates[i]].map((d) => {
           const {
@@ -108,16 +101,16 @@ const StoreHome = {
             assignmentStartTime, // 代币分配开始时间
             assignmentEndTime, // 代币分配结束时间
             currencyTotal, //代币发行总量
-            pledgeTotal, //总质押
+            // capTotal,
           } = d;
-          const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toNumber();
+          const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toString();
           return {
             ...d,
             cardType: mapKey.get(endStates[i]),
             capTotal,
             proTimeList: [
               {
-                title: "质押开始时间",
+                title: "质押时间",
                 startDate: dayjs(startTime).format("YYYY MM/DD HH:mm:ss"),
                 endDate: dayjs(pledgeEndTime).format("YYYY MM/DD HH:mm:ss"),
               },
@@ -140,30 +133,36 @@ const StoreHome = {
               },
             ],
             decentralizedList: [
-              {
-                title: "我的质押",
-                amount: 0,
-              },
-              {
-                title: "代币销售数量",
-                amount: 0,
-              },
-              {
-                title: "代币总量",
-                amount: currencyTotal,
-              },
-              {
-                title: "总质押",
-                amount: pledgeTotal,
-              },
-              {
-                title: "售价",
-                amount: rate,
-              },
-              {
-                title: "目标筹款",
-                amount: raiseTotal,
-              },
+              0,
+              0,
+              currencyTotal,
+              0,
+              rate,
+              raiseTotal,
+              // {
+              //   title: "我的质押",
+              //   amount: 0,
+              // },
+              // {
+              //   title: "代币销售数量",
+              //   amount: 0,
+              // },
+              // {
+              //   title: "代币总量",
+              //   amount: currencyTotal,
+              // },
+              // {
+              //   title: "总质押",
+              //   amount: 0,
+              // },
+              // {
+              //   title: "售价",
+              //   amount: rate,
+              // },
+              // {
+              //   title: "目标筹款",
+              //   amount: raiseTotal,
+              // },
             ],
           };
         });
@@ -173,6 +172,7 @@ const StoreHome = {
         };
         results.push(obj);
       }
+      results = results.filter((d) => d.cardInfoList.length > 0);
       console.log("results", results);
       // results = [results[0]];
       commit(types.STORE_HOME_SET_DATA_LIST, results);

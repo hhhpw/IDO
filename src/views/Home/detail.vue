@@ -6,7 +6,7 @@
         class="detail-wrap-content-left"
         :style="`background-image: url(${require(`../../assets/home/${detailCardType}-left-bg.png`)})`"
       >
-        <detail-left-card> </detail-left-card>
+        <detail-left-card @eventLoop="eventLoop"> </detail-left-card>
       </div>
       <div
         class="detail-wrap-content-right"
@@ -24,9 +24,7 @@ import DetailLeftCard from "@components/Home/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    // StartInput,
     StartSpace,
-    // StartButton,
     DetailRightCard,
     DetailLeftCard,
   },
@@ -35,14 +33,16 @@ export default {
       inputValue: "",
     };
   },
-  props: {
-    cardInfo: Object,
-  },
+  // props: {
+  //   cardInfo: Object,
+  // },
   mounted() {
+    // console.log("cardInfo", this.cardInfo);
     // this.loadInfo();
     // this.getStakeAmount();
     // this.getContractsProjectInfo("STC");
-    this.loadInfo({ currency: "DUMMY" });
+    // this.loadInfo({ currency: "DUMMY" });
+    this.loadInfo({ token: this.currencyToken });
     // console.log("stcAccounts", this.stcAccounts);
     // if (!this.stcAccounts || this.stcAccounts.length < 1) {
     //   console.error("账号不存在");
@@ -51,6 +51,12 @@ export default {
     // }
   },
   methods: {
+    // 支付后轮询查询状态
+    eventLoop() {
+      this.timer = setInterval(() => {
+        this.loadInfo({ token: this.currencyToken });
+      }, 7000);
+    },
     inputEvent(e) {
       this.inputValue = e;
     },
@@ -63,6 +69,7 @@ export default {
   computed: {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
+      currencyToken: (state) => state.currencyToken,
     }),
     // ...mapState("StoreWallet", {
     //   stcAccounts: (state) => state.stcAccounts,

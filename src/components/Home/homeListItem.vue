@@ -21,7 +21,7 @@
               colorsInfo['common-color']
             )
           "
-          >{{ $t(`${d.label}`) }}</start-button
+          >{{ $t(`constants.${d.label}`) }}</start-button
         >
       </div>
       <start-space :size="30"></start-space>
@@ -31,14 +31,17 @@
           :key="index"
           :name="iconkey.name + '-' + cardType"
           class="home-list-item-rough-icons-icon"
+          @click.stop.prevent="openURL(iconkey.url)"
         ></svg-icon>
       </div>
       <start-space :size="30"></start-space>
       <div class="home-list-item-rough-infos">
-        <!-- utilsNumber.formatNumberMeta(data.amount, { grouped: true }).text -->
-        <start-item-cell :data="cellData('raiseTotal')"> </start-item-cell>
-        <start-item-cell :data="cellData('rate')"> </start-item-cell>
-        <start-item-cell :data="cellData('capTotal')"> </start-item-cell>
+        <start-item-cell :data="cellData('raiseTotal', data.currency)">
+        </start-item-cell>
+        <start-item-cell :data="cellData('rate', data.currency)">
+        </start-item-cell>
+        <start-item-cell :data="cellData('capTotal', data.currency)">
+        </start-item-cell>
       </div>
     </div>
   </div>
@@ -51,6 +54,7 @@ import StartItemCell from "@startUI/StartItemCell.vue";
 import { mapGetters } from "vuex";
 import mixinHome from "@/mixins/home.js";
 import utilsNumber from "@utils/number.js";
+import utilsTool from "@utils/tool";
 export default {
   components: { StartButton, StartSpace, SvgIcon, StartItemCell },
   mixins: [mixinHome],
@@ -68,21 +72,34 @@ export default {
   },
   mounted() {},
   methods: {
-    cellData(key) {
-      /////  这里写key
-      return {
-        title: key,
-        amount: utilsNumber.formatNumberMeta(this.data[key], { grouped: true })
-          .text,
-      };
-      // return data.
+    openURL(url) {
+      utilsTool.openNewWindow(url);
     },
-    // emit() {
-    //   this.$emit("clickMethod", {
-    //     cardType: this.cardType,
-    //     // id: this.data.id,
-    //   });
-    // },
+    cellData(key, currency) {
+      let name, text;
+      if (key === "raiseTotal") {
+        name = this.$t("constants.总募资");
+        text = `${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } USDT`;
+      }
+      if (key === "rate") {
+        name = this.$t("constants.兑换比例");
+        text = `1 ${currency} = ${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } USDT`;
+      }
+      if (key === "capTotal") {
+        name = this.$t("constants.总销售量");
+        text = `${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } ${currency}`;
+      }
+      return {
+        title: name,
+        text,
+      };
+    },
   },
   computed: {
     ...mapGetters("StoreHome", ["cardTypeColorInfo"]),

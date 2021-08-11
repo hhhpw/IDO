@@ -6,11 +6,10 @@
       :style="setStyle()"
     >
       <span class="title">
-        {{ $t(`${data.title}`) }}
+        {{ data.name }}
       </span>
       <span class="amount">
-        <!-- {{ data.amount }} -->
-        {{ utilsNumber.formatNumberMeta(data.amount, { grouped: true }).text }}
+        {{ data.text }}
       </span>
     </div>
     <div
@@ -19,25 +18,25 @@
       :style="setStyle()"
     >
       <span class="title">
-        {{ $t(`${data.title}`) }}
+        {{ $t(`constants.${data.title}`) }}
       </span>
       <div class="time-info">
-        <p v-if="data.startDate">
+        <p v-if="data.startDate" class="time-info-date">
           <span>
-            {{ $t("始") }}
+            {{ $t("constants.始") }}
           </span>
           <span>{{ data.startDate }}</span>
         </p>
-        <p v-if="data.endDate">
+        <p v-if="data.endDate" class="time-info-date">
           <span>
-            {{ $t("至") }}
+            {{ $t("constants.至") }}
           </span>
           <!-- <span> 2021 08 12 / 12:00:00 </span> -->
           <span>{{ data.endDate }}</span>
         </p>
-        <p v-else>
+        <!-- <p v-else>
           <span>{{ data.date }}</span>
-        </p>
+        </p> -->
       </div>
     </div>
   </div>
@@ -101,15 +100,22 @@ export default {
       align-items: center;
       .title {
         display: flex;
-        flex: 1;
+        flex: 1.3;
         color: $text_gray_color;
       }
       .time-info {
+        margin-left: 30px;
         display: flex;
         flex: 3;
         flex-direction: column;
         justify-content: center;
         color: #fff;
+        .time-info-date {
+          span:first-child {
+            display: inline-block;
+            width: 45px;
+          }
+        }
       }
     }
   }
