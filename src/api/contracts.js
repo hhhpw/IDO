@@ -4,31 +4,24 @@ import {
   CONTRACTS_TEST_ADDRESS,
   CONTRACTS_ADDRESS,
 } from "@constants/contracts";
-// import session from "@utils/session.js";
 // 合约相关接口
 import request from "@utils/request";
 const COUNT = 8;
-// import { getTokenByCurrency } from "@utils/tokens";
-
-// setTimeout(() => {
-//   console.log("store", store);
-// });
 
 let CONTRACTS_URL, CONTRACTS_ADD;
 if (process.env.NODE_ENV !== "development") {
-  // 开发
+  // 线上
   CONTRACTS_URL = SMART_CONTRACTS_API;
   CONTRACTS_ADD = CONTRACTS_ADDRESS;
 } else {
-  // 线上
+  // 开发
   CONTRACTS_URL = SMART_CONTRACTS_TEST_API;
   CONTRACTS_ADD = CONTRACTS_TEST_ADDRESS;
 }
 
 // 获取币种精度
-// stc 1000000000
 function getCurrencyPrecision() {
-  let v = {
+  let params = {
     id: 101,
     jsonrpc: "2.0",
     method: "contract.call_v2",
@@ -46,7 +39,30 @@ function getCurrencyPrecision() {
     },
     url: CONTRACTS_URL,
     method: "POST",
-    data: JSON.stringify(v),
+    data: JSON.stringify(params),
+  });
+}
+// 是否已接受该币种token
+function isAcceptedToken() {
+  let params = {
+    id: 101,
+    jsonrpc: "2.0",
+    method: "contract.call_v2",
+    params: [
+      {
+        function_id: "0x1::Account::is_accepts_token",
+        type_args: ["0xf8af03dd08de49d81e4efd9e24c039cc::Doge::SHIBA"],
+        args: ["0x07fa08a855753f0ff7292fdcbe871216"],
+      },
+    ],
+  };
+  return request({
+    headers: {
+      "content-type": "application/json",
+    },
+    url: CONTRACTS_URL,
+    method: "POST",
+    data: JSON.stringify(params),
   });
 }
 
@@ -105,4 +121,5 @@ export default {
   getCurrencyPrecision,
   getContractsProjectInfo,
   getStakeAmount,
+  isAcceptedToken,
 };

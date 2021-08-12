@@ -3,11 +3,9 @@
     class="home-list animate__animated animate__fadeInUp"
     :style="getBg(cardType)"
   >
-    <!-- <slot name="title"> </slot> -->
     <p class="home-list-title">
       {{ renderTitle(cardType) }}
     </p>
-    <!-- <slot name=""> </slot> -->
     <div
       class="home-list-content"
       :style="{ '--color': cardsInfo['common-color'] }"
@@ -16,7 +14,14 @@
         class="home-list-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
         :key="index"
-        @click="emit(cardData.cardType, cardData.id, cardData.address)"
+        @click="
+          emit(
+            cardData.cardType,
+            cardData.id,
+            cardData.address,
+            cardData.currency
+          )
+        "
         :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
         <div
@@ -30,7 +35,7 @@
           "
         >
           <span v-for="(l, ix) in cardData.attributes.slice(0, 2)" :key="ix">
-            {{ $t(`constants.${l.name}`) }}
+            {{ $t(`${l.name}`) }}
           </span>
         </div>
         <home-list-item
@@ -39,18 +44,17 @@
           :colorsInfo="cardsInfo"
           :data="cardData"
         ></home-list-item>
-        <start-space :size="40"></start-space>
         <div class="home-list-item-wrap-footer">
           <span v-if="cardType === 'open'">
-            {{ $t("constants.进行中") }}
+            {{ $t("进行中") }}
           </span>
           <span v-if="cardType === 'will'">
-            {{ $t("constants.即将推出") }}
+            {{ $t("即将推出") }}
 
             {{ timers && timers[index].countdown }}
           </span>
           <span v-if="cardType === 'closed'">
-            {{ $t("constants.已经结束") }}
+            {{ $t("已经结束") }}
           </span>
         </div>
       </div>
@@ -63,9 +67,8 @@ const WILL_BG = require("../../assets/card/will-wrap.png");
 const CLOSED_BG = require("../../assets/card/closed-wrap.png");
 import variables from "@styles/variables.scss";
 import homeListItem from "@components/Home/homeListItem.vue";
-import StartSpace from "@startUI/StartSpace.vue";
 import mixinHome from "@mixins/home.js";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isUndefined } from "lodash";
 import { countdown } from "@utils/date.js";
 export default {
   name: "homelist",
@@ -81,7 +84,6 @@ export default {
   mixins: [mixinHome],
   components: {
     homeListItem,
-    StartSpace,
   },
   props: {
     cardsInfo: Object,
@@ -104,17 +106,26 @@ export default {
   methods: {
     renderTitle(type) {
       if (type === "open") {
-        return this.$t("constants.进行中");
+        return this.$t("进行中");
       }
       if (type === "will") {
-        return this.$t("constants.即将推出");
+        return this.$t("即将推出");
       }
       if (type === "closed") {
-        return this.$t("constants.已经结束");
+        return this.$t("已经结束");
       }
     },
     formateDate(obj) {
       const { day, hour, minute, second } = obj;
+      if (
+        isUndefined(day) &&
+        isUndefined(hour) &&
+        isUndefined(minute) &&
+        isUndefined(second)
+      ) {
+        // window.location.reload();
+        return;
+      }
       return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
     },
     playTimer() {
@@ -126,11 +137,12 @@ export default {
         }
       }, 1000);
     },
-    emit(cardType, id, address) {
+    emit(cardType, id, address, currency) {
       this.$emit("clickMethod", {
         cardType: cardType,
         cardId: id,
         token: address,
+        currencyName: currency,
       });
     },
   },
@@ -184,22 +196,23 @@ export default {
     cursor: pointer;
     overflow: hidden;
     margin-top: 20px;
-    padding: 30px 40px;
+    padding: 30px 48px;
     .home-list-item-wrap {
+      border: 3px solid transparent;
       padding: 60px 30px 0px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       float: left;
       box-sizing: border-box;
       overflow: hidden;
-      height: 550px;
-      width: 380px;
+      height: 544px;
+      width: 374px;
       margin-bottom: 20px;
-      margin-left: 14px;
+      margin-left: 15px;
       position: relative;
       &:hover {
-        transition: border ease 0.15s;
-        border: 4px solid var(--color);
+        transition: all ease 0.15s;
+        border: 3px solid var(--color);
       }
       .home-list-item-wrap-labels {
         position: absolute;
@@ -223,9 +236,12 @@ export default {
       margin-left: 0%;
     }
     .home-list-item-wrap-footer {
-      margin-top: 8px;
       text-align: center;
       font-size: 16px;
+      position: absolute;
+      left: 0;
+      bottom: 40px;
+      right: 0;
     }
   }
 }

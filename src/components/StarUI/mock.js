@@ -4,7 +4,7 @@ export const cardData = [
     cardInfoList: [
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -27,7 +27,7 @@ export const cardData = [
       },
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -49,7 +49,7 @@ export const cardData = [
       },
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         time: "1628744960000",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
@@ -72,7 +72,7 @@ export const cardData = [
       },
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -94,7 +94,7 @@ export const cardData = [
       },
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -121,7 +121,7 @@ export const cardData = [
     cardInfoList: [
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -143,7 +143,7 @@ export const cardData = [
       },
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],
@@ -169,7 +169,7 @@ export const cardData = [
     cardInfoList: [
       {
         imgUrl: require("../../assets/header/logo.png"),
-        currencyPad: "StartPad",
+        currencyPad: "StarPad",
         currency: "STP",
         labels: ["label One", "label Two", "label Three"],
         icons: ["net", "facebook", "tw"],

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="start-button"
+    class="star-button"
     :class="{
       light,
       dark,
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "StartButton",
+  name: "StarButton",
   components: {},
   data() {
     return {};
@@ -57,7 +57,7 @@ export default {
   }
 }
 
-.start-button {
+.star-button {
   position: relative;
   display: inline-block;
   white-space: nowrap;
@@ -71,17 +71,17 @@ export default {
   text-align: center;
   box-sizing: content-box;
 }
-.start-button + .start-button {
+.star-button + .star-button {
   margin-left: 10px;
 }
-.start-button.light {
+.star-button.light {
   @include btnstyle($btn_base_bgcolor, false, $light_bordercolor);
 }
-.start-button.dark {
+.star-button.dark {
   @include btnstyle(#000, $text_light_color);
 }
 // 左下
-.start-button.blborder {
+.star-button.blborder {
   ::before {
     content: "";
     position: absolute;
@@ -113,7 +113,7 @@ export default {
   }
 }
 // 右上
-.start-button.trborder {
+.star-button.trborder {
   ::before {
     content: "";
     position: absolute;

@@ -1,21 +1,21 @@
 <template>
-  <div class="start-item-cell">
-    <div v-if="cellType === 'horizontal'" class="start-item-cell-horizontal">
+  <div class="star-item-cell">
+    <div v-if="cellType === 'horizontal'" class="star-item-cell-horizontal">
       <slot name="default"></slot>
-      <p class="start-item-cell-title">{{ data.title }}</p>
-      <start-space :size="5"></start-space>
-      <p class="start-item-cell-info">
+      <p class="star-item-cell-title">{{ data.title }}</p>
+      <star-space :size="5"></star-space>
+      <p class="star-item-cell-info">
         <template v-if="data.text"> {{ data.text }}</template>
       </p>
-      <start-space :size="20"></start-space>
+      <star-space :size="20"></star-space>
     </div>
-    <div v-if="cellType === 'vertical'" class="start-item-cell-vertical">
+    <div v-if="cellType === 'vertical'" class="star-item-cell-vertical">
       <slot name="default"></slot>
     </div>
   </div>
 </template>
 <script>
-import StartSpace from "@startUI/StartSpace.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
 import utilsNumber from "@utils/number.js";
 export default {
   data() {
@@ -24,7 +24,7 @@ export default {
     };
   },
   components: {
-    StartSpace,
+    StarSpace,
   },
   props: {
     cellType: {
@@ -46,20 +46,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.start-item-cell {
+.star-item-cell {
   color: #ffffff;
-  .start-item-cell-horizontal {
-    .start-item-cell-title {
+  .star-item-cell-horizontal {
+    .star-item-cell-title {
       font-size: 12px;
       font-weight: 400;
       opacity: 0.7;
     }
-    .start-item-cell-info {
+    .star-item-cell-info {
       font-size: 16px;
       font-weight: 500;
     }
   }
-  .start-item-cell-vertical {
+  .star-item-cell-vertical {
     display: flex;
     align-items: center;
   }

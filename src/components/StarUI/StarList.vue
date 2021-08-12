@@ -1,7 +1,7 @@
 <template>
-  <div class="start-list">
+  <div class="star-list">
     <div
-      class="start-list-item prodetail"
+      class="star-list-item prodetail"
       v-if="type === 'prodetail'"
       :style="setStyle()"
     >
@@ -12,27 +12,25 @@
         {{ data.text }}
       </span>
     </div>
-    <div
-      class="start-list-item time"
-      v-if="type === 'time'"
-      :style="setStyle()"
-    >
+    <div class="star-list-item time" v-if="type === 'time'" :style="setStyle()">
       <span class="title">
-        {{ $t(`constants.${data.title}`) }}
+        {{ $t(`${data.title}`) }}
       </span>
       <div class="time-info">
         <p v-if="data.startDate" class="time-info-date">
           <span>
-            {{ $t("constants.始") }}
+            {{ $t("始") }}
           </span>
           <span>{{ data.startDate }}</span>
         </p>
         <p v-if="data.endDate" class="time-info-date">
           <span>
-            {{ $t("constants.至") }}
+            {{ $t("至") }}
           </span>
           <!-- <span> 2021 08 12 / 12:00:00 </span> -->
           <span>{{ data.endDate }}</span>
+
+          <span style="margin-left: 8px">UTC+8</span>
         </p>
         <!-- <p v-else>
           <span>{{ data.date }}</span>
@@ -70,12 +68,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
-.start-list {
+.star-list {
   width: 100%;
-  &.start-list {
+  &.star-list {
     margin-top: 3px;
   }
-  .start-list-item {
+  .star-list-item {
     width: 100%;
     padding: 15px;
     // background-color: red;

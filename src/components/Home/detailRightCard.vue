@@ -31,7 +31,7 @@
     </div>
     <div class="detail-card-header">
       <img class="detail-card-header-logo" :src="cardInfo.icon" />
-      <!-- <start-space :size="30" :horizontal="true"></start-space> -->
+      <!-- <star-space :size="30" :horizontal="true"></star-space> -->
       <div class="detail-card-header-info">
         <div class="detail-card-header-info-currency">
           <span>
@@ -44,7 +44,7 @@
             {{ cardInfo.address }}
           </span>
 
-          <start-tool-tip
+          <star-tool-tip
             :content="copyContent"
             placement="top"
             class="detail-card-header-info-copy"
@@ -53,13 +53,13 @@
               :name="`copy-${detailCardType}`"
               @click="clipHash(cardInfo.address)"
             ></svg-icon>
-          </start-tool-tip>
+          </star-tool-tip>
         </div>
       </div>
     </div>
-    <start-space :size="20"></start-space>
+    <star-space :size="20"></star-space>
     <div class="detail-card-labels">
-      <start-button
+      <star-button
         v-for="(d, i) in cardInfo.labels"
         :key="i"
         light
@@ -69,10 +69,10 @@
             colorsInfo['common-color']
           )
         "
-        >{{ $t(`constants.${d.label}`) }}</start-button
+        >{{ $t(`${d.label}`) }}</star-button
       >
     </div>
-    <start-space :size="20"></start-space>
+    <star-space :size="20"></star-space>
     <div class="detail-card-icons">
       <svg-icon
         v-for="(iconkey, index) in cardInfo.links"
@@ -82,54 +82,54 @@
         @click="handleToPath(iconkey)"
       ></svg-icon>
     </div>
-    <start-space :size="20"></start-space>
+    <star-space :size="20"></star-space>
     <div class="detail-card-tabs">
-      <start-tab-bar
+      <star-tab-bar
         :value="tabCategory"
         @input="hanleTabChange"
         :items="tabItmes"
         :color="colorsInfo['common-color']"
       >
-      </start-tab-bar>
+      </star-tab-bar>
       <div class="detail-card-tabs-list">
         <template v-if="tabCategory === 'prodetail'">
-          <start-list
+          <star-list
             v-for="(d, index) in detailListAmount"
             :key="index"
             :data="d"
             type="prodetail"
             :bgColor="colorsInfo['list-bg-color']"
           >
-          </start-list>
+          </star-list>
         </template>
         <template v-if="tabCategory === 'time'">
-          <start-list
+          <star-list
             v-for="(d, index) in cardInfo.proTimeList"
             :key="index"
             :data="d"
             type="time"
             :bgColor="colorsInfo['list-bg-color']"
-          ></start-list>
+          ></star-list>
         </template>
       </div>
     </div>
-    <start-space :size="30"></start-space>
+    <star-space :size="30"></star-space>
     <div class="detail-card-footer">
       {{ this.lang === "zh" ? cardInfo.prdDesc : cardInfo.prdDescEn }}
     </div>
   </div>
 </template>
 <script>
-import StartSpace from "@startUI/StartSpace.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
-import StartButton from "@startUI/StartButton.vue";
-import StartTabBar from "@startUI/StartTabBar.vue";
-import StartList from "@startUI/StartList.vue";
-import StartToolTip from "@startUI/StartToolTip.vue";
+import StarButton from "@StarUI/StarButton.vue";
+import StarTabBar from "@StarUI/StarTabBar.vue";
+import StarList from "@StarUI/StarList.vue";
+import StarToolTip from "@StarUI/StarToolTip.vue";
 import * as clipboard from "clipboard-polyfill/text";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
-import { mapActions } from "vuex";
+// import { mapActions } from "vuex";
 import session from "@utils/session";
 import { cloneDeep } from "lodash";
 import utilsNumber from "@utils/number.js";
@@ -138,15 +138,15 @@ import utilsTool from "@utils/tool";
 export default {
   data() {
     return {
-      copyContent: this.$t("constants.复制"),
+      copyContent: this.$t("复制"),
       tabCategory: "prodetail",
       tabItmes: [
         {
-          label: this.$t("constants.项目详情"),
+          label: this.$t("项目详情"),
           value: "prodetail",
         },
         {
-          label: this.$t("constants.时间"),
+          label: this.$t("时间"),
           value: "time",
         },
       ],
@@ -155,17 +155,15 @@ export default {
   },
   mixins: [mixinHome],
   components: {
-    StartToolTip,
-    StartSpace,
+    StarToolTip,
+    StarSpace,
     SvgIcon,
-    StartButton,
-    StartTabBar,
-    StartList,
+    StarButton,
+    StarTabBar,
+    StarList,
   },
   watch: {},
-  mounted() {
-    this.getCardInfo();
-  },
+  mounted() {},
   methods: {
     changeDisplayList(val, precision, currency) {
       // 需要再次组合下数据
@@ -173,7 +171,7 @@ export default {
       list = list.map((d, i) => {
         if (i === 0) {
           return {
-            name: this.$t(`constants.我的质押`),
+            name: this.$t(`我的质押`),
             text: `${
               this.myStakeAmount
                 ? utilsNumber.formatNumberMeta(
@@ -190,7 +188,7 @@ export default {
         if (i === 1) {
           return {
             // ...d,
-            name: this.$t(`constants.总销售量`),
+            name: this.$t(`总销售量`),
             text:
               utilsNumber.formatNumberMeta(
                 utilsNumber
@@ -204,7 +202,7 @@ export default {
         }
         if (i === 2) {
           return {
-            name: this.$t(`constants.代币发行总量`),
+            name: this.$t(`代币发行总量`),
             text:
               utilsNumber.formatNumberMeta(d, { grouped: true }).text +
               " " +
@@ -213,7 +211,7 @@ export default {
         }
         if (i === 3) {
           return {
-            name: this.$t("constants.总质押"),
+            name: this.$t("总质押"),
             text:
               utilsNumber.formatNumberMeta(
                 utilsNumber
@@ -226,7 +224,7 @@ export default {
         }
         if (i === 4) {
           return {
-            name: this.$t("constants.兑换比例"),
+            name: this.$t("兑换比例"),
             text: `1 ${currency} = ${
               utilsNumber.formatNumberMeta(d, { grouped: true }).text
             } USDT`,
@@ -234,23 +232,13 @@ export default {
         }
         if (i === 5) {
           return {
-            name: this.$t("constants.总募资"),
+            name: this.$t("总募资"),
             text: `${
               utilsNumber.formatNumberMeta(d, { grouped: true }).text
             } USDT`,
           };
         }
       });
-      // list[0].amount = this.myStakeAmount
-      //   ? utilsNumber.bigNum(this.myStakeAmount).div(STC_PRECISION).toString()
-      //   : 0;
-      // list[1].amount = utilsNumber
-      //   .bigNum(this.currencyTotalAmount)
-      //   .div(Math.pow(10, precision)); // 还需要除币种精度
-      // list[3].amount = utilsNumber
-      //   .bigNum(this.stakeTotalAmount)
-      //   .div(STC_PRECISION)
-      //   .toString();
       return list;
     },
     hanleTabChange(val) {
@@ -262,9 +250,9 @@ export default {
     clipHash(val) {
       clipboard.writeText(val).then(
         () => {
-          this.copyContent = this.$t("constants.复制成功");
+          this.copyContent = this.$t("复制成功");
           setTimeout(() => {
-            this.copyContent = this.$t("constants.复制");
+            this.copyContent = this.$t("复制");
           }, 1500);
         },
         () => {
@@ -272,7 +260,6 @@ export default {
         }
       );
     },
-    ...mapActions("StoreHome", ["getCardInfo"]),
   },
   computed: {
     ...mapState("StoreHome", {
@@ -318,6 +305,7 @@ export default {
     .detail-card-header-logo {
       width: 48px;
       height: 48px;
+      border-radius: 50%;
       display: inline-block;
     }
     .detail-card-header-info {
@@ -336,9 +324,10 @@ export default {
     }
   }
   .detail-card-labels {
-    .start-button {
+    .star-button {
       border-radius: 2px;
       padding: 5px 10px;
+      cursor: default;
     }
   }
   .detail-card-icons {

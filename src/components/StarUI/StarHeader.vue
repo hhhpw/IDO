@@ -1,61 +1,55 @@
 <template>
-  <div class="start-header">
-    <div class="start-header-left">
+  <div class="star-header">
+    <div class="star-header-left">
       <img src="../../assets/header/logo.png" />
       <Menu
         :default-active="activeHeaderItem"
         mode="horizontal"
-        class="start-menu"
-        @select="handleSelect"
+        class="star-menu"
+        @select="handleSelectTab"
       >
         <MenuItem
           index="home"
-          class="start-menu-item"
+          class="star-menu-item"
           v-for="(d, index) in headerItems"
           :key="index"
-          :class="{ 'start-menu-item-active': activeHeaderItem === d.value }"
+          :class="{ 'star-menu-item-active': activeHeaderItem === d.value }"
         >
-          {{ $t(`constants.${d.label}`) }}
+          {{ $t(`${d.label}`) }}
         </MenuItem>
       </Menu>
     </div>
 
-    <div class="start-header-right">
-      <div style="color: red">{{ walletStatus }}</div>
-      <start-button dark class="start-header-right-btn">
+    <div class="star-header-right">
+      <star-button dark class="star-header-right-btn">
         <span @click="onClickConnect">
           <span v-if="walletStatus === 'unConnected'">
-            {{ $t("constants.连接钱包") }}
+            {{ $t("连接钱包") }}
           </span>
           <span v-if="walletStatus === 'connected'">
-            {{ $t("constants.已连接") }}
+            {{ $t("已连接") }}
           </span>
-          <!-- {{
-            walletStatus === "Connected"
-              ? format.shortAddress(this.stcAccounts[0])
-              : walletStatus
-          }} -->
         </span>
-      </start-button>
-      <start-drop-down
+      </star-button>
+      <star-drop-down
         trigger="click"
         :itemList="langs"
         @handleClick="hanldeChangeLang"
         :activeValue="currLang"
       >
         <template #tag>
-          <start-button light>
-            {{ $t("constants.切换语言") }}
-          </start-button>
+          <star-button light>
+            {{ $t("语言") }}
+          </star-button>
         </template>
-      </start-drop-down>
+      </star-drop-down>
     </div>
   </div>
 </template>
 <script>
 import { Menu, MenuItem } from "element-ui";
-import StartButton from "@startUI/StartButton.vue";
-import StartDropDown from "@startUI/StartDropDown.vue";
+import StarButton from "@StarUI/StarButton.vue";
+import StarDropDown from "@StarUI/StarDropDown.vue";
 import session from "@utils/session.js";
 import { mapState, mapActions } from "vuex";
 import { Notification } from "element-ui";
@@ -66,7 +60,7 @@ import { isNil, isUndefined } from "lodash";
 import { STAR_MASK_PLUGIN_URL } from "@constants/contracts";
 
 export default {
-  name: "StartHeader",
+  name: "StarHeader",
   data() {
     return {
       currLang: null,
@@ -75,14 +69,14 @@ export default {
         { text: "ENG", value: "en" },
       ],
       format,
-      // pluginUrl: STAR_MASK_PLUGIN_URL,
+      isStarMaskInstalled: null,
     };
   },
   components: {
     Menu,
     MenuItem,
-    StartButton,
-    StartDropDown,
+    StarButton,
+    StarDropDown,
   },
   mounted() {
     const currLang = session.getItem("lang");
@@ -95,7 +89,12 @@ export default {
       "setStcProvider",
       "setStcChianID",
     ]),
-    handleSelect(key) {
+    handleNewAccounts() {
+      if (this.isStarMaskInstalled) {
+        console.log("切换账户了");
+      }
+    },
+    handleSelectTab(key) {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",
       });
@@ -111,14 +110,14 @@ export default {
       }
     },
     async loadData() {
-      const chianID = await Wallet.getStcChianID();
+      // const chianID = await Wallet.getStcChianID();
       // session.setItem("chianID", chianID);
-      this.setStcChianID(chianID);
+      // this.setStcChianID(chianID);
       const permissions = await Wallet.getPermissions();
-      // console.log("permissions", permissions);
-      if (!permissions.length) {
-        this.setPermissions();
-      }
+      console.log("permissions", permissions);
+      // if (!permissions.length) {
+      //   this.setPermissions();
+      // }
       this.getAccountBalance();
     },
     async getAccountBalance() {
@@ -143,8 +142,7 @@ export default {
     },
     async onClickConnect() {
       // 检查是否下载
-      const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-      if (!isStarMaskInstalled) {
+      if (!this.isStarMaskInstalled) {
         const h = this.$createElement;
         Notification({
           message: h(
@@ -176,7 +174,7 @@ export default {
                 STAR_MASK_PLUGIN_URL
               ),
               h(
-                "start-button",
+                "star-button",
                 {
                   props: {
                     light: true,
@@ -215,17 +213,21 @@ export default {
         if (this.onboarding) this.onboarding.stopOnboarding();
         this.loadData();
       } else {
-        // 检测钱包账户切换
-        window.starcoin.on("accountsChanged", () => {
-          console.log("=====钱包账户切换=====");
-        });
-        this.$store.commit(
-          "StoreWallet/SET_WALLET_CONNECT_STATUS",
-          "unConnected"
-        );
-        const accounts = await Wallet.connect();
-        this.setStcAccounts(accounts);
+        this.connetWallet();
       }
+    },
+    async connetWallet() {
+      this.$store.commit(
+        "StoreWallet/SET_WALLET_CONNECT_STATUS",
+        "unConnected"
+      );
+      const accounts = await Wallet.connect();
+      this.setStcAccounts(accounts);
+    },
+    handleAccountsChange() {
+      // this.connetWallet();
+      // 需要依赖某些状态，直接刷新页面了
+      window.location.reload();
     },
   },
   watch: {
@@ -250,7 +252,8 @@ export default {
     ]),
   },
   beforeDestroy() {},
-  created() {
+
+  async created() {
     if (!this.onboarding) {
       const onboarding = Wallet.createStarMaskOnboarding();
       console.log("onboarding", onboarding);
@@ -258,17 +261,20 @@ export default {
     }
     const stcProvider = Wallet.createStcProvider();
     this.setStcProvider(stcProvider);
-
-    // const isStarMaskInstalled = Wallet.checkStarMaskInstalled();
-    // if (!isStarMaskInstalled) {
-    //   this.walletStatus = "Install StarMask";
-    // }
+    this.isStarMaskInstalled = Wallet.checkStarMaskInstalled();
+    if (this.isStarMaskInstalled) {
+      window.starcoin &&
+        window.starcoin.on("accountsChanged", () => {
+          this.handleAccountsChange();
+        });
+      this.connetWallet();
+    }
   },
 };
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
-.start-header {
+.star-header {
   height: 80px;
   width: calc(100% - 80px);
   display: flex;
@@ -281,12 +287,12 @@ export default {
   box-sizing: content-box;
   display: flex;
   justify-content: space-between;
-  .start-menu {
+  .star-menu {
     background-color: transparent;
     border-bottom: none;
     margin-left: 50px;
   }
-  .start-menu-item {
+  .star-menu-item {
     width: 100px;
     height: 80px;
     line-height: 80px;
@@ -303,24 +309,24 @@ export default {
     border-bottom: 2px solid $light_bordercolor;
     color: $text_light_color !important;
   }
-  .el-menu-item.is-active.start-menu-item-active {
+  .el-menu-item.is-active.star-menu-item-active {
     background: linear-gradient(
       180deg,
       rgba(84, 255, 255, 0) 0%,
       rgba(42, 254, 254, 0.21) 100%
     );
   }
-  .start-header-left {
+  .star-header-left {
     display: flex;
     align-items: center;
     img {
       margin-right: 10px;
     }
   }
-  .start-header-right {
+  .star-header-right {
     display: flex;
     align-items: center;
-    .start-header-right-btn {
+    .star-header-right-btn {
       margin-right: 20px;
     }
   }

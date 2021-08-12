@@ -6,11 +6,12 @@
       (cardCountDown = cardContent.startTime))
     "
   >
+    <div>{{ stcAccounts }}</div>
     <div
       class="detail-input-wrap"
       :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
     >
-      <start-input
+      <star-input
         class="detail-input"
         :precision="9"
         :value="inputValue"
@@ -18,9 +19,9 @@
         @input="inputEvent"
         @maxEvent="maxEvent"
         v-if="stakeStatus === 'stake' && proState === 2"
-      ></start-input>
+      ></star-input>
 
-      <start-input
+      <star-input
         class="detail-input"
         v-if="stakeStatus === 'unstake'"
         :precision="9"
@@ -29,18 +30,11 @@
         @input="inputEvent"
         @maxEvent="maxEvent"
       >
-      </start-input>
+      </star-input>
     </div>
-    <p style="color: red">
-      proState:{{ proState }}stakeStatus: {{ stakeStatus }} payState:{{
-        payState
-      }}
-    </p>
-    <start-space :size="12"></start-space>
+    <star-space :size="12"></star-space>
     <div v-if="stakeStatus === 'unstake'" class="detail-wrap-content-left-info">
-      <span
-        >{{ $t("constants.还可解押") }}：{{ renderAmount(stakeAmount) }}</span
-      >
+      <span>{{ $t("还可解押") }}：{{ renderAmount(stakeAmount) }}</span>
     </div>
     <div
       class="detail-wrap-content-left-info"
@@ -49,48 +43,43 @@
       "
     >
       <div>
-        <span>{{ $t("constants.还可质押") }}：</span>
-        <span>{{ renderRestAmount() }} STC</span>
+        <span>{{ $t("还可质押") }}：</span>
+        <span>{{ renderAmount(restStakeAmount) }} STC</span>
       </div>
       <div>
-        <span>{{ $t("constants.余额") }}：</span>
+        <span>{{ $t("余额") }}：</span>
         <!-- 钱包的stc -->
         <span>{{ renderAmount(balances.stc) }} STC</span>
       </div>
     </div>
-    <start-space
+    <star-space
       :size="24"
       v-if="
         detailCardType === 'open' &&
-        stakeStatus === 'stake' &&
         proState !== 3 &&
         proState !== 4 &&
         proState !== 5
       "
-    ></start-space>
+    ></star-space>
 
     <div
       class="detail-wrap-conent-left-amount-text"
-      v-if="
-        detailCardType === 'open' &&
-        (proState === 4 || proState === 3) &&
-        stakeStatus === 'stake'
-      "
+      v-if="detailCardType === 'open' && (proState === 4 || proState === 3)"
     >
-      <template v-if="proState === 3">
+      <template v-if="proState === 3 && stakeStatus !== 'unstake'">
         <p class="detail-wrap-conent-left-amount-text-ttile">
-          {{ $t("constants.我的质押") }}
+          {{ $t("我的质押") }}
         </p>
-        <start-space :size="8"></start-space>
+        <star-space :size="8"></star-space>
         <p class="detail-wrap-conent-left-amount-text-amount">
           {{ renderAmount(stakeAmount) }} STC
         </p>
       </template>
-      <template v-if="proState === 4">
+      <template v-if="proState === 4 && stakeStatus !== 'unstake'">
         <p class="detail-wrap-conent-left-amount-text-ttile">
-          {{ $t("constants.我的份额") }}
+          {{ $t("我的份额") }}
         </p>
-        <start-space :size="8"></start-space>
+        <star-space :size="8"></star-space>
         <p class="detail-wrap-conent-left-amount-text-amount">
           {{ getCurrencyShare(cardContent.tokenPrecision) }}
           {{ cardContent.currency }}
@@ -100,17 +89,11 @@
     <div class="detail-wrap-content-left-error" v-if="errorText">
       <p>{{ errorText }}</p>
     </div>
-    <!-- <div
-      class="detail-wrap-content-left-unstake-tips"
-      v-if="stakeStatus === 'unstake'"
-    >
-      <start-space :size="8"></start-space>
-      <p>{{ $t("现在全部解押将会失去您的额度") }}</p>
-    </div> -->
-    <start-space :size="12"></start-space>
-    <start-button
+    <star-space :size="12"></star-space>
+    <star-button
       v-if="showRule(detailCardType, payState)"
       class="detail-wrap-content-button"
+      :class="{ noPointer: proState === 3 && stakeStatus === 'stake' }"
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
       <p
@@ -125,7 +108,7 @@
           "
           @click="onStakeClick"
         >
-          {{ $t("constants.质押") }}
+          {{ $t("质押") }}
         </span>
         <span
           v-if="
@@ -134,7 +117,7 @@
             stakeStatus === 'stake'
           "
         >
-          {{ $t("constants.锁仓中") }}
+          {{ $t("锁仓中") }}
         </span>
         <span
           v-if="
@@ -144,12 +127,10 @@
           "
           @click="payUSDT"
         >
-          {{
-            isPaying ? `${$t("constants.支付中")}...` : $t("constants.待支付")
-          }}
+          {{ isPaying ? `${$t("支付中")}...` : $t("待支付") }}
         </span>
         <span v-if="proState === 5 && stakeStatus === 'stake'">
-          {{ $t("constants.已结束") }}
+          {{ $t("已结束") }}
         </span>
         <span
           v-if="
@@ -158,23 +139,51 @@
             detailCardType === 'will'
           "
         >
-          {{ $t("constants.未开始") }}: {{ countdowntime }}
+          {{ $t("未开始") }}: {{ countdowntime }}
         </span>
 
         <span v-if="stakeStatus === 'unstake'" @click="onUnstakeClick">
-          {{ $t("onstants.解押") }}
+          {{ $t("解押") }}
         </span>
       </p>
-    </start-button>
-    <div v-if="!payState && stakeStatus === 'stake' && proState !== 1">
-      <start-space :size="20"></start-space>
-      <p
+    </star-button>
+    <div v-if="!payState && proState !== 1">
+      <star-space :size="20"></star-space>
+      <span
         class="detail-wrap-content-left-unstake"
         :style="{ color: cardsInfo['common-color'] }"
-        @click="changeStakeStatus"
+        @click="changeStakeStatus('unstake')"
+        v-if="stakeStatus === 'stake' && proState !== 1"
       >
-        {{ $t("constants.解押") }}
-      </p>
+        {{ $t("解押") }}
+      </span>
+      <span
+        v-if="stakeStatus === 'unstake' && proState !== 3 && proState !== 4"
+        style="margin-left: 5px"
+        class="detail-wrap-content-left-unstake"
+        :style="{ color: cardsInfo['common-color'] }"
+        @click="changeStakeStatus('stake')"
+      >
+        {{ $t("质押") }}
+      </span>
+      <span
+        v-if="stakeStatus === 'unstake' && proState === 3"
+        style="margin-left: 5px"
+        class="detail-wrap-content-left-unstake"
+        :style="{ color: cardsInfo['common-color'] }"
+        @click="changeStakeStatus('stake')"
+      >
+        {{ $t("锁仓") }}
+      </span>
+      <span
+        v-if="stakeStatus === 'unstake' && proState === 4 && !payState"
+        style="margin-left: 5px"
+        class="detail-wrap-content-left-unstake"
+        :style="{ color: cardsInfo['common-color'] }"
+        @click="changeStakeStatus('stake')"
+      >
+        {{ $t("待支付") }}
+      </span>
     </div>
     <!-- 支付成功 -->
     <div
@@ -184,23 +193,20 @@
       <div class="detail-wrap-content-left-paysuccess-wrap">
         <img src="../../assets/home/pay-sucess.png" />
         <span class="detail-wrap-content-left-paysuccess-title">{{
-          $t("constants.支付成功")
+          $t("支付成功")
         }}</span>
       </div>
-      <start-space :size="10"></start-space>
+      <star-space :size="10"></star-space>
       <p class="detail-wrap-content-left-paysuccess-detail">
-        {{
-          $t("constants.支付成功文案", { currency: `${cardContent.currency}` })
-        }}
-        <!-- 质押的STC以及{代币符号}已转到你的账户，请到Starmask钱包查看代币！ -->
+        {{ $t("支付成功文案", { currency: `${cardContent.currency}` }) }}
       </p>
     </div>
-    <start-space :size="35"></start-space>
+    <star-space :size="35"></star-space>
     <div class="detail-wrap-content-left-rule">
       <p>
-        {{ $t("constants.参与规则") }}
+        {{ $t("参与规则") }}
       </p>
-      <start-space :size="10"></start-space>
+      <star-space :size="10"></star-space>
       <p class="detail-wrap-content-left-rule-content">
         {{ this.lang === "zh" ? cardContent.ruleDesc : cardContent.ruleDescEn }}
       </p>
@@ -208,16 +214,16 @@
   </div>
 </template>
 <script>
-import StartButton from "@startUI/StartButton.vue";
-import StartInput from "@startUI/StartInput.vue";
-import StartSpace from "@startUI/StartSpace.vue";
-import { mapGetters, mapState } from "vuex";
+import StarButton from "@StarUI/StarButton.vue";
+import StarInput from "@StarUI/StarInput.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
+import { mapGetters, mapState, mapActions } from "vuex";
 import utilsNumber from "@utils/number.js";
-import { STC_PRECISION } from "@constants/contracts";
-import { isNil } from "lodash";
+import { isNil, isUndefined } from "lodash";
 import session from "@utils/session";
 import { Wallet } from "@contactLogic";
 import { countdown } from "@utils/date.js";
+import { STC_PRECISION } from "@constants/contracts";
 export default {
   data() {
     return {
@@ -228,9 +234,10 @@ export default {
       countdowntime: null,
       currencyShareAmount: "0", // 为0没有份额，说明没有参与活动
       isPaying: false,
+      timer: null,
     };
   },
-  components: { StartInput, StartSpace, StartButton },
+  components: { StarInput, StarSpace, StarButton },
   mounted() {
     if (this.detailCardType === "will") {
       let time = this.detailCardInfo(this.detailCardId).startTime;
@@ -240,6 +247,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions("StoreHome", ["triggerStakeRecord"]),
     showRule(type, paystate) {
       if (type === "open") {
         if (paystate) {
@@ -253,29 +261,48 @@ export default {
     },
     formateDate(obj) {
       const { day, hour, minute, second } = obj;
+      if (
+        isUndefined(day) &&
+        isUndefined(hour) &&
+        isUndefined(minute) &&
+        isUndefined(second)
+      ) {
+        window.location.reload();
+        return;
+      }
       return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
     },
     getParams() {
       return {
         provider: this.stcProvider,
-        account: this.stcAccounts[0],
+        // account: this.stcAccounts[0],
+        tokenCode: this.currencyToken,
         chianID: this.stcChianID,
       };
     },
     // 获取代币份额
     getCurrencyShare(precision) {
-      this.currencyShareAmount = this.isNilCheck(
+      if (!this.myStakeAmount) return "0";
+      let amount = utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(this.myStakeAmount)
           .times(this.currencyTotalAmount)
           .div(this.stakeTotalAmount)
-          .div(Math.pow(10, precision)) // 这里需要动态换
-          .toString()
-      );
-      return this.currencyShareAmount;
+          .div(Math.pow(10, precision))
+          .toString(),
+        {
+          precision: precision,
+          trailingZero: false,
+        }
+      ).text;
+      if (isNil(amount) || !this.myStakeAmount) {
+        amount = "0";
+      }
+      this.currencyShareAmount = amount;
+      return amount;
     },
-    changeStakeStatus() {
-      this.stakeStatus = "unstake";
+    changeStakeStatus(state) {
+      this.stakeStatus = state;
       this.inputValue = "";
       this.errorText = "";
     },
@@ -320,14 +347,6 @@ export default {
         );
       }
     },
-    renderRestAmount() {
-      if (isNil(this.restStakeAmount)) return "--";
-      console.log("==renderRestAmount===", this.restStakeAmount);
-      return utilsNumber.formatNumberMeta(
-        utilsNumber.bigNum(this.restStakeAmount).div(STC_PRECISION).toString(),
-        { grouped: true }
-      ).text;
-    },
     renderAmount(balance) {
       if (isNil(balance)) return "--";
       console.log("==renderAmount===", balance);
@@ -339,6 +358,10 @@ export default {
 
     validteStake() {
       if (!utilsNumber.bigNum(this.inputValue).gt(0)) {
+        return false;
+      }
+      if (!utilsNumber.bigNum(this.inputValue).gt(100)) {
+        this.errorText = this.$t("errors.最小质押100STC");
         return false;
       }
       if (
@@ -354,7 +377,7 @@ export default {
           .bigNum(this.inputValue)
           .gt(utilsNumber.bigNum(this.restStakeAmount).div(STC_PRECISION))
       ) {
-        this.errorText = this.$t("errors.质押量超出个人额度上限！");
+        this.errorText = this.$t("errors.质押量超出个人额度上限");
         return false;
       }
 
@@ -373,6 +396,12 @@ export default {
       // 质押成功
       if (res) {
         this.inputValue = "";
+        // this.triggerStakeRecord({
+        // userAddress: this.stcAccounts[0],
+        // prdAddress:
+        // userPledgeType: 1,
+        // currency:
+        // });
         console.log("=====质押成功=====");
         console.log("stake result:", res);
       }
@@ -405,6 +434,12 @@ export default {
           .toString(),
       });
       if (res) {
+        // this.triggerStakeRecord({
+        //   userAddress: this.stcAccounts[0],
+        //   prdAddress:
+        //   userPledgeType: 2,
+        //   currency:
+        // });
         this.inputValue = "";
         console.log("=====解押成功=====");
         console.log("unstake result:", res);
@@ -441,6 +476,8 @@ export default {
       detailCardType: (state) => state.detailCardType,
       colorInfo: (state) => state.colorInfo,
       detailCardId: (state) => state.detailCardId,
+      currencyToken: (state) => state.currencyToken,
+      currencyName: (state) => state.currencyName,
     }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,
@@ -459,11 +496,16 @@ export default {
     }),
     ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
 };
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
+.noPointer {
+  cursor: default;
+}
 .detail-input-wrap {
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -491,16 +533,16 @@ export default {
   .detail-wrap-content-button-text {
     font-weight: 500;
     font-size: 24px;
-    -webkit-user-select: none; /*webkit浏览器*/
-    -ms-user-select: none; /*IE10*/
-    -khtml-user-select: none; /*早期浏览器*/
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
     user-select: none;
     span {
       display: inline-block;
       width: 100%;
-      -webkit-user-select: none; /*webkit浏览器*/
-      -ms-user-select: none; /*IE10*/
-      -khtml-user-select: none; /*早期浏览器*/
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -khtml-user-select: none;
       user-select: none;
     }
   }
@@ -511,12 +553,6 @@ export default {
   font-weight: 500;
   text-align: center;
 }
-// .detail-wrap-content-left-unstake-tips {
-//   font-size: 14px;
-//   color: $text_error_color;
-//   font-weight: 500;
-//   text-align: center;
-// }
 .detail-wrap-conent-left-amount-text {
   text-align: center;
   .detail-wrap-conent-left-amount-text-ttile {
@@ -537,6 +573,7 @@ export default {
   -ms-user-select: none; /*IE10*/
   -khtml-user-select: none; /*早期浏览器*/
   user-select: none;
+  display: inline-block;
 }
 .detail-wrap-content-left-paysuccess {
   color: #2afefe;

@@ -1,20 +1,20 @@
 <template>
-  <div class="start-home-support">
+  <div class="star-home-support">
     <p>I PARTNERS</p>
     <div>
-      <start-tag
+      <star-tag
         v-for="(d, i) in supportList"
         :key="i"
         class="support-icon"
         :class="`support-tag-${i + 1}`"
         :style="`background-image: url(${d})`"
       >
-      </start-tag>
+      </star-tag>
     </div>
   </div>
 </template>
 <script>
-import StartTag from "@startUI/StartTag.vue";
+import StarTag from "@StarUI/StarTag.vue";
 export default {
   data() {
     return {
@@ -27,7 +27,7 @@ export default {
     };
   },
   components: {
-    StartTag,
+    StarTag,
   },
   mounted() {},
   methods: {},
@@ -38,7 +38,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 @import "~@/styles/variables.scss";
-.start-home-support {
+.star-home-support {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -53,6 +53,7 @@ export default {
   background-size: cover;
   .support-icon {
     height: 60px;
+    cursor: default;
   }
   @for $i from 1 through 4 {
     .support-tag-#{$i} {

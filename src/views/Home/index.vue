@@ -4,21 +4,21 @@
       <div class="home-banner-content">
         <p class="home-banner-title">ATLASPAD</p>
         <p class="home-banner-subtitle">
-          {{ $t("constants.连接stc生态第一步") }}
+          {{ $t("连接stc生态第一步") }}
         </p>
         <div class="home-banner-btns">
-          <start-button blborder class="home-banner-btns-btn">
-            {{ $t("constants.加入我们") }}
-          </start-button>
-          <start-button trborder dark class="home-banner-btns-btn">
-            {{ $t("constants.购买STC") }}
-          </start-button>
+          <star-button blborder class="home-banner-btns-btn">
+            {{ $t("加入我们") }}
+          </star-button>
+          <star-button trborder dark class="home-banner-btns-btn">
+            {{ $t("购买STC") }}
+          </star-button>
         </div>
         <!-- <p class="home-banner-desc">{{ $t("你的第一步stc") }}</p> -->
       </div>
       <support> </support>
     </div>
-    <div class="start-container">
+    <div class="star-container">
       <template v-if="status === 'home-list'">
         <home-list
           v-for="(d, index) in cardData"
@@ -34,17 +34,17 @@
         <home-detail></home-detail>
       </template>
     </div>
-    <start-space :size="120"></start-space>
+    <star-space :size="120"></star-space>
   </div>
 </template>
 <script>
 import HomeList from "./homeList.vue";
-import StartButton from "@startUI/StartButton.vue";
+import StarButton from "@StarUI/StarButton.vue";
 import support from "./support.vue";
 import { Notification } from "element-ui";
 import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
-import StartSpace from "@startUI/StartSpace.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
 export default {
   data() {
     return {
@@ -54,11 +54,11 @@ export default {
     };
   },
   components: {
-    StartButton,
+    StarButton,
     support,
     HomeDetail,
     HomeList,
-    StartSpace,
+    StarSpace,
   },
   mounted() {
     this.getDataList();
@@ -113,6 +113,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
+// .home-banner
+
 .home-banner {
   width: 100%;
   background-image: url("../../assets/home/bg.png");
@@ -151,6 +153,14 @@ export default {
     .home-banner-desc {
       font-size: 14px;
       margin-top: 30px;
+    }
+  }
+}
+@media screen and (max-width: 1440px) {
+  .home-banner {
+    height: 600px;
+    .home-banner-content {
+      margin-top: 100px;
     }
   }
 }

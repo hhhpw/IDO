@@ -1,15 +1,15 @@
 <template>
-  <div class="start-input">
+  <div class="star-input">
     <Input v-bind="{ ...$attrs }" @input="inputEvent">
-      <div slot="suffix" class="start-input-suffix">
+      <div slot="suffix" class="star-input-suffix">
         <span
-          class="start-input-suffix-max"
+          class="star-input-suffix-max"
           :style="{ color: maxColor }"
           @click.stop="maxEvent"
           >MAX</span
         >
         <span>|</span>
-        <span class="start-input-suffix-usdt">STC</span>
+        <span class="star-input-suffix-usdt">STC</span>
       </div>
     </Input>
   </div>
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.start-input {
+.star-input {
   color: #fff;
   height: 54px;
   ::v-deep {
@@ -78,7 +78,7 @@ export default {
       line-height: 54px;
     }
   }
-  .start-input-suffix {
+  .star-input-suffix {
     display: flex;
     align-items: center;
     height: 100%;
@@ -86,14 +86,14 @@ export default {
     -ms-user-select: none; /*IE10*/
     -khtml-user-select: none; /*早期浏览器*/
     user-select: none;
-    .start-input-suffix-max {
+    .star-input-suffix-max {
       margin-right: 10px;
       cursor: pointer;
     }
-    .start-input-suffix-usdt {
+    .star-input-suffix-usdt {
       margin-left: 10px;
       margin-right: 5px;
-      cursor: pointer;
+      cursor: default;
     }
   }
 }

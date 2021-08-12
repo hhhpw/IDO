@@ -1,5 +1,4 @@
 import * as types from "../constants/home.js";
-// import homeApi from "@api/home.js";
 import dayjs from "dayjs";
 import homeApi from "../../api/home.js";
 import utilsNumber from "@utils/number.js";
@@ -16,14 +15,16 @@ const StoreHome = {
     detailCardId: null, // 具体卡片的id
     cardData: null,
     currencyToken: null,
+    currencyName: null,
   },
   mutations: {
     [types.STORE_HOME_CHANGE_STATUS](state, info) {
       console.log("info", info);
-      const { cardType, status, cardId, token } = info;
+      const { cardType, status, cardId, token, currencyName } = info;
       state.detailCardType = cardType;
       state.status = status;
       state.currencyToken = token;
+      state.currencyName = currencyName;
       if (cardId) {
         state.detailCardId = cardId;
       }
@@ -77,31 +78,35 @@ const StoreHome = {
     },
   },
   actions: {
-    async getCardInfo() {
-      // let pId = state.detailCardId;
-      // let res = await homeApi.getCardInfo(pId);
-      // console.log(res);
+    async triggerStakeRecord(params) {
+      const res = await homeApi.triggerStakeRecord(params);
+      console.log("=====triggerStakeRecord====", res);
     },
+    // async getCardInfo() {
+    // let pId = state.detailCardId;
+    // let res = await homeApi.getCardInfo(pId);
+    // console.log(res);
+    // },
     async getDataList({ commit }) {
       let res = await homeApi.getDataList();
-      console.log("res", res);
+      console.log("====getDataList=====", res);
       let results = [];
       const endStates = ["processing", "init", "finish"];
+      // const endStates = ["init"];
       for (let i = 0; i < endStates.length; i++) {
         const cardInfoList = res.data[endStates[i]].map((d) => {
           const {
             raiseTotal,
             rate,
-            startTime, // 质押开始时间
             pledgeEndTime, // 质押结束时间
             lockStartTime, // 锁仓开始时间
             lockEndTime, // 锁仓结束时间
+            pledgeStartTime, // 质押开始时间
             payStartTime, // 支付开始时间
             payEndTime, // 支付结束时间
             assignmentStartTime, // 代币分配开始时间
             assignmentEndTime, // 代币分配结束时间
             currencyTotal, //代币发行总量
-            // capTotal,
           } = d;
           const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toString();
           return {
@@ -111,59 +116,28 @@ const StoreHome = {
             proTimeList: [
               {
                 title: "质押时间",
-                startDate: dayjs(startTime).format("YYYY MM/DD HH:mm:ss"),
-                endDate: dayjs(pledgeEndTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(pledgeStartTime).format("YYYY/MM/DD HH:mm:ss"),
+                endDate: dayjs(pledgeEndTime).format("YYYY/MM/DD HH:mm:ss"),
               },
               {
                 title: "锁仓时间",
-                startDate: dayjs(lockStartTime).format("YYYY MM/DD HH:mm:ss"),
-                endDate: dayjs(lockEndTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(lockStartTime).format("YYYY/MM/DD HH:mm:ss"),
+                endDate: dayjs(lockEndTime).format("YYYY/MM/DD HH:mm:ss"),
               },
               {
                 title: "支付时间",
-                startDate: dayjs(payStartTime).format("YYYY MM/DD HH:mm:ss"),
-                endDate: dayjs(payEndTime).format("YYYY MM/DD HH:mm:ss"),
+                startDate: dayjs(payStartTime).format("YYYY/MM/DD HH:mm:ss"),
+                endDate: dayjs(payEndTime).format("YYYY/MM/DD HH:mm:ss"),
               },
               {
                 title: "代币分配时间",
                 startDate: dayjs(assignmentStartTime).format(
-                  "YYYY MM/DD HH:mm:ss"
+                  "YYYY/MM/DD HH:mm:ss"
                 ),
-                endDate: dayjs(assignmentEndTime).format("YYYY MM/DD HH:mm:ss"),
+                endDate: dayjs(assignmentEndTime).format("YYYY/MM/DD HH:mm:ss"),
               },
             ],
-            decentralizedList: [
-              0,
-              0,
-              currencyTotal,
-              0,
-              rate,
-              raiseTotal,
-              // {
-              //   title: "我的质押",
-              //   amount: 0,
-              // },
-              // {
-              //   title: "代币销售数量",
-              //   amount: 0,
-              // },
-              // {
-              //   title: "代币总量",
-              //   amount: currencyTotal,
-              // },
-              // {
-              //   title: "总质押",
-              //   amount: 0,
-              // },
-              // {
-              //   title: "售价",
-              //   amount: rate,
-              // },
-              // {
-              //   title: "目标筹款",
-              //   amount: raiseTotal,
-              // },
-            ],
+            decentralizedList: [0, 0, currencyTotal, 0, rate, raiseTotal],
           };
         });
         let obj = {
@@ -174,15 +148,8 @@ const StoreHome = {
       }
       results = results.filter((d) => d.cardInfoList.length > 0);
       console.log("results", results);
-      // results = [results[0]];
       commit(types.STORE_HOME_SET_DATA_LIST, results);
     },
-
-    // getTableList({ commit }) {
-    //   fetchList().then((res) => {
-    //     console.log("res", res);
-    //   });
-    // },
   },
 };
 

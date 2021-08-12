@@ -1,5 +1,5 @@
 <template>
-  <div class="start-tabs">
+  <div class="star-tabs">
     <tabs @tab-click="handleClick" :value="value" :style="{ '--color': color }">
       <tab-pane
         v-for="d in items"
@@ -46,7 +46,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
-.start-tabs {
+.star-tabs {
   ::v-deep {
     .el-tabs__item.is-active {
       color: var(--color);

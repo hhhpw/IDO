@@ -1,19 +1,17 @@
 {
-  "质押开始时间": "质押开始时间",
-  "锁仓时间": "锁仓时间",
-  "支付时间": "支付时间",
-  "代币分配时间": "代币分配时间",
   "wallet": {
     "download-tip": "英文=》下载提示",
     "connect-tip": "Please connect the wallet first"
   },
   "errors": {
-    "账户余额不足": "账户余额不足",
-    "质押量超出个人额度上限": "质押量超出个人额度上限",
-    "可解押量不足": "可解押量不足",
-    "您未获得该活动额度": "您未获得该活动额度"
+    "账户余额不足": "Insufficient Account Balance",
+    "质押量超出个人额度上限": "Staked amount exceeds individual limit",
+    "可解押量不足": "No enough balance to redeem",
+    "您未获得该活动额度": "You did not get the quota for this event",
+    "最小质押100STC": "Minimum Stake 100STC"
   },
   "constants": {
+    "锁仓": "Locked",
     "支付中": "支付中",
     "已结束": "已结束",
     "支付成功": "Paid Succeed",
@@ -45,11 +43,11 @@
     "连接钱包": "Connect To Wallet",
     "中文": "中文（繁）",
     "ENG": "ENG",
-    "切换语言": "Language",
+    "语言": "Language",
     "加入我们": "Join Us",
     "购买STC": "Buy STC",
-    "进行中": "Live pools",
-    "即将推出": "Coming soon",
+    "进行中": "Live Pools",
+    "即将推出": "Coming Soon",
     "已经结束": "Closed",
     "参与规则": "Rules",
     "质押时余额不足": "账户余额不足",
@@ -74,7 +72,7 @@
     "NFT": "NFT",
     "Web3.0": "Web3.0",
     "游戏": "Game",
-    "DEX": "去中心化交易所",
+    "DEX": "DEX",
     "预言机": "Oracle",
     "借贷": "Loan",
     "隐私计算": "Privacy",
@@ -92,6 +90,5 @@
     "聚合交易": "Aggregator",
     "公链": "Public Chain",
     "粉丝代币": "Fan Token"
-  },
-  "home": {}
+  }
 }

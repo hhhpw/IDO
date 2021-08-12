@@ -2,16 +2,16 @@
   <div class="home-list-item">
     <div class="home-list-item-rough">
       <div class="home-list-item-rough-header">
-        <start-item-cell cellType="vertical">
+        <star-item-cell cellType="vertical">
           <!-- 项目logo -->
           <img :src="data.icon" />
           <span>{{ $t(`${data.prdName}`) }}</span>
-          <span>{{ $t(`${data.currency}`) }}</span>
-        </start-item-cell>
+          <span>({{ $t(`${data.currency}`) }})</span>
+        </star-item-cell>
       </div>
-      <start-space :size="20"></start-space>
+      <star-space :size="20"></star-space>
       <div class="home-list-item-rough-labels">
-        <start-button
+        <star-button
           v-for="(d, i) in data.labels"
           :key="i"
           light
@@ -21,10 +21,10 @@
               colorsInfo['common-color']
             )
           "
-          >{{ $t(`constants.${d.label}`) }}</start-button
+          >{{ $t(`${d.label}`) }}</star-button
         >
       </div>
-      <start-space :size="30"></start-space>
+      <star-space :size="10"></star-space>
       <div class="home-list-item-rough-icons">
         <svg-icon
           v-for="(iconkey, index) in data.links"
@@ -34,29 +34,29 @@
           @click.stop.prevent="openURL(iconkey.url)"
         ></svg-icon>
       </div>
-      <start-space :size="30"></start-space>
+      <star-space :size="20"></star-space>
       <div class="home-list-item-rough-infos">
-        <start-item-cell :data="cellData('raiseTotal', data.currency)">
-        </start-item-cell>
-        <start-item-cell :data="cellData('rate', data.currency)">
-        </start-item-cell>
-        <start-item-cell :data="cellData('capTotal', data.currency)">
-        </start-item-cell>
+        <star-item-cell :data="cellData('raiseTotal', data.currency)">
+        </star-item-cell>
+        <star-item-cell :data="cellData('rate', data.currency)">
+        </star-item-cell>
+        <star-item-cell :data="cellData('capTotal', data.currency)">
+        </star-item-cell>
       </div>
     </div>
   </div>
 </template>
 <script>
-import StartSpace from "@startUI/StartSpace.vue";
-import StartButton from "@startUI/StartButton.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
+import StarButton from "@StarUI/StarButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
-import StartItemCell from "@startUI/StartItemCell.vue";
+import StarItemCell from "@StarUI/StarItemCell.vue";
 import { mapGetters } from "vuex";
 import mixinHome from "@/mixins/home.js";
 import utilsNumber from "@utils/number.js";
 import utilsTool from "@utils/tool";
 export default {
-  components: { StartButton, StartSpace, SvgIcon, StartItemCell },
+  components: { StarButton, StarSpace, SvgIcon, StarItemCell },
   mixins: [mixinHome],
   data() {
     return {};
@@ -78,19 +78,19 @@ export default {
     cellData(key, currency) {
       let name, text;
       if (key === "raiseTotal") {
-        name = this.$t("constants.总募资");
+        name = this.$t("总募资");
         text = `${
           utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
         } USDT`;
       }
       if (key === "rate") {
-        name = this.$t("constants.兑换比例");
+        name = this.$t("兑换比例");
         text = `1 ${currency} = ${
           utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
         } USDT`;
       }
       if (key === "capTotal") {
-        name = this.$t("constants.总销售量");
+        name = this.$t("总销售量");
         text = `${
           utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
         } ${currency}`;
@@ -123,6 +123,7 @@ export default {
         display: inline-block;
         width: 48px;
         height: 48px;
+        border-radius: 50%;
       }
       span {
         color: #fff;
@@ -132,9 +133,17 @@ export default {
       }
     }
     .home-list-item-rough-labels {
-      .start-button {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      .star-button {
+        margin-right: 10px;
         border-radius: 2px;
-        padding: 5px 10px;
+        padding: 3px 6px;
+        margin-bottom: 10px;
+      }
+      .star-button + .star-button {
+        margin-left: 0px;
       }
     }
     .home-list-item-rough-icons {

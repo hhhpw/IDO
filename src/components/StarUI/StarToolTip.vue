@@ -1,6 +1,6 @@
 <template>
-  <div class="start-tool-tip">
-    <Tooltip v-bind="$attrs" class="start-tool-tip">
+  <div class="star-tool-tip">
+    <Tooltip v-bind="$attrs" class="star-tool-tip">
       <slot></slot>
     </Tooltip>
   </div>

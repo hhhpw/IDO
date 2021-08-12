@@ -1,11 +1,11 @@
 <template>
-  <div class="start-tag">
+  <div class="star-tag">
     <slot name="default"></slot>
   </div>
 </template>
 <script>
 export default {
-  name: "StartTag",
+  name: "StarTag",
   data() {
     return {};
   },
@@ -21,14 +21,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.start-tag {
+.star-tag {
   // padding: 10px;
   // width: 100px;
   // height: 60px;
   display: inline-block;
   cursor: pointer;
 }
-.start-tag + .start-tag {
+.star-tag + .star-tag {
   margin-left: 10px;
 }
 </style>

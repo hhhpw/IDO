@@ -2,13 +2,12 @@ import StarMaskOnboarding from "@starcoin/starmask-onboarding";
 import { providers, utils, bcs } from "@starcoin/starcoin";
 import { arrayify, hexlify } from "@ethersproject/bytes";
 // import getTokenByCurrency from "./tokens";
-import { getTokenByCurrency } from "@utils/tokens";
+// import { getTokenByCurrency } from "@utils/tokens";
 import {
   STAKE_STC_FUNCTION_ID,
   UNSTAKE_STC_FUNCTION_ID,
   PAY_USDT_FUNCTION_ID,
 } from "@constants/contracts";
-// import BigNumber from "bignumber.js";
 import utilsNumber from "@utils/number.js";
 
 /**
@@ -148,17 +147,10 @@ const getPermissions = async () => {
  * stake STC
  *
  * */
-const stakeWithSTC = async ({
-  provider,
-  chianID,
-  currency = "DUMMY",
-  amount,
-}) => {
-  const stcToken = getTokenByCurrency(chianID, currency);
-  console.log("====stcToken=====", stcToken);
+const stakeWithSTC = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = STAKE_STC_FUNCTION_ID;
-    const strTypeArgs = [stcToken.code];
+    const strTypeArgs = [tokenCode];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
     const amountHex = (function () {
@@ -185,8 +177,6 @@ const stakeWithSTC = async ({
 
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
-      // gasLimit: 1000000,
-      // gasPrice: 1,
     });
 
     return txhash;
@@ -200,16 +190,10 @@ const stakeWithSTC = async ({
  * unstake STC
  *
  * */
-const unstakeWithSTC = async ({
-  provider,
-  chianID,
-  currency = "DUMMY",
-  amount,
-}) => {
-  const token = getTokenByCurrency(chianID, currency);
+const unstakeWithSTC = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = UNSTAKE_STC_FUNCTION_ID;
-    const strTypeArgs = [token.code];
+    const strTypeArgs = [tokenCode];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
     const amountHex = (function () {
@@ -233,8 +217,6 @@ const unstakeWithSTC = async ({
     })();
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
-      // gasLimit: 1000000,
-      // gasPrice: 1,
     });
     console.log("=====unstakeSTC======", txhash);
 
@@ -245,16 +227,10 @@ const unstakeWithSTC = async ({
   return false;
 };
 
-const payUSDT = async ({
-  provider,
-  chianID,
-  currency = "DUMMY",
-  // amount = 1,
-}) => {
-  const token = getTokenByCurrency(chianID, currency);
+const payUSDT = async ({ provider, tokenCode }) => {
   try {
     const functionId = PAY_USDT_FUNCTION_ID;
-    const strTypeArgs = [token.code];
+    const strTypeArgs = [tokenCode];
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
     // const amountHex = (function () {
     //   const se = new bcs.BcsSerializer();
@@ -285,8 +261,6 @@ const payUSDT = async ({
 
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
-      // gasLimit: 1000000,
-      // gasPrice: 1,
     });
 
     return txhash;

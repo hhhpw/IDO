@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "StartSpace",
+  name: "StarSpace",
   props: {
     horizontal: {
       type: Boolean,

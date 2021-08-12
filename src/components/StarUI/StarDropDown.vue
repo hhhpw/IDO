@@ -1,16 +1,16 @@
 <template>
-  <div class="start-dropdown">
+  <div class="star-dropdown">
     <Dropdown v-bind="$attrs">
       <slot name="tag"></slot>
-      <DropdownMenu slot="dropdown" class="start-dropdown-menu">
+      <DropdownMenu slot="dropdown" class="star-dropdown-menu">
         <DropdownItem
           v-for="(d, i) in itemList"
           :key="i"
-          class="start-dropdown-menu-item"
+          class="star-dropdown-menu-item"
           @click.native="emitClick(d.value)"
           :class="{ 'is-active': activeValue === d.value }"
         >
-          {{ $t(`constants.${d.text}`) }}
+          {{ $t(`${d.text}`) }}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -20,7 +20,7 @@
 import { Dropdown, DropdownMenu, DropdownItem } from "element-ui";
 import session from "@utils/session.js";
 export default {
-  name: "StartDropDown",
+  name: "StarDropDown",
   data() {
     return {};
   },
@@ -58,7 +58,7 @@ export default {
   background: #29f3f6 !important;
   color: #170c39 !important;
 }
-.start-dropdown-menu {
+.star-dropdown-menu {
   background-color: #333d5c;
   color: #fff;
   border: none;
@@ -76,14 +76,14 @@ export default {
     }
   }
 }
-.start-dropdown-menu-item {
+.star-dropdown-menu-item {
   text-align: center;
   color: #fff;
   &:hover {
     @include hoverStyle();
   }
 }
-.start-dropdown-menu-item.is-active {
+.star-dropdown-menu-item.is-active {
   background: rgba(42, 254, 254, 0.6) !important;
   color: #170c39 !important;
   &:hover {

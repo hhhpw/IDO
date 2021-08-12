@@ -1,6 +1,6 @@
 <template>
   <div class="detail-wrap animate__animated animate__fadeInUp">
-    <start-space :size="30"></start-space>
+    <star-space :size="30"></star-space>
     <div class="detail-wrap-content">
       <div
         class="detail-wrap-content-left"
@@ -18,13 +18,13 @@
   </div>
 </template>
 <script>
-import StartSpace from "@startUI/StartSpace.vue";
+import StarSpace from "@StarUI/StarSpace.vue";
 import DetailRightCard from "@components/Home/detailRightCard.vue";
 import DetailLeftCard from "@components/Home/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    StartSpace,
+    StarSpace,
     DetailRightCard,
     DetailLeftCard,
   },
