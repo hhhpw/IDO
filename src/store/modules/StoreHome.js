@@ -14,17 +14,17 @@ const StoreHome = {
     detailCardType: "", // 详情页卡片类型,
     detailCardId: null, // 具体卡片的id
     cardData: null,
-    currencyToken: null,
-    currencyName: null,
+    // 活动币种信息， 基础币、质押币、支付币
+    currencyInfo: {},
   },
   mutations: {
     [types.STORE_HOME_CHANGE_STATUS](state, info) {
       console.log("info", info);
-      const { cardType, status, cardId, token, currencyName } = info;
+      const { cardType, status, cardId, currencyInfo } = info;
       state.detailCardType = cardType;
       state.status = status;
-      state.currencyToken = token;
-      state.currencyName = currencyName;
+      state.currencyInfo = currencyInfo;
+      // state.currencyName = currencyName;
       if (cardId) {
         state.detailCardId = cardId;
       }
@@ -78,7 +78,9 @@ const StoreHome = {
     },
   },
   actions: {
-    async triggerStakeRecord(params) {
+    /* eslint-disable*/
+    async triggerStakeRecord({}, params) {
+      console.log("params", params);
       const res = await homeApi.triggerStakeRecord(params);
       console.log("=====triggerStakeRecord====", res);
     },
@@ -107,10 +109,52 @@ const StoreHome = {
             assignmentStartTime, // 代币分配开始时间
             assignmentEndTime, // 代币分配结束时间
             currencyTotal, //代币发行总量
+            // payCurrency,
+            // payPrecision,
+            // payAddress,
+            // assignCurrency,
+            // assignPrecision,
+            // assignAddress,
           } = d;
           const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toString();
+          //质押币种、精度、地址
+          // pledgeCurrency: null;
+          // pledgePrecision;
+          // pledgeAddress;
+          // //支付币种、精度、地址
+          // payCurrency;
+          // payPrecision;
+          // payAddress;
+          // //分配币种/精度、地址
+          // assignCurrency;
+          // assignPrecision;
+          // assignAddress;
           return {
             ...d,
+            currencyInfo: {
+              // 质押
+              // stakeCurrency: d.pledgeCurrency || "PPP",
+              // stakePrecision: d.pledgePrecision || 9,
+              // stakeAddress: d.pledgeAddress || "dasdaas",
+              stakeCurrency: "STAKECOIN",
+              stakePrecision: 9,
+              stakeAddress: "stakeCOINAddress",
+              //支付币种、精度、地址
+              // payCurrency,
+              // payPrecision,
+              // payAddress,
+              // //分配币种/精度、地址
+              // assignCurrency,
+              // assignPrecision,
+              // assignAddress,
+              payCurrency: "PAYCOIN",
+              payPrecision: 9,
+              payAddress: "USDTTOKEN",
+              //分配币种/精度、地址
+              assignCurrency: "NMB",
+              assignPrecision: 9,
+              assignAddress: "NMB TOKEN",
+            },
             cardType: mapKey.get(endStates[i]),
             capTotal,
             proTimeList: [

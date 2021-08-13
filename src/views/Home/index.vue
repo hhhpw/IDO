@@ -160,7 +160,17 @@ export default {
   .home-banner {
     height: 600px;
     .home-banner-content {
+      .home-banner-title {
+        font-size: 80px;
+      }
       margin-top: 100px;
+      .home-banner-btns {
+        .home-banner-btns-btn {
+          width: 180px;
+          height: 60px;
+          line-height: 60px;
+        }
+      }
     }
   }
 }

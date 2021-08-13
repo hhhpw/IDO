@@ -6,7 +6,7 @@ import {
 } from "@constants/contracts";
 // 合约相关接口
 import request from "@utils/request";
-const COUNT = 8;
+const COUNT = 10;
 
 let CONTRACTS_URL, CONTRACTS_ADD;
 if (process.env.NODE_ENV !== "development") {
@@ -19,56 +19,9 @@ if (process.env.NODE_ENV !== "development") {
   CONTRACTS_ADD = CONTRACTS_TEST_ADDRESS;
 }
 
-// 获取币种精度
-function getCurrencyPrecision() {
-  let params = {
-    id: 101,
-    jsonrpc: "2.0",
-    method: "contract.call_v2",
-    params: [
-      {
-        function_id: "0x1::Token::scaling_factor",
-        type_args: ["0x1::STC::STC"], // 币种token
-        args: [],
-      },
-    ],
-  };
-  return request({
-    headers: {
-      "content-type": "application/json",
-    },
-    url: CONTRACTS_URL,
-    method: "POST",
-    data: JSON.stringify(params),
-  });
-}
-// 是否已接受该币种token
-function isAcceptedToken() {
-  let params = {
-    id: 101,
-    jsonrpc: "2.0",
-    method: "contract.call_v2",
-    params: [
-      {
-        function_id: "0x1::Account::is_accepts_token",
-        type_args: ["0xf8af03dd08de49d81e4efd9e24c039cc::Doge::SHIBA"],
-        args: ["0x07fa08a855753f0ff7292fdcbe871216"],
-      },
-    ],
-  };
-  return request({
-    headers: {
-      "content-type": "application/json",
-    },
-    url: CONTRACTS_URL,
-    method: "POST",
-    data: JSON.stringify(params),
-  });
-}
-
 // 合约项目详情
 function getContractsProjectInfo({ token }) {
-  console.log("====t0ken====", token);
+  console.log("====getContractsProjectInfo====", token);
   if (!token) return;
   // const token = getTokenByCurrency(chainID, currency);
   // console.log("token", token);
@@ -79,7 +32,7 @@ function getContractsProjectInfo({ token }) {
     params: [
       CONTRACTS_ADD, //合约地址
       // "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
-      // Offering3 也是个变量？
+      // <stakeToken,payToken,offeringToken>
       `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${token}>`,
     ],
   };
@@ -115,11 +68,7 @@ function getStakeAmount(accountToken, token) {
   });
 }
 
-//
-
 export default {
-  getCurrencyPrecision,
   getContractsProjectInfo,
   getStakeAmount,
-  isAcceptedToken,
 };

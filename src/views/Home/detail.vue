@@ -22,6 +22,8 @@ import StarSpace from "@StarUI/StarSpace.vue";
 import DetailRightCard from "@components/Home/detailRightCard.vue";
 import DetailLeftCard from "@components/Home/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
+import { Wallet } from "@contactLogic";
+import { isNil, isUndefined } from "lodash";
 export default {
   components: {
     StarSpace,
@@ -33,29 +35,35 @@ export default {
       inputValue: "",
     };
   },
-  // props: {
-  //   cardInfo: Object,
-  // },
   mounted() {
-    // console.log("cardInfo", this.cardInfo);
-    // this.loadInfo();
-    // this.getStakeAmount();
-    // this.getContractsProjectInfo("STC");
-    // this.loadInfo({ currency: "DUMMY" });
-    this.loadInfo({ token: this.currencyToken });
-    // console.log("stcAccounts", this.stcAccounts);
-    // if (!this.stcAccounts || this.stcAccounts.length < 1) {
-    //   console.error("账号不存在");
-    // } else {
-    //   this.getStakeAmount(this.stcAccounts[0]);
-    // }
+    if (this.walletStatus !== "connected") {
+      console.error("wallet not conneceted");
+      return;
+    }
+    this.getBanlance();
   },
   methods: {
+    // this.loadInfo({ currency: "DUMMY" });
+    async getBanlance() {
+      const params = {
+        provider: this.stcProvider,
+        account: this.stcAccounts[0],
+        token: "0xd800a4813e2f3ef20f9f541004dbd189::DummyToken::USD2T",
+        // token: this.currencyInfo.assignAddress,
+      };
+      // 获取钱包下特定币种S额度
+      const balance = await Wallet.getAccountBalance(params);
+      if (!isNil(balance) || !isUndefined(balance)) {
+        this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
+          [this.currencyInfo.stakeCurrency]: balance,
+        });
+      }
+    },
     // 支付后轮询查询状态
     eventLoop() {
-      this.timer = setInterval(() => {
-        this.loadInfo({ token: this.currencyToken });
-      }, 7000);
+      // this.timer = setInterval(() => {
+      //   this.loadInfo({ token: this.currencyInfo });
+      // }, 7000);
     },
     inputEvent(e) {
       this.inputValue = e;
@@ -69,11 +77,9 @@ export default {
   computed: {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
-      currencyToken: (state) => state.currencyToken,
+      currencyInfo: (state) => state.currencyInfo,
     }),
-    // ...mapState("StoreWallet", {
-    //   stcAccounts: (state) => state.stcAccounts,
-    // }),
+    ...mapState("StoreWallet", ["stcAccounts", "stcProvider", "walletStatus"]),
   },
   beforeDestroy() {},
 };
@@ -93,13 +99,10 @@ export default {
     }
     .detail-wrap-content-right {
       width: 55%;
-      // height: 600px;
       background-repeat: no-repeat;
       background-image: url("../../assets/home/open-right-bg.png");
       background-size: 100% 100%;
     }
   }
-  // color: red;
-  // font-size: 100x;
 }
 </style>

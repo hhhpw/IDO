@@ -6,28 +6,32 @@
       (cardCountDown = cardContent.startTime))
     "
   >
-    <div>{{ stcAccounts }}</div>
+    <div>
+      {{ balances }}
+    </div>
     <div
       class="detail-input-wrap"
       :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
     >
       <star-input
         class="detail-input"
-        :precision="9"
+        :precision="currencyInfo.stakePrecision"
         :value="inputValue"
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
         @maxEvent="maxEvent"
+        :stakeCurrency="currencyInfo.stakeCurrency"
         v-if="stakeStatus === 'stake' && proState === 2"
       ></star-input>
 
       <star-input
         class="detail-input"
         v-if="stakeStatus === 'unstake'"
-        :precision="9"
+        :precision="currencyInfo.stakePrecision"
         :value="inputValue"
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
+        :stakeCurrency="currencyInfo.stakeCurrency"
         @maxEvent="maxEvent"
       >
       </star-input>
@@ -44,12 +48,18 @@
     >
       <div>
         <span>{{ $t("还可质押") }}：</span>
-        <span>{{ renderAmount(restStakeAmount) }} STC</span>
+        <span
+          >{{ renderAmount(restStakeAmount) }}
+          {{ currencyInfo.stakeCurrency }}</span
+        >
       </div>
       <div>
         <span>{{ $t("余额") }}：</span>
         <!-- 钱包的stc -->
-        <span>{{ renderAmount(balances.stc) }} STC</span>
+        <span
+          >{{ renderAmount(balances.stc) }}
+          {{ currencyInfo.stakeCurrency }}</span
+        >
       </div>
     </div>
     <star-space
@@ -93,7 +103,10 @@
     <star-button
       v-if="showRule(detailCardType, payState)"
       class="detail-wrap-content-button"
-      :class="{ noPointer: proState === 3 && stakeStatus === 'stake' }"
+      :class="{
+        noPointer:
+          (proState === 3 || proState === 1) && stakeStatus === 'stake',
+      }"
       :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
     >
       <p
@@ -198,7 +211,12 @@
       </div>
       <star-space :size="10"></star-space>
       <p class="detail-wrap-content-left-paysuccess-detail">
-        {{ $t("支付成功文案", { currency: `${cardContent.currency}` }) }}
+        {{
+          $t("支付成功文案", {
+            assign: currencyInfo.assignCurrency,
+            stake: currencyInfo.stakeCurrency,
+          })
+        }}
       </p>
     </div>
     <star-space :size="35"></star-space>
@@ -223,7 +241,6 @@ import { isNil, isUndefined } from "lodash";
 import session from "@utils/session";
 import { Wallet } from "@contactLogic";
 import { countdown } from "@utils/date.js";
-import { STC_PRECISION } from "@constants/contracts";
 export default {
   data() {
     return {
@@ -276,13 +293,17 @@ export default {
       return {
         provider: this.stcProvider,
         // account: this.stcAccounts[0],
-        tokenCode: this.currencyToken,
+        // 这里token怎么传
+        // tokenCode: this.currencyToken,
         chianID: this.stcChianID,
       };
     },
     // 获取代币份额
     getCurrencyShare(precision) {
-      if (!this.myStakeAmount) return "0";
+      if (!this.myStakeAmount) {
+        this.currencyShareAmount = "0";
+        return "0";
+      }
       let amount = utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(this.myStakeAmount)
@@ -291,8 +312,9 @@ export default {
           .div(Math.pow(10, precision))
           .toString(),
         {
-          precision: precision,
+          precision,
           trailingZero: false,
+          round: "floor",
         }
       ).text;
       if (isNil(amount) || !this.myStakeAmount) {
@@ -320,20 +342,28 @@ export default {
       return val;
     },
     maxEvent() {
+      console.log("this.balances", this.balances);
       if (this.detailCardType === "will") {
         return;
       }
       if (this.stakeStatus === "stake") {
         // 最大质押量、钱包余额做比较
-        if (utilsNumber.bigNum(this.restStakeAmount).gte(this.balances.stc)) {
+        if (
+          utilsNumber
+            .bigNum(this.restStakeAmount)
+            .gte(this.balances[this.currencyInfo.stakeCurrency])
+        ) {
           this.inputValue = this.isNilCheck(
-            utilsNumber.bigNum(this.balances.stc).div(STC_PRECISION).toString()
+            utilsNumber
+              .bigNum(this.balances[this.currencyInfo.stakeCurrency])
+              .div(Math.pow(10, this.currencyInfo.stakePrecision))
+              .toString()
           );
         } else {
           this.inputValue = this.isNilCheck(
             utilsNumber
               .bigNum(this.restStakeAmount)
-              .div(STC_PRECISION)
+              .div(Math.pow(10, this.currencyInfo.stakePrecision))
               .toString()
           );
         }
@@ -343,7 +373,10 @@ export default {
           return;
         }
         this.inputValue = this.isNilCheck(
-          utilsNumber.bigNum(this.stakeAmount).div(STC_PRECISION).toString()
+          utilsNumber
+            .bigNum(this.stakeAmount)
+            .div(Math.pow(10, this.currencyInfo.stakePrecision))
+            .toString()
         );
       }
     },
@@ -351,7 +384,10 @@ export default {
       if (isNil(balance)) return "--";
       console.log("==renderAmount===", balance);
       return utilsNumber.formatNumberMeta(
-        utilsNumber.bigNum(balance).div(STC_PRECISION).toString(),
+        utilsNumber
+          .bigNum(balance)
+          .div(Math.pow(10, this.currencyInfo.stakePrecision))
+          .toString(),
         { grouped: true }
       ).text;
     },
@@ -360,14 +396,18 @@ export default {
       if (!utilsNumber.bigNum(this.inputValue).gt(0)) {
         return false;
       }
-      if (!utilsNumber.bigNum(this.inputValue).gt(100)) {
+      if (!utilsNumber.bigNum(this.inputValue).gte(100)) {
         this.errorText = this.$t("errors.最小质押100STC");
         return false;
       }
       if (
         utilsNumber
           .bigNum(this.inputValue)
-          .gt(utilsNumber.bigNum(this.balances.stc).div(STC_PRECISION))
+          .gt(
+            utilsNumber
+              .bigNum(this.balances[this.currencyInfo.stakeCurrency])
+              .div(Math.pow(10, this.currencyInfo.stakePrecision))
+          )
       ) {
         this.errorText = this.$t("errors.账户余额不足");
         return false;
@@ -375,7 +415,11 @@ export default {
       if (
         utilsNumber
           .bigNum(this.inputValue)
-          .gt(utilsNumber.bigNum(this.restStakeAmount).div(STC_PRECISION))
+          .gt(
+            utilsNumber
+              .bigNum(this.restStakeAmount)
+              .div(Math.pow(10, this.currencyInfo.stakePrecision))
+          )
       ) {
         this.errorText = this.$t("errors.质押量超出个人额度上限");
         return false;
@@ -386,22 +430,24 @@ export default {
     async onStakeClick() {
       if (!this.validteStake()) return;
       const params = this.getParams();
-      const res = await Wallet.stakeWithSTC({
+      const amount = utilsNumber
+        .bigNum(this.inputValue)
+        .times(Math.pow(10, this.currencyInfo.stakePrecision))
+        .toString();
+      const res = await Wallet.stakeFunc({
         ...params,
-        amount: utilsNumber
-          .bigNum(this.inputValue)
-          .times(STC_PRECISION)
-          .toString(),
+        amount,
       });
       // 质押成功
       if (res) {
+        this.triggerStakeRecord({
+          userAddress: this.stcAccounts[0],
+          prdAddress: this.currencyInfo.assignAddress,
+          userPledgeType: 1,
+          currency: this.currencyInfo.assignCurrency,
+          amount: this.inputValue,
+        });
         this.inputValue = "";
-        // this.triggerStakeRecord({
-        // userAddress: this.stcAccounts[0],
-        // prdAddress:
-        // userPledgeType: 1,
-        // currency:
-        // });
         console.log("=====质押成功=====");
         console.log("stake result:", res);
       }
@@ -413,7 +459,11 @@ export default {
       if (
         utilsNumber
           .bigNum(this.inputValue)
-          .gt(utilsNumber.bigNum(this.stakeAmount).div(STC_PRECISION))
+          .gt(
+            utilsNumber
+              .bigNum(this.stakeAmount)
+              .div(Math.pow(10, this.currencyInfo.stakePrecision))
+          )
       ) {
         this.errorText = this.$t("errors.可解押量不足");
         return false;
@@ -426,20 +476,22 @@ export default {
       }
       if (!this.validteUnstake()) return;
       const params = this.getParams();
-      const res = await Wallet.unstakeWithSTC({
+      const amount = utilsNumber
+        .bigNum(this.inputValue)
+        .times(Math.pow(10, this.currencyInfo.stakePrecision))
+        .toString();
+      const res = await Wallet.unstakeFunc({
         ...params,
-        amount: utilsNumber
-          .bigNum(this.inputValue)
-          .times(STC_PRECISION)
-          .toString(),
+        amount,
       });
       if (res) {
-        // this.triggerStakeRecord({
-        //   userAddress: this.stcAccounts[0],
-        //   prdAddress:
-        //   userPledgeType: 2,
-        //   currency:
-        // });
+        this.triggerStakeRecord({
+          userAddress: this.stcAccounts[0],
+          prdAddress: this.currencyInfo.assignAddress,
+          userPledgeType: 2,
+          currency: this.currencyInfo.assignCurrency,
+          amount: this.inputValue,
+        });
         this.inputValue = "";
         console.log("=====解押成功=====");
         console.log("unstake result:", res);
@@ -468,6 +520,7 @@ export default {
         // console.log("payUSDT result:", res);
         this.$emit("eventLoop");
       }
+      // 支付后去轮询接口
       // this.$emit("eventLoop");
     },
   },
@@ -476,8 +529,7 @@ export default {
       detailCardType: (state) => state.detailCardType,
       colorInfo: (state) => state.colorInfo,
       detailCardId: (state) => state.detailCardId,
-      currencyToken: (state) => state.currencyToken,
-      currencyName: (state) => state.currencyName,
+      currencyInfo: (state) => state.currencyInfo,
     }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,

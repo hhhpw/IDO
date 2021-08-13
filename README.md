@@ -2,16 +2,7 @@
 
 ---
 
-### TODO
-
-- 切换账户
-- 活动拒绝回调
-
----
-
 ### Star Mask
-
-参考地址：
 
 - [starmask-test-dapp](https://github.com/starcoinorg/starmask-test-dapp)
 

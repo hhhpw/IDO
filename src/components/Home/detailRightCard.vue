@@ -4,11 +4,7 @@
     :set="
       (((colorsInfo = cardTypeColorInfo(detailCardType)),
       (cardInfo = detailCardInfo(detailCardId))),
-      (detailListAmount = changeDisplayList(
-        cardInfo.decentralizedList,
-        cardInfo.tokenPrecision,
-        cardInfo.currency
-      )))
+      (detailListAmount = changeDisplayList(cardInfo.decentralizedList)))
     "
   >
     <div
@@ -37,11 +33,11 @@
           <span>
             {{ $t(`${cardInfo.prdName}`) }}
           </span>
-          <span> ({{ $t(`${cardInfo.currency}`) }}) </span>
+          <span> ({{ $t(`${cardInfo.currencyInfo.assignCurrency}`) }}) </span>
         </div>
         <div>
           <span class="detail-card-header-info-hash">
-            {{ cardInfo.address }}
+            {{ cardInfo.currencyInfo.assignAddress }}
           </span>
 
           <star-tool-tip
@@ -51,7 +47,7 @@
           >
             <svg-icon
               :name="`copy-${detailCardType}`"
-              @click="clipHash(cardInfo.address)"
+              @click="clipHash(cardInfo.currencyInfo.assignAddress)"
             ></svg-icon>
           </star-tool-tip>
         </div>
@@ -133,7 +129,6 @@ import mixinHome from "@mixins/home.js";
 import session from "@utils/session";
 import { cloneDeep } from "lodash";
 import utilsNumber from "@utils/number.js";
-import { STC_PRECISION } from "@constants/contracts";
 import utilsTool from "@utils/tool";
 export default {
   data() {
@@ -165,7 +160,7 @@ export default {
   watch: {},
   mounted() {},
   methods: {
-    changeDisplayList(val, precision, currency) {
+    changeDisplayList(val) {
       // 需要再次组合下数据
       let list = cloneDeep(val);
       list = list.map((d, i) => {
@@ -177,12 +172,12 @@ export default {
                 ? utilsNumber.formatNumberMeta(
                     utilsNumber
                       .bigNum(this.myStakeAmount)
-                      .div(STC_PRECISION)
+                      .div(Math.pow(10, this.currencyInfo.stakePrecision))
                       .toString(),
                     { grouped: true }
                   ).text
                 : 0
-            } STC`,
+            } ${this.currencyInfo.stakeCurrency}`,
           };
         }
         if (i === 1) {
@@ -193,11 +188,11 @@ export default {
               utilsNumber.formatNumberMeta(
                 utilsNumber
                   .bigNum(this.currencyTotalAmount)
-                  .div(Math.pow(10, precision)),
+                  .div(Math.pow(10, this.currencyInfo.assignPrecision)),
                 { grouped: true }
               ).text +
               " " +
-              currency,
+              `${this.currencyInfo.assignCurrency}`,
           };
         }
         if (i === 2) {
@@ -206,7 +201,7 @@ export default {
             text:
               utilsNumber.formatNumberMeta(d, { grouped: true }).text +
               " " +
-              currency,
+              `${this.currencyInfo.assignCurrency}`,
           };
         }
         if (i === 3) {
@@ -216,16 +211,16 @@ export default {
               utilsNumber.formatNumberMeta(
                 utilsNumber
                   .bigNum(this.stakeTotalAmount)
-                  .div(STC_PRECISION)
+                  .div(Math.pow(10, this.currencyInfo.stakePrecision))
                   .toString(),
                 { grouped: true }
-              ).text + " STC",
+              ).text + ` ${this.currencyInfo.stakeCurrency}`,
           };
         }
         if (i === 4) {
           return {
             name: this.$t("兑换比例"),
-            text: `1 ${currency} = ${
+            text: `1 ${this.currencyInfo.assignCurrency} = ${
               utilsNumber.formatNumberMeta(d, { grouped: true }).text
             } USDT`,
           };
@@ -265,6 +260,7 @@ export default {
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       detailCardId: (state) => state.detailCardId,
+      currencyInfo: (state) => state.currencyInfo,
     }),
     ...mapState("StoreContracts", {
       stakeAmount: (state) => state.stakeAmount,

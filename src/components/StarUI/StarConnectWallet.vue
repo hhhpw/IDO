@@ -1,75 +1,33 @@
 <template>
-  <div class="star-header">
-    <div class="star-header-left">
-      <img src="../../assets/header/logo.png" />
-      <Menu
-        :default-active="activeHeaderItem"
-        mode="horizontal"
-        class="star-menu"
-        @select="handleSelectTab"
-      >
-        <MenuItem
-          :index="d.value"
-          class="star-menu-item"
-          v-for="(d, index) in headerItems"
-          :key="index"
-          :class="{ 'star-menu-item-active': activeHeaderItem === d.value }"
-        >
-          {{ $t(`${d.label}`) }}
-        </MenuItem>
-      </Menu>
-    </div>
-
-    <div class="star-header-right">
-      <star-connect-wallet
-        class="star-header-right-btn"
-        @click="onClickConnect"
-      ></star-connect-wallet>
-      <star-drop-down
-        trigger="click"
-        :itemList="langs"
-        @handleClick="hanldeChangeLang"
-        :activeValue="currLang"
-      >
-        <template #tag>
-          <star-button light>
-            {{ $t("语言") }}
-          </star-button>
-        </template>
-      </star-drop-down>
-    </div>
-  </div>
+  <star-button dark>
+    <span @click="onClickConnect">
+      <span v-if="walletStatus === 'unConnected'">
+        {{ $t("连接钱包") }}
+      </span>
+      <span v-if="walletStatus === 'connected'">
+        {{ $t("已连接") }}
+      </span>
+    </span>
+  </star-button>
 </template>
+
 <script>
-import { Menu, MenuItem } from "element-ui";
 import StarButton from "@StarUI/StarButton.vue";
-import StarDropDown from "@StarUI/StarDropDown.vue";
 import session from "@utils/session.js";
 import { mapState, mapActions } from "vuex";
 import { Notification } from "element-ui";
 import { Wallet } from "@contactLogic";
 import utilsTool from "@utils/tool";
 import { STAR_MASK_PLUGIN_URL } from "@constants/contracts";
-import StarConnectWallet from "./StarConnectWallet.vue";
-
 export default {
-  name: "StarHeader",
+  name: "StarCOnnectWallet",
   data() {
     return {
-      currLang: null,
-      langs: [
-        { text: "中文", value: "zh" },
-        { text: "ENG", value: "en" },
-      ],
       isStarMaskInstalled: null,
     };
   },
   components: {
-    Menu,
-    MenuItem,
     StarButton,
-    StarDropDown,
-    StarConnectWallet,
   },
   mounted() {
     const currLang = session.getItem("lang");
@@ -85,22 +43,6 @@ export default {
     handleNewAccounts() {
       if (this.isStarMaskInstalled) {
         console.log("切换账户了");
-      }
-    },
-    handleSelectTab() {
-      this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
-        status: "home-list",
-      });
-      window.scrollTo(0, 0);
-      // 切换tab
-      // this.activeHeaderItem = key;
-    },
-    hanldeChangeLang(value) {
-      let currLang = this.language;
-      if (currLang === value) return;
-      if (currLang !== value) {
-        session.setItem("lang", value);
-        window.location.reload();
       }
     },
     async loadData() {
@@ -137,7 +79,7 @@ export default {
     },
     async onClickConnect() {
       // 检查是否下载
-      if (!this.isStarMaskInstalled) {
+      if (this.isStarMaskInstalled) {
         const h = this.$createElement;
         Notification({
           message: h(
@@ -220,7 +162,6 @@ export default {
       this.setStcAccounts(accounts);
     },
     handleAccountsChange() {
-      // this.connetWallet();
       // 需要依赖某些状态，直接刷新页面了
       window.location.reload();
     },
@@ -238,7 +179,6 @@ export default {
     },
   },
   computed: {
-    ...mapState("StoreApp", ["headerItems", "activeHeaderItem", "language"]),
     ...mapState("StoreWallet", [
       "stcAccounts",
       "onboarding",
@@ -267,63 +207,3 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-@import "~@/styles/variables.scss";
-.star-header {
-  height: 80px;
-  width: calc(100% - 80px);
-  display: flex;
-  align-items: center;
-  background-image: url("../../assets/header/header.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 0px 30px;
-  padding-left: 50px;
-  box-sizing: content-box;
-  display: flex;
-  justify-content: space-between;
-  .star-menu {
-    background-color: transparent;
-    border-bottom: none;
-    margin-left: 50px;
-  }
-  .star-menu-item {
-    height: 80px;
-    line-height: 80px;
-    color: #fff;
-    text-align: center;
-    font-size: 18px;
-    padding: 0px 20px;
-    &:hover {
-      background-color: transparent !important;
-      color: $text_light_color !important;
-    }
-  }
-  .el-menu-item.is-active {
-    background-color: transparent !important;
-    border-bottom: 2px solid $light_bordercolor;
-    color: $text_light_color !important;
-  }
-  .el-menu-item.is-active.star-menu-item-active {
-    background: linear-gradient(
-      180deg,
-      rgba(84, 255, 255, 0) 0%,
-      rgba(42, 254, 254, 0.21) 100%
-    );
-  }
-  .star-header-left {
-    display: flex;
-    align-items: center;
-    img {
-      margin-right: 10px;
-    }
-  }
-  .star-header-right {
-    display: flex;
-    align-items: center;
-    .star-header-right-btn {
-      margin-right: 20px;
-    }
-  }
-}
-</style>

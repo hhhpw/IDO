@@ -9,7 +9,7 @@
           >MAX</span
         >
         <span>|</span>
-        <span class="star-input-suffix-usdt">STC</span>
+        <span class="star-input-suffix-usdt">{{ stakeCurrency }}</span>
       </div>
     </Input>
   </div>
@@ -27,6 +27,10 @@ export default {
   },
   // value不用props接，因为事件出发会导致子组件直接修改了父组件
   props: {
+    stakeCurrency: {
+      type: String,
+      default: "",
+    },
     inputType: {
       type: String,
       default: "number",

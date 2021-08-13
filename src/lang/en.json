@@ -1,6 +1,6 @@
 {
   "wallet": {
-    "download-tip": "英文=》下载提示",
+    "download-tip": "StarMask wallet has not been installed in your browser, please download and install",
     "connect-tip": "Please connect the wallet first"
   },
   "errors": {
@@ -17,7 +17,7 @@
     "支付成功": "Paid Succeed",
     "质押": "Stake",
     "解押": "Unstake",
-    "我的份额": "我的份额",
+    "我的份额": "My share",
     "锁仓中": "Locked",
     "待支付": "To be paid",
     "复制成功": "Copy Succeed",
@@ -50,13 +50,7 @@
     "即将推出": "Coming Soon",
     "已经结束": "Closed",
     "参与规则": "Rules",
-    "质押时余额不足": "账户余额不足",
-    "质押量超出单账户额度": "质押量超出个人额度上限",
-    "解押数量超出质押量": "可解押量不足！",
-    "质押期已过，质押时": "质押时间已结束，不可新增质押",
-    "支付期已过，支付": "支付失败！支付时间已结束！",
-    "支付成功文案": "支付成功，质押的STC以及{currency}已转到你的账户，请到Starmask钱包查看代币！",
-    "余额不足支付失败": "支付失败！账户余额不足!",
+    "支付成功文案": "Your {stake} and {assigin} have been transferred to your account, please check in your Starmask wallet",
     "进行中的项目": "OPEN NOW",
     "即将到来的项目": "COMING SOON",
     "已结束的项目": "CLOSED",

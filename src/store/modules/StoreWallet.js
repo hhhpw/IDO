@@ -1,6 +1,4 @@
 import * as types from "../constants/wallet";
-// import contractsApi from "@api/contracts.js";
-// import { STC_PRECISION } from "@constants/index";
 
 const StoreWallet = {
   namespaced: true,
@@ -48,16 +46,6 @@ const StoreWallet = {
     setStcProvider({ commit }, provider) {
       commit(types.SET_STARMASK_PROVIDER, provider);
     },
-    // 获取币种精度
-    // async getCurrencyPrecision() {
-    //   let t = await contractsApi.getCurrencyPrecision();
-    //   // console.log("t", t);
-    // },
-    // 当前质押额度
-    // async getStakeAmount() {
-    //   let amount = await contractsApi.getStakeAmount();
-    //   console.log("amount", amount);
-    // },
   },
 };
 

@@ -1,8 +1,6 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
 import { providers, utils, bcs } from "@starcoin/starcoin";
 import { arrayify, hexlify } from "@ethersproject/bytes";
-// import getTokenByCurrency from "./tokens";
-// import { getTokenByCurrency } from "@utils/tokens";
 import {
   STAKE_STC_FUNCTION_ID,
   UNSTAKE_STC_FUNCTION_ID,
@@ -100,14 +98,15 @@ const getAccountBalance = async ({ provider, account, token }) => {
     );
     if (result) {
       balance = utilsNumber.bigNum(result.token.value).toString();
+      return balance;
     } else {
-      balance = 0;
+      balance = "0";
+      return balance;
     }
-    console.log("balance", balance);
   } catch (error) {
     console.error(error);
+    return "0";
   }
-  return balance;
 };
 
 /**
@@ -147,7 +146,7 @@ const getPermissions = async () => {
  * stake STC
  *
  * */
-const stakeWithSTC = async ({ provider, tokenCode, amount }) => {
+const stakeFunc = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = STAKE_STC_FUNCTION_ID;
     const strTypeArgs = [tokenCode];
@@ -190,7 +189,7 @@ const stakeWithSTC = async ({ provider, tokenCode, amount }) => {
  * unstake STC
  *
  * */
-const unstakeWithSTC = async ({ provider, tokenCode, amount }) => {
+const unStakeFunc = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = UNSTAKE_STC_FUNCTION_ID;
     const strTypeArgs = [tokenCode];
@@ -279,7 +278,7 @@ export default {
   getAccountBalance,
   setPermissions,
   getPermissions,
-  stakeWithSTC,
-  unstakeWithSTC,
+  stakeFunc,
+  unStakeFunc,
   payUSDT,
 };

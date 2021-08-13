@@ -15,13 +15,11 @@ function getCardInfo(pId) {
 }
 
 function triggerStakeRecord(params) {
-  console.log("params", params);
-  return;
-  // return request({
-  //   url: " /v1/ido/dx/user/updteUserRecord",
-  //   method: "POST",
-  //   data: params,
-  // });
+  return request({
+    url: "/v1/ido/dx/user/updateUserRecord",
+    method: "POST",
+    data: params,
+  });
 }
 
 export default {

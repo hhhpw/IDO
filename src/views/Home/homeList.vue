@@ -14,14 +14,7 @@
         class="home-list-item-wrap"
         v-for="(cardData, index) in data.cardInfoList"
         :key="index"
-        @click="
-          emit(
-            cardData.cardType,
-            cardData.id,
-            cardData.address,
-            cardData.currency
-          )
-        "
+        @click="emit(cardData.cardType, cardData.id, cardData.currencyInfo)"
         :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
       >
         <div
@@ -137,12 +130,13 @@ export default {
         }
       }, 1000);
     },
-    emit(cardType, id, address, currency) {
+    emit(cardType, id, currencyInfo) {
       this.$emit("clickMethod", {
         cardType: cardType,
         cardId: id,
-        token: address,
-        currencyName: currency,
+        currencyInfo,
+        // token: address,
+        // currencyName: currency,
       });
     },
   },
@@ -221,6 +215,7 @@ export default {
         background-size: 100% 100%;
         height: 26px;
         background-repeat: no-repeat;
+        // left: 5px;
         span {
           position: relative;
           top: -2px;
