@@ -41,18 +41,22 @@ export default {
       return;
     }
     this.getBanlance();
+    this.loadInfo({
+      stakeToken: this.currencyInfo.stakeAddress,
+      payToken: this.currencyInfo.payAddress,
+      assignToken: this.currencyInfo.assignAddress,
+    });
   },
   methods: {
-    // this.loadInfo({ currency: "DUMMY" });
     async getBanlance() {
       const params = {
         provider: this.stcProvider,
         account: this.stcAccounts[0],
-        token: "0xd800a4813e2f3ef20f9f541004dbd189::DummyToken::USD2T",
-        // token: this.currencyInfo.assignAddress,
+        token: this.currencyInfo.stakeAddress,
       };
       // 获取钱包下特定币种S额度
       const balance = await Wallet.getAccountBalance(params);
+      console.log("===balance====", balance);
       if (!isNil(balance) || !isUndefined(balance)) {
         this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
           [this.currencyInfo.stakeCurrency]: balance,
@@ -68,11 +72,7 @@ export default {
     inputEvent(e) {
       this.inputValue = e;
     },
-    ...mapActions("StoreContracts", [
-      "getStakeAmount",
-      "getContractsProjectInfo",
-      "loadInfo",
-    ]),
+    ...mapActions("StoreContracts", ["getStakeAmount", "loadInfo"]),
   },
   computed: {
     ...mapState("StoreHome", {

@@ -6,7 +6,7 @@
           <!-- 项目logo -->
           <img :src="data.icon" />
           <span>{{ $t(`${data.prdName}`) }}</span>
-          <span>({{ $t(`${data.currency}`) }})</span>
+          <span>({{ $t(`${data.assignCurrency}`) }})</span>
         </star-item-cell>
       </div>
       <star-space :size="20"></star-space>
@@ -36,11 +36,13 @@
       </div>
       <star-space :size="20"></star-space>
       <div class="home-list-item-rough-infos">
-        <star-item-cell :data="cellData('raiseTotal', data.currency)">
+        <star-item-cell :data="cellData('raiseTotal', data.payCurrency)">
         </star-item-cell>
-        <star-item-cell :data="cellData('rate', data.currency)">
+        <star-item-cell
+          :data="cellData('rate', data.assignCurrency, data.payCurrency)"
+        >
         </star-item-cell>
-        <star-item-cell :data="cellData('capTotal', data.currency)">
+        <star-item-cell :data="cellData('capTotal', data.assignCurrency)">
         </star-item-cell>
       </div>
     </div>
@@ -75,19 +77,19 @@ export default {
     openURL(url) {
       utilsTool.openNewWindow(url);
     },
-    cellData(key, currency) {
+    cellData(key, currency, currencyB) {
       let name, text;
       if (key === "raiseTotal") {
         name = this.$t("总募资");
         text = `${
           utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
-        } USDT`;
+        } ${currency}`;
       }
       if (key === "rate") {
         name = this.$t("兑换比例");
         text = `1 ${currency} = ${
           utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
-        } USDT`;
+        } ${currencyB}`;
       }
       if (key === "capTotal") {
         name = this.$t("总销售量");

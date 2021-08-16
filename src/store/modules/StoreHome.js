@@ -80,7 +80,6 @@ const StoreHome = {
   actions: {
     /* eslint-disable*/
     async triggerStakeRecord({}, params) {
-      console.log("params", params);
       const res = await homeApi.triggerStakeRecord(params);
       console.log("=====triggerStakeRecord====", res);
     },
@@ -91,10 +90,8 @@ const StoreHome = {
     // },
     async getDataList({ commit }) {
       let res = await homeApi.getDataList();
-      console.log("====getDataList=====", res);
       let results = [];
       const endStates = ["processing", "init", "finish"];
-      // const endStates = ["init"];
       for (let i = 0; i < endStates.length; i++) {
         const cardInfoList = res.data[endStates[i]].map((d) => {
           const {
@@ -109,12 +106,15 @@ const StoreHome = {
             assignmentStartTime, // 代币分配开始时间
             assignmentEndTime, // 代币分配结束时间
             currencyTotal, //代币发行总量
-            // payCurrency,
-            // payPrecision,
-            // payAddress,
-            // assignCurrency,
-            // assignPrecision,
-            // assignAddress,
+            payCurrency,
+            payPrecision,
+            payAddress,
+            assignCurrency,
+            assignPrecision,
+            assignAddress,
+            pledgeCurrency,
+            pledgePrecision,
+            pledgeAddress,
           } = d;
           const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toString();
           //质押币种、精度、地址
@@ -133,27 +133,29 @@ const StoreHome = {
             ...d,
             currencyInfo: {
               // 质押
-              // stakeCurrency: d.pledgeCurrency || "PPP",
-              // stakePrecision: d.pledgePrecision || 9,
-              // stakeAddress: d.pledgeAddress || "dasdaas",
-              stakeCurrency: "STAKECOIN",
-              stakePrecision: 9,
-              stakeAddress: "stakeCOINAddress",
+              stakeCurrency: pledgeCurrency,
+              stakePrecision: pledgePrecision,
+              stakeAddress: pledgeAddress,
+              // stakeCurrency: "STC",
+              // stakePrecision: 9,
+              // stakeAddress: "0x1::STC::STC",
               //支付币种、精度、地址
-              // payCurrency,
-              // payPrecision,
-              // payAddress,
+              payCurrency,
+              payPrecision,
+              payAddress,
               // //分配币种/精度、地址
-              // assignCurrency,
-              // assignPrecision,
-              // assignAddress,
-              payCurrency: "PAYCOIN",
-              payPrecision: 9,
-              payAddress: "USDTTOKEN",
+              assignCurrency,
+              assignPrecision,
+              assignAddress,
+              // payCurrency: "USDT",
+              // payPrecision: 9,
+              // payAddress:
+              //   "0xd800a4813e2f3ef20f9f541004dbd189::DummyToken::USDT",
               //分配币种/精度、地址
-              assignCurrency: "NMB",
-              assignPrecision: 9,
-              assignAddress: "NMB TOKEN",
+              // assignCurrency: "DUMMY",
+              // assignPrecision: 9,
+              // assignAddress:
+              //   "0xd800a4813e2f3ef20f9f541004dbd189::DummyToken::DUMMY",
             },
             cardType: mapKey.get(endStates[i]),
             capTotal,
@@ -181,7 +183,14 @@ const StoreHome = {
                 endDate: dayjs(assignmentEndTime).format("YYYY/MM/DD HH:mm:ss"),
               },
             ],
-            decentralizedList: [0, 0, currencyTotal, 0, rate, raiseTotal],
+            decentralizedList: [
+              0,
+              capTotal,
+              currencyTotal,
+              0,
+              rate,
+              raiseTotal,
+            ],
           };
         });
         let obj = {

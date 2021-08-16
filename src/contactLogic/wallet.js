@@ -87,15 +87,18 @@ const getStcChianID = async () => {
  *
  * */
 const getAccountBalance = async ({ provider, account, token }) => {
+  console.log("token", token, "account", account);
   let balance;
   try {
     if (token === undefined) {
       token = "0x1::STC::STC";
     }
+    console.log("====>", `0x1::Account::Balance<${token}>`);
     const result = await provider.getResource(
       account,
       `0x1::Account::Balance<${token}>`
     );
+    console.log("getAccountBalance.result", result);
     if (result) {
       balance = utilsNumber.bigNum(result.token.value).toString();
       return balance;
@@ -149,9 +152,10 @@ const getPermissions = async () => {
 const stakeFunc = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = STAKE_STC_FUNCTION_ID;
-    const strTypeArgs = [tokenCode];
+    const strTypeArgs = tokenCode;
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
+    console.log("functionId", functionId);
     const amountHex = (function () {
       const se = new bcs.BcsSerializer();
       se.serializeU128(amount);
@@ -159,14 +163,12 @@ const stakeFunc = async ({ provider, tokenCode, amount }) => {
     })();
 
     const args = [arrayify(amountHex)];
-    console.log("args", args);
 
     const scriptFunction = utils.tx.encodeScriptFunction(
       functionId,
       tyArgs,
       args
     );
-    console.log("scriptFunction", scriptFunction);
 
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
@@ -192,7 +194,7 @@ const stakeFunc = async ({ provider, tokenCode, amount }) => {
 const unStakeFunc = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = UNSTAKE_STC_FUNCTION_ID;
-    const strTypeArgs = [tokenCode];
+    const strTypeArgs = tokenCode;
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
     const amountHex = (function () {
@@ -208,7 +210,6 @@ const unStakeFunc = async ({ provider, tokenCode, amount }) => {
       tyArgs,
       args
     );
-    console.log("=====scriptFunction======", scriptFunction);
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();
       scriptFunction.serialize(se);
@@ -217,7 +218,6 @@ const unStakeFunc = async ({ provider, tokenCode, amount }) => {
     const txhash = await provider.getSigner().sendUncheckedTransaction({
       data: payloadInHex,
     });
-    console.log("=====unstakeSTC======", txhash);
 
     return txhash;
   } catch (error) {
@@ -229,7 +229,13 @@ const unStakeFunc = async ({ provider, tokenCode, amount }) => {
 const payUSDT = async ({ provider, tokenCode }) => {
   try {
     const functionId = PAY_USDT_FUNCTION_ID;
-    const strTypeArgs = [tokenCode];
+    const strTypeArgs = tokenCode;
+    console.log(
+      "tokenCode",
+      tokenCode,
+      "PAY_USDT_FUNCTION_ID",
+      PAY_USDT_FUNCTION_ID
+    );
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
     // const amountHex = (function () {
     //   const se = new bcs.BcsSerializer();

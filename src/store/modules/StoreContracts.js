@@ -44,20 +44,19 @@ const StoreWallet = {
         // 获取质押额度
         contractsApi.getStakeAmount(
           rootState.StoreWallet.stcAccounts[0],
-          payload.token
+          payload
         ),
         // 获取项目详情
-        contractsApi.getContractsProjectInfo({
-          token: payload.token,
-        }),
+        contractsApi.getContractsProjectInfo(payload),
       ])
         .then((result) => {
           console.log("result", result);
           if (result[0].status === "fulfilled") {
             if (result[0].value.result) {
               let res = fromPairs(result[0].value.result.value);
-              let value = res["stc_staking"]["Struct"]["value"][0][1]["U128"];
-              let myStake = res["stc_staking_amount"]["U128"];
+              let value =
+                res["staking_tokens"]["Struct"]["value"][0][1]["U128"];
+              let myStake = res["staking_token_amount"]["U128"];
               let payState = res["is_pay_off"]["Bool"];
               console.log("payState", payState);
               commit(types.SET_STAKE_AMOUNT, value);
@@ -67,11 +66,11 @@ const StoreWallet = {
           }
           if (result[1].status === "fulfilled") {
             let res = fromPairs(result[1].value.result.value);
-            let amount = res.personal_stc_staking_limit.U128;
+            let amount = res.personal_staking_token_amount_limit.U128;
             let proState = res.state.U8;
-            let currencyTotalAmount = res.token_total_amount.U128;
+            let currencyTotalAmount = res.offering_token_total_amount.U128;
             console.log("currencyTotalAmount", currencyTotalAmount);
-            let stakeTotalAmount = res.stc_staking_amount.U128;
+            let stakeTotalAmount = res.staking_token_amount.U128;
             console.log("stakeTotalAmount", stakeTotalAmount);
             commit(types.SET_PROJECT_INFO, {
               amount,
@@ -95,45 +94,6 @@ const StoreWallet = {
           console.error("项目详情失败:", e);
         });
     },
-    // 获取币种精度
-    // async getCurrencyPrecision() {
-    //   let t = await contractsApi.getCurrencyPrecision();
-    //   // console.log("t", t);
-    // },
-    // 当前质押额度
-    // async getStakeAmount({ commit, rootState }) {
-    //   let data = await contractsApi.getStakeAmount(
-    //     rootState.StoreWallet.stcAccounts[0]
-    //   );
-    //   let res = fromPairs(data.result.value);
-    //   let value = res["stc_staking"]["Struct"]["value"][0][1]["U128"];
-    //   commit(types.SET_STAKE_AMOUNT, value);
-    // },
-    // // 当前链上项目详情
-    // async getContractsProjectInfo({ rootState }, payload) {
-    //   const { currency } = payload;
-    //   const chainID = rootState.StoreWallet.stcChianID;
-    //   const token = getTokenByCurrency(chainID, currency || "DUMMY");
-    //   let data = await contractsApi.getContractsProjectInfo({
-    //     token,
-    //   });
-
-    //   // data:
-    //   // 0: (2) ["tokens", {…}]
-    //   // 1: (2) ["token_total_amount", {…}]
-    //   // 2: (2) ["usdt_rate", {…}]
-    //   // 3: (2) ["state", {…}]
-    //   // 4: (2) ["offering_addr", {…}]
-    //   // 5: (2) ["stc_staking_amount", {…}]
-    //   // 6: (2) ["token_offering_amount", {…}]
-    //   // 7: (2) ["version", {…}]
-    //   // 8: (2) ["offering_created_event", {…}]
-    //   // 9: (2) ["offering_update_event", {…}]
-    //   if (data.result && data.result.value) {
-    //     const res = fromPairs(data.result.value);
-    //     console.log("data", res.personal_stc_staking_limit.U128);
-    //   }
-    // },
   },
 };
 

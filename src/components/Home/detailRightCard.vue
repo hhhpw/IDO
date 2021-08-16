@@ -182,17 +182,20 @@ export default {
         }
         if (i === 1) {
           return {
-            // ...d,
             name: this.$t(`总销售量`),
-            text:
-              utilsNumber.formatNumberMeta(
-                utilsNumber
-                  .bigNum(this.currencyTotalAmount)
-                  .div(Math.pow(10, this.currencyInfo.assignPrecision)),
-                { grouped: true }
-              ).text +
-              " " +
-              `${this.currencyInfo.assignCurrency}`,
+            text: `${utilsNumber.formatNumberMeta(d, { grouped: true }).text} ${
+              this.currencyInfo.assignCurrency
+            }`,
+
+            // text:
+            //   utilsNumber.formatNumberMeta(
+            //     utilsNumber
+            //       .bigNum(this.currencyTotalAmount)
+            //       .div(Math.pow(10, this.currencyInfo.assignPrecision)),
+            //     { grouped: true }
+            //   ).text +
+            //   " " +
+            //   `${this.currencyInfo.assignCurrency}`,
           };
         }
         if (i === 2) {
@@ -222,15 +225,15 @@ export default {
             name: this.$t("兑换比例"),
             text: `1 ${this.currencyInfo.assignCurrency} = ${
               utilsNumber.formatNumberMeta(d, { grouped: true }).text
-            } USDT`,
+            } ${this.currencyInfo.payCurrency}`,
           };
         }
         if (i === 5) {
           return {
             name: this.$t("总募资"),
-            text: `${
-              utilsNumber.formatNumberMeta(d, { grouped: true }).text
-            } USDT`,
+            text: `${utilsNumber.formatNumberMeta(d, { grouped: true }).text} ${
+              this.currencyInfo.payCurrency
+            }`,
           };
         }
       });

@@ -1,6 +1,6 @@
 {
   "wallet": {
-    "download-tip": "StarMask wallet has not been installed in your browser, please download and install",
+    "download-tip": "StarMask wallet has not been installed in your browser,please download and install",
     "connect-tip": "Please connect the wallet first"
   },
   "errors": {
@@ -8,12 +8,12 @@
     "质押量超出个人额度上限": "Staked amount exceeds individual limit",
     "可解押量不足": "No enough balance to redeem",
     "您未获得该活动额度": "You did not get the quota for this event",
-    "最小质押100STC": "Minimum Stake 100STC"
+    "最小质押100": "Minimum Stake 100{currency}"
   },
   "constants": {
     "锁仓": "Locked",
-    "支付中": "支付中",
-    "已结束": "已结束",
+    "支付中": "Paying",
+    "已结束": "Closed",
     "支付成功": "Paid Succeed",
     "质押": "Stake",
     "解押": "Unstake",

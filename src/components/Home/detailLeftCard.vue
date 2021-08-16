@@ -6,9 +6,7 @@
       (cardCountDown = cardContent.startTime))
     "
   >
-    <div>
-      {{ balances }}
-    </div>
+    <div style="color: red">{{ proState }} {{ stakeStatus }}</div>
     <div
       class="detail-input-wrap"
       :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
@@ -57,7 +55,7 @@
         <span>{{ $t("余额") }}：</span>
         <!-- 钱包的stc -->
         <span
-          >{{ renderAmount(balances.stc) }}
+          >{{ renderAmount(balances[currencyInfo.stakeCurrency]) }}
           {{ currencyInfo.stakeCurrency }}</span
         >
       </div>
@@ -82,7 +80,7 @@
         </p>
         <star-space :size="8"></star-space>
         <p class="detail-wrap-conent-left-amount-text-amount">
-          {{ renderAmount(stakeAmount) }} STC
+          {{ renderAmount(stakeAmount) }} {{ currencyInfo.stakeCurrency }}
         </p>
       </template>
       <template v-if="proState === 4 && stakeStatus !== 'unstake'">
@@ -91,8 +89,10 @@
         </p>
         <star-space :size="8"></star-space>
         <p class="detail-wrap-conent-left-amount-text-amount">
-          {{ getCurrencyShare(cardContent.tokenPrecision) }}
-          {{ cardContent.currency }}
+          {{
+            getCurrencyShare(cardContent.capTotal, cardContent.assignPrecision)
+          }}
+          {{ cardContent.assignCurrency }}
         </p>
       </template>
     </div>
@@ -290,24 +290,32 @@ export default {
       return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
     },
     getParams() {
+      const { stakeAddress, payAddress, assignAddress } = this.currencyInfo;
       return {
         provider: this.stcProvider,
-        // account: this.stcAccounts[0],
         // 这里token怎么传
-        // tokenCode: this.currencyToken,
+        tokenCode: [stakeAddress, payAddress, assignAddress],
         chianID: this.stcChianID,
       };
     },
     // 获取代币份额
-    getCurrencyShare(precision) {
+    getCurrencyShare(capTotal, precision) {
       if (!this.myStakeAmount) {
         this.currencyShareAmount = "0";
         return "0";
       }
+      console.log(
+        "dasdadas",
+        this.myStakeAmount,
+        capTotal,
+        // this.currencyTotalAmount,
+        this.stakeTotalAmount,
+        precision
+      );
       let amount = utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(this.myStakeAmount)
-          .times(this.currencyTotalAmount)
+          .times(capTotal)
           .div(this.stakeTotalAmount)
           .div(Math.pow(10, precision))
           .toString(),
@@ -381,8 +389,7 @@ export default {
       }
     },
     renderAmount(balance) {
-      if (isNil(balance)) return "--";
-      console.log("==renderAmount===", balance);
+      if (isNil(balance)) return "0";
       return utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(balance)
@@ -397,7 +404,9 @@ export default {
         return false;
       }
       if (!utilsNumber.bigNum(this.inputValue).gte(100)) {
-        this.errorText = this.$t("errors.最小质押100STC");
+        this.errorText = this.$t("errors.最小质押100", {
+          currency: this.currencyInfo.stakeCurrency,
+        });
         return false;
       }
       if (
@@ -430,6 +439,7 @@ export default {
     async onStakeClick() {
       if (!this.validteStake()) return;
       const params = this.getParams();
+      console.log("params", params);
       const amount = utilsNumber
         .bigNum(this.inputValue)
         .times(Math.pow(10, this.currencyInfo.stakePrecision))
@@ -447,10 +457,10 @@ export default {
           currency: this.currencyInfo.assignCurrency,
           amount: this.inputValue,
         });
-        this.inputValue = "";
         console.log("=====质押成功=====");
         console.log("stake result:", res);
       }
+      this.inputValue = "";
     },
     validteUnstake() {
       if (!utilsNumber.bigNum(this.inputValue).gt(0)) {
@@ -480,7 +490,7 @@ export default {
         .bigNum(this.inputValue)
         .times(Math.pow(10, this.currencyInfo.stakePrecision))
         .toString();
-      const res = await Wallet.unstakeFunc({
+      const res = await Wallet.unStakeFunc({
         ...params,
         amount,
       });
@@ -492,10 +502,10 @@ export default {
           currency: this.currencyInfo.assignCurrency,
           amount: this.inputValue,
         });
-        this.inputValue = "";
         console.log("=====解押成功=====");
         console.log("unstake result:", res);
       }
+      this.inputValue = "";
     },
     validtePay() {
       if (this.proState === 4) {
@@ -517,7 +527,6 @@ export default {
       });
       if (res) {
         console.log("=====支付成功=====");
-        // console.log("payUSDT result:", res);
         this.$emit("eventLoop");
       }
       // 支付后去轮询接口

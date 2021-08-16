@@ -6,7 +6,7 @@ import {
 } from "@constants/contracts";
 // 合约相关接口
 import request from "@utils/request";
-const COUNT = 10;
+const COUNT = "";
 
 let CONTRACTS_URL, CONTRACTS_ADD;
 if (process.env.NODE_ENV !== "development") {
@@ -20,20 +20,19 @@ if (process.env.NODE_ENV !== "development") {
 }
 
 // 合约项目详情
-function getContractsProjectInfo({ token }) {
-  console.log("====getContractsProjectInfo====", token);
-  if (!token) return;
-  // const token = getTokenByCurrency(chainID, currency);
-  // console.log("token", token);
+function getContractsProjectInfo({ stakeToken, payToken, assignToken }) {
+  console.log("CONTRACTS_ADD", CONTRACTS_ADD);
+  console.log(
+    `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${stakeToken},${payToken},${assignToken}>`
+  );
+  if (!stakeToken || !payToken || !assignToken) return;
   let params = {
     id: 101,
     jsonrpc: "2.0",
     method: "contract.get_resource",
     params: [
       CONTRACTS_ADD, //合约地址
-      // "0xd501465255d22d1751aae83651421198::Offering::Offering<0x00000000000000000000000000000001::STC::STC>",
-      // <stakeToken,payToken,offeringToken>
-      `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${token}>`,
+      `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${stakeToken},${payToken},${assignToken}>`,
     ],
   };
   console.log("params", params);
@@ -47,15 +46,16 @@ function getContractsProjectInfo({ token }) {
   });
 }
 
-// 获取币种(如STC/ETH，STC/BTC不同活动下STC)已质押额度
-function getStakeAmount(accountToken, token) {
+// 获取该活动已质押额度
+function getStakeAmount(accountToken, { stakeToken, payToken, assignToken }) {
+  if (!stakeToken || !payToken || !assignToken) return;
   let params = {
     id: 101,
     jsonrpc: "2.0",
     method: "contract.get_resource",
     params: [
       accountToken,
-      `${CONTRACTS_ADD}::Offering${COUNT}::Staking<${token}>`,
+      `${CONTRACTS_ADD}::Offering${COUNT}::Staking<${stakeToken},${payToken},${assignToken}>`,
     ],
   };
   return request({

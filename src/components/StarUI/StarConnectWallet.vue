@@ -20,7 +20,7 @@ import { Wallet } from "@contactLogic";
 import utilsTool from "@utils/tool";
 import { STAR_MASK_PLUGIN_URL } from "@constants/contracts";
 export default {
-  name: "StarCOnnectWallet",
+  name: "StarConnectWallet",
   data() {
     return {
       isStarMaskInstalled: null,
@@ -57,29 +57,13 @@ export default {
       // }
       // this.getAccountBalance();
     },
-    // async getAccountBalance() {
-    //   // console.log("stcAccounts", this.stcAccounts);
-    //   if (this.stcProvider) {
-    //     const params = {
-    //       provider: this.stcProvider,
-    //       account: this.stcAccounts[0], // 默认取STC
-    //     };
-    //     // 获取钱包STC额度
-    //     const balance = await Wallet.getAccountBalance(params);
-    //     if (!isNil(balance) || !isUndefined(balance)) {
-    //       this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
-    //         stc: balance,
-    //       });
-    //     }
-    //   }
-    // },
     async setPermissions() {
       const permArr = await Wallet.setPermissions();
       console.log("permissions:", permArr);
     },
     async onClickConnect() {
       // 检查是否下载
-      if (this.isStarMaskInstalled) {
+      if (!this.isStarMaskInstalled) {
         const h = this.$createElement;
         Notification({
           message: h(
@@ -169,7 +153,6 @@ export default {
   watch: {
     stcAccounts(value) {
       if (value && value.length) {
-        // this.walletStatus = "Connected";
         this.$store.commit(
           "StoreWallet/SET_WALLET_CONNECT_STATUS",
           "connected"
