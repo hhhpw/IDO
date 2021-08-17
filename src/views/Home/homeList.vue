@@ -209,6 +209,7 @@ export default {
           width: 94px;
           text-align: center;
           font-size: 12px;
+          padding-left: 12px;
         }
       }
     }

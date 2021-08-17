@@ -304,20 +304,20 @@ export default {
         this.currencyShareAmount = "0";
         return "0";
       }
-      console.log(
-        "dasdadas",
-        this.myStakeAmount,
-        capTotal,
-        // this.currencyTotalAmount,
-        this.stakeTotalAmount,
-        precision
-      );
+      // console.log(
+      //   "dasdadas",
+      //   this.myStakeAmount,
+      //   capTotal,
+      //   // this.currencyTotalAmount,
+      //   this.stakeTotalAmount,
+      //   precision
+      // );
       let amount = utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(this.myStakeAmount)
           .times(capTotal)
           .div(this.stakeTotalAmount)
-          .div(Math.pow(10, precision))
+          // .div(Math.pow(10, precision))
           .toString(),
         {
           precision,

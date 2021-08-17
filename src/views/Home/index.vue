@@ -121,12 +121,12 @@ export default {
   background-size: 100% 100%;
   overflow: hidden;
   background-repeat: no-repeat;
-  height: 740px;
+  height: 1000px;
   background-origin: content-box;
   position: relative;
   .home-banner-content {
     margin-left: 12%;
-    margin-top: 130px;
+    margin-top: 230px;
     color: #fff;
     .home-banner-title {
       @include fontRigelstar();
