@@ -1,6 +1,7 @@
 <template>
   <div
     class="star-button"
+    v-on="$listeners"
     :class="{
       light,
       dark,
@@ -70,6 +71,10 @@ export default {
   font-size: 14px;
   text-align: center;
   box-sizing: content-box;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 .star-button + .star-button {
   margin-left: 10px;

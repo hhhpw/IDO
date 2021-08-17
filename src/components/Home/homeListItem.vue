@@ -25,14 +25,25 @@
         >
       </div>
       <star-space :size="10"></star-space>
-      <div class="home-list-item-rough-icons">
+      <div
+        class="home-list-item-rough-icons"
+        @mouseout.stop.prevent="changeHoverList(null, null, true)"
+      >
         <svg-icon
           v-for="(iconkey, index) in data.links"
           :key="index"
-          :name="iconkey.name + '-' + cardType"
+          :name="
+            isHoverList && isHoverList[index]
+              ? svgName(iconkey.name, cardType, true)
+              : svgName(iconkey.name, cardType)
+          "
           class="home-list-item-rough-icons-icon"
+          @mouseenter.stop.prevent="changeHoverList(index, true)"
+          @mouseleave.stop.prevent="changeHoverList(index, false)"
           @click.stop.prevent="openURL(iconkey.url)"
         ></svg-icon>
+        <!-- getSvgName(iconkey.name, cardType) -->
+        <!-- :name="iconkey.name + '-' + cardType" -->
       </div>
       <star-space :size="20"></star-space>
       <div class="home-list-item-rough-infos">
@@ -72,7 +83,15 @@ export default {
       type: Object,
     },
   },
-  mounted() {},
+  mounted() {
+    this.isHoverList =
+      this.data &&
+      this.data.links &&
+      this.data.links.length &&
+      this.data.links.map(() => {
+        return false;
+      });
+  },
   methods: {
     openURL(url) {
       utilsTool.openNewWindow(url);
@@ -110,11 +129,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.xxx {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 .home-list-item {
   width: 100%;
   .home-list-item-rough {
@@ -152,6 +166,8 @@ export default {
       .home-list-item-rough-icons-icon {
         width: 24px;
         height: 24px;
+        &:hover {
+        }
       }
       .home-list-item-rough-icons-icon + .home-list-item-rough-icons-icon {
         margin-left: 10px;

@@ -69,13 +69,22 @@
       >
     </div>
     <star-space :size="20"></star-space>
-    <div class="detail-card-icons">
+    <div
+      class="detail-card-icons"
+      @mouseout.stop.prevent="changeHoverList(null, null, true)"
+    >
       <svg-icon
         v-for="(iconkey, index) in cardInfo.links"
         :key="index"
-        :name="iconkey.name + '-' + detailCardType"
+        :name="
+          isHoverList && isHoverList[index]
+            ? svgName(iconkey.name, detailCardType, true)
+            : svgName(iconkey.name, detailCardType)
+        "
         class="detail-card-icons-icon"
-        @click="handleToPath(iconkey)"
+        @mouseenter.native.prevent="changeHoverList(index, true)"
+        @mouseleave.native.prevent="changeHoverList(index, false)"
+        @click.stop.prevent="handleToPath(iconkey)"
       ></svg-icon>
     </div>
     <star-space :size="20"></star-space>
@@ -158,7 +167,15 @@ export default {
     StarList,
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    // this.isHoverList =
+    //   this.data &&
+    //   this.data.links &&
+    //   this.data.links.length &&
+    //   this.data.links.map(() => {
+    //     return false;
+    //   });
+  },
   methods: {
     changeDisplayList(val) {
       // 需要再次组合下数据
@@ -186,16 +203,6 @@ export default {
             text: `${utilsNumber.formatNumberMeta(d, { grouped: true }).text} ${
               this.currencyInfo.assignCurrency
             }`,
-
-            // text:
-            //   utilsNumber.formatNumberMeta(
-            //     utilsNumber
-            //       .bigNum(this.currencyTotalAmount)
-            //       .div(Math.pow(10, this.currencyInfo.assignPrecision)),
-            //     { grouped: true }
-            //   ).text +
-            //   " " +
-            //   `${this.currencyInfo.assignCurrency}`,
           };
         }
         if (i === 2) {
