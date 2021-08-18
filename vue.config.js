@@ -14,6 +14,10 @@ module.exports = {
   devServer: {
     ...devServer(),
   },
+  css: {
+    // 为了解决css动画不起作用
+    extract: false,
+  },
   chainWebpack: (config) => {
     // alias
     config.resolve.alias
@@ -69,10 +73,6 @@ module.exports = {
         minRatio: 0.8,
       }),
     ],
-  },
-  css: {
-    // 为了解决css动画不起作用
-    extract: false,
   },
 };
 // css: {
