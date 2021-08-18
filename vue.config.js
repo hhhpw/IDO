@@ -71,7 +71,8 @@ module.exports = {
     ],
   },
   css: {
-    extract: true,
+    // 为了解决css动画不起作用
+    extract: false,
   },
 };
 // css: {
