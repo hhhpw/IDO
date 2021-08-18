@@ -21,10 +21,6 @@ if (process.env.NODE_ENV !== "development") {
 
 // 合约项目详情
 function getContractsProjectInfo({ stakeToken, payToken, assignToken }) {
-  console.log("CONTRACTS_ADD", CONTRACTS_ADD);
-  console.log(
-    `${CONTRACTS_ADD}::Offering${COUNT}::Offering<${stakeToken},${payToken},${assignToken}>`
-  );
   if (!stakeToken || !payToken || !assignToken) return;
   let params = {
     id: 101,

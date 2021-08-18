@@ -18,7 +18,7 @@
           :style="
             mixinLabelColor(
               colorsInfo['label-text-color'],
-              colorsInfo['common-color']
+              colorsInfo['label-border-color']
             )
           "
           >{{ $t(`${d.label}`) }}</star-button

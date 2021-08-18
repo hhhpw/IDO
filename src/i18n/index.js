@@ -38,7 +38,7 @@ langs.forEach((lang) => {
 });
 
 const i18n = new VueI18n({
-  locale: session.getItem("lang") || "zh", // 语言标识
+  locale: session.getItem("lang") || "en", // 语言标识
   fallbackLocale: "en", // 找不到语言包默认
   messages,
   silentTranslationWarn: true,

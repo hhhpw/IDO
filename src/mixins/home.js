@@ -17,17 +17,11 @@ export default {
         );
         return;
       }
-
       if (!flag) {
-        console.log("B");
         this.$set(this.isHoverList, index, false);
-        console.log("isHoverList", this.isHoverList);
         return;
       }
-      console.log("A");
       this.$set(this.isHoverList, index, true);
-      console.log("isHoverList", this.isHoverList);
-      // }, 0);
     },
   },
   computed: {

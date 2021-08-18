@@ -46,8 +46,10 @@
             class="detail-card-header-info-copy"
           >
             <svg-icon
-              :name="`copy-${detailCardType}`"
+              :name="setSvgName(detailCardType, isHover)"
               @click="clipHash(cardInfo.currencyInfo.assignAddress)"
+              @mouseenter.native.prevent="isHover = true"
+              @mouseleave.native.prevent="isHover = false"
             ></svg-icon>
           </star-tool-tip>
         </div>
@@ -62,7 +64,7 @@
         :style="
           mixinLabelColor(
             colorsInfo['label-text-color'],
-            colorsInfo['common-color']
+            colorsInfo['label-border-color']
           )
         "
         >{{ $t(`${d.label}`) }}</star-button
@@ -134,7 +136,6 @@ import StarToolTip from "@StarUI/StarToolTip.vue";
 import * as clipboard from "clipboard-polyfill/text";
 import { mapState, mapGetters } from "vuex";
 import mixinHome from "@mixins/home.js";
-// import { mapActions } from "vuex";
 import session from "@utils/session";
 import { cloneDeep } from "lodash";
 import utilsNumber from "@utils/number.js";
@@ -142,6 +143,7 @@ import utilsTool from "@utils/tool";
 export default {
   data() {
     return {
+      isHover: false,
       copyContent: this.$t("复制"),
       tabCategory: "prodetail",
       tabItmes: [
@@ -167,15 +169,6 @@ export default {
     StarList,
   },
   watch: {},
-  mounted() {
-    // this.isHoverList =
-    //   this.data &&
-    //   this.data.links &&
-    //   this.data.links.length &&
-    //   this.data.links.map(() => {
-    //     return false;
-    //   });
-  },
   methods: {
     changeDisplayList(val) {
       // 需要再次组合下数据
@@ -267,6 +260,14 @@ export default {
     },
   },
   computed: {
+    setSvgName() {
+      return function (type, isHover) {
+        if (isHover) {
+          return `copy-${type}-actived`;
+        }
+        return `copy-${type}`;
+      };
+    },
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       detailCardId: (state) => state.detailCardId,
@@ -274,7 +275,6 @@ export default {
     }),
     ...mapState("StoreContracts", {
       stakeAmount: (state) => state.stakeAmount,
-      currencyTotalAmount: (state) => state.currencyTotalAmount,
       myStakeAmount: (state) => state.myStakeAmount,
       stakeTotalAmount: (state) => state.stakeTotalAmount,
     }),

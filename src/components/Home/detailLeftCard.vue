@@ -7,10 +7,7 @@
     "
   >
     <div style="color: red">{{ proState }} {{ stakeStatus }}</div>
-    <div
-      class="detail-input-wrap"
-      :style="`background-image: url(${cardsInfo['detail-input-wrap-bg']})`"
-    >
+    <div class="detail-input-wrap" :style="setInputBg(isFocus, cardsInfo)">
       <star-input
         class="detail-input"
         :precision="currencyInfo.stakePrecision"
@@ -18,6 +15,8 @@
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
         @maxEvent="maxEvent"
+        @focus="isFocus = true"
+        @blur="isFocus = false"
         :stakeCurrency="currencyInfo.stakeCurrency"
         v-if="stakeStatus === 'stake' && proState === 2"
       ></star-input>
@@ -31,6 +30,8 @@
         @input="inputEvent"
         :stakeCurrency="currencyInfo.stakeCurrency"
         @maxEvent="maxEvent"
+        @focus="isFocus = true"
+        @blur="isFocus = false"
       >
       </star-input>
     </div>
@@ -107,8 +108,11 @@
         noPointer:
           (proState === 3 || proState === 1) && stakeStatus === 'stake',
       }"
-      :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`"
+      :style="setButtonBg(isHoverBtn, cardsInfo)"
+      @mouseenter.native.prevent.stop="isHoverBtn = true"
+      @mouseleave.native.prevent.stop="isHoverBtn = false"
     >
+      <!-- :style="`background-image: url(${cardsInfo['detail-wrap-content-button']})`" -->
       <p
         :style="{ color: cardsInfo['common-color'] }"
         class="detail-wrap-content-button-text"
@@ -252,6 +256,8 @@ export default {
       currencyShareAmount: "0", // 为0没有份额，说明没有参与活动
       isPaying: false,
       timer: null,
+      isFocus: false,
+      isHoverBtn: false,
     };
   },
   components: { StarInput, StarSpace, StarButton },
@@ -265,6 +271,9 @@ export default {
   },
   methods: {
     ...mapActions("StoreHome", ["triggerStakeRecord"]),
+    setFocus() {
+      this.isFocus = true;
+    },
     showRule(type, paystate) {
       if (type === "open") {
         if (paystate) {
@@ -304,20 +313,11 @@ export default {
         this.currencyShareAmount = "0";
         return "0";
       }
-      // console.log(
-      //   "dasdadas",
-      //   this.myStakeAmount,
-      //   capTotal,
-      //   // this.currencyTotalAmount,
-      //   this.stakeTotalAmount,
-      //   precision
-      // );
       let amount = utilsNumber.formatNumberMeta(
         utilsNumber
           .bigNum(this.myStakeAmount)
           .times(capTotal)
           .div(this.stakeTotalAmount)
-          // .div(Math.pow(10, precision))
           .toString(),
         {
           precision,
@@ -350,7 +350,6 @@ export default {
       return val;
     },
     maxEvent() {
-      console.log("this.balances", this.balances);
       if (this.detailCardType === "will") {
         return;
       }
@@ -439,7 +438,6 @@ export default {
     async onStakeClick() {
       if (!this.validteStake()) return;
       const params = this.getParams();
-      console.log("params", params);
       const amount = utilsNumber
         .bigNum(this.inputValue)
         .times(Math.pow(10, this.currencyInfo.stakePrecision))
@@ -457,8 +455,8 @@ export default {
           currency: this.currencyInfo.assignCurrency,
           amount: this.inputValue,
         });
-        console.log("=====质押成功=====");
-        console.log("stake result:", res);
+        // console.log("=====质押成功=====");
+        // console.log("stake result:", res);
       }
       this.inputValue = "";
     },
@@ -502,8 +500,8 @@ export default {
           currency: this.currencyInfo.assignCurrency,
           amount: this.inputValue,
         });
-        console.log("=====解押成功=====");
-        console.log("unstake result:", res);
+        // console.log("=====解押成功=====");
+        // console.log("unstake result:", res);
       }
       this.inputValue = "";
     },
@@ -534,6 +532,30 @@ export default {
     },
   },
   computed: {
+    setButtonBg() {
+      return function (focus, data) {
+        if (!focus) {
+          return {
+            "background-image": `url(${data["detail-wrap-content-button"]})`,
+          };
+        }
+        return {
+          "background-image": `url(${data["detail-wrap-content-button-actived"]})`,
+        };
+      };
+    },
+    setInputBg() {
+      return function (focus, data) {
+        if (!focus) {
+          return {
+            "background-image": `url(${data["detail-input-wrap-bg"]})`,
+          };
+        }
+        return {
+          "background-image": `url(${data["detail-input-wrap-bg-actived"]})`,
+        };
+      };
+    },
     ...mapState("StoreHome", {
       detailCardType: (state) => state.detailCardType,
       colorInfo: (state) => state.colorInfo,
@@ -550,7 +572,6 @@ export default {
       restStakeAmount: (state) => state.restStakeAmount,
       stakeAmount: (state) => state.stakeAmount,
       proState: (state) => state.proState,
-      currencyTotalAmount: (state) => state.currencyTotalAmount,
       myStakeAmount: (state) => state.myStakeAmount,
       stakeTotalAmount: (state) => state.stakeTotalAmount,
       payState: (state) => state.payState,

@@ -87,18 +87,15 @@ const getStcChianID = async () => {
  *
  * */
 const getAccountBalance = async ({ provider, account, token }) => {
-  console.log("token", token, "account", account);
   let balance;
   try {
     if (token === undefined) {
       token = "0x1::STC::STC";
     }
-    console.log("====>", `0x1::Account::Balance<${token}>`);
     const result = await provider.getResource(
       account,
       `0x1::Account::Balance<${token}>`
     );
-    console.log("getAccountBalance.result", result);
     if (result) {
       balance = utilsNumber.bigNum(result.token.value).toString();
       return balance;
@@ -155,7 +152,6 @@ const stakeFunc = async ({ provider, tokenCode, amount }) => {
     const strTypeArgs = tokenCode;
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
-    console.log("functionId", functionId);
     const amountHex = (function () {
       const se = new bcs.BcsSerializer();
       se.serializeU128(amount);
@@ -255,8 +251,6 @@ const payUSDT = async ({ provider, tokenCode }) => {
       tyArgs,
       args
     );
-
-    console.log("=====scriptFunction======", scriptFunction);
 
     const payloadInHex = (function () {
       const se = new bcs.BcsSerializer();

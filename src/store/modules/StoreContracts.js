@@ -10,7 +10,6 @@ const StoreWallet = {
     stakeAmount: null, // 个人已质押额度
     personStakeAmount: null, // 个人质押上限
     restStakeAmount: null, // 个人还可质押总额
-    currencyTotalAmount: null, // 代币销售数量
     proState: null, // 1未开始 2进行中 3质押中 4待支付 5已结束
     stakeTotalAmount: null, // 总质押
     myStakeAmount: null, // 我的质押 列表展示
@@ -23,8 +22,6 @@ const StoreWallet = {
     [types.SET_PROJECT_INFO](state, payload) {
       state.personStakeAmount = payload.amount;
       state.proState = payload.proState;
-      // state.proState = 1;
-      state.currencyTotalAmount = payload.currencyTotalAmount;
       state.stakeTotalAmount = payload.stakeTotalAmount;
     },
     [types.SET_REST_STAKE_AMOUNT](state, payload) {
@@ -58,7 +55,6 @@ const StoreWallet = {
                 res["staking_tokens"]["Struct"]["value"][0][1]["U128"];
               let myStake = res["staking_token_amount"]["U128"];
               let payState = res["is_pay_off"]["Bool"];
-              console.log("payState", payState);
               commit(types.SET_STAKE_AMOUNT, value);
               commit(types.SET_STAKE_MY_AMOUNT, myStake);
               commit(types.SET_PAY_STATE, payState);
@@ -68,14 +64,10 @@ const StoreWallet = {
             let res = fromPairs(result[1].value.result.value);
             let amount = res.personal_staking_token_amount_limit.U128;
             let proState = res.state.U8;
-            let currencyTotalAmount = res.offering_token_total_amount.U128;
-            console.log("currencyTotalAmount", currencyTotalAmount);
             let stakeTotalAmount = res.staking_token_amount.U128;
-            console.log("stakeTotalAmount", stakeTotalAmount);
             commit(types.SET_PROJECT_INFO, {
               amount,
               proState,
-              currencyTotalAmount,
               stakeTotalAmount,
             });
           }

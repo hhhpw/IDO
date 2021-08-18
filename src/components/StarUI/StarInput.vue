@@ -1,6 +1,6 @@
 <template>
   <div class="star-input">
-    <Input v-bind="{ ...$attrs }" @input="inputEvent">
+    <Input v-bind="{ ...$attrs }" @input="inputEvent" v-on="$listeners">
       <div slot="suffix" class="star-input-suffix">
         <span
           class="star-input-suffix-max"

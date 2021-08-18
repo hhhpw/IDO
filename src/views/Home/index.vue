@@ -170,7 +170,6 @@ export default {
   animation-duration: 3s;
   animation-iteration-count: infinite;
   position: absolute;
-  animation-timing-function: ease-in-out;
   left: 0;
   top: 0;
   img {

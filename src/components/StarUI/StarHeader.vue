@@ -82,11 +82,6 @@ export default {
       "setStcProvider",
       "setStcChianID",
     ]),
-    handleNewAccounts() {
-      if (this.isStarMaskInstalled) {
-        console.log("切换账户了");
-      }
-    },
     handleSelectTab() {
       this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
         status: "home-list",

@@ -56,7 +56,6 @@ export default {
       };
       // 获取钱包下特定币种S额度
       const balance = await Wallet.getAccountBalance(params);
-      console.log("===balance====", balance);
       if (!isNil(balance) || !isUndefined(balance)) {
         this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
           [this.currencyInfo.stakeCurrency]: balance,
@@ -66,7 +65,11 @@ export default {
     // 支付后轮询查询状态
     eventLoop() {
       // this.timer = setInterval(() => {
-      //   this.loadInfo({ token: this.currencyInfo });
+      //   this.loadInfo({
+      //     stakeToken: this.currencyInfo.stakeAddress,
+      //     payToken: this.currencyInfo.payAddress,
+      //     assignToken: this.currencyInfo.assignAddress,
+      //   });
       // }, 7000);
     },
     inputEvent(e) {

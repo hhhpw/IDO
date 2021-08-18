@@ -1,7 +1,7 @@
 import * as types from "../constants/home.js";
 import dayjs from "dayjs";
 import homeApi from "../../api/home.js";
-import utilsNumber from "@utils/number.js";
+// import utilsNumber from "@utils/number.js";
 const mapKey = new Map([
   ["processing", "open"],
   ["init", "will"],
@@ -19,12 +19,10 @@ const StoreHome = {
   },
   mutations: {
     [types.STORE_HOME_CHANGE_STATUS](state, info) {
-      console.log("info", info);
       const { cardType, status, cardId, currencyInfo } = info;
       state.detailCardType = cardType;
       state.status = status;
       state.currencyInfo = currencyInfo;
-      // state.currencyName = currencyName;
       if (cardId) {
         state.detailCardId = cardId;
       }
@@ -41,6 +39,7 @@ const StoreHome = {
           "list-bg-color": "#192A51",
           "common-color": "#2afefe",
           "label-text-color": "#23B0B4",
+          "label-border-color": "rgba(42, 254, 254, 0.25)",
         };
       }
       if (type === "will") {
@@ -48,6 +47,7 @@ const StoreHome = {
           "list-bg-color": "#303244",
           "common-color": "#bbff8a",
           "label-text-color": "#86B66B",
+          "label-border-color": "rgba(187, 255, 138, 0.26)",
         };
       }
       if (type === "closed") {
@@ -55,20 +55,27 @@ const StoreHome = {
           "list-bg-color": "#303352",
           "common-color": "#A6DFE6",
           "label-text-color": "#7DA2B3",
+          "label-border-color": "rgba(166, 223, 230, 0.28)",
         };
       }
       obj[
         "list-item-wrap-bg"
       ] = require(`../../assets/card/${type}-card-item.png`);
-      // if (type !== "closed") {
       obj[
         "detail-input-wrap-bg"
       ] = require(`../../assets/home/${type}-input-border.png`);
-      // }
 
       obj[
         "detail-wrap-content-button"
       ] = require(`../../assets/home/${type}-button.png`);
+      if (type !== "closed") {
+        obj[
+          "detail-input-wrap-bg-actived"
+        ] = require(`../../assets/home/${type}-input-border-actived.png`);
+        obj[
+          "detail-wrap-content-button-actived"
+        ] = require(`../../assets/home/${type}-button-actived.png`);
+      }
       return obj;
     },
     detailCardInfo: (state) => (id) => {
@@ -115,8 +122,9 @@ const StoreHome = {
             pledgeCurrency,
             pledgePrecision,
             pledgeAddress,
+            saleTotal,
           } = d;
-          const capTotal = utilsNumber.bigNum(raiseTotal).div(rate).toString();
+          const capTotal = saleTotal;
           //质押币种、精度、地址
           // pledgeCurrency: null;
           // pledgePrecision;
