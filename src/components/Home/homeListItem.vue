@@ -143,9 +143,9 @@ export default {
       }
       span {
         color: #fff;
-        font-size: 16px;
-        font-weight: 500;
-        margin-left: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        margin-left: 15px;
       }
     }
     .home-list-item-rough-labels {

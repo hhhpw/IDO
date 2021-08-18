@@ -6,7 +6,7 @@ import {
 } from "@constants/contracts";
 // 合约相关接口
 import request from "@utils/request";
-const COUNT = "1";
+const COUNT = "";
 
 let CONTRACTS_URL, CONTRACTS_ADD;
 if (process.env.NODE_ENV !== "development") {

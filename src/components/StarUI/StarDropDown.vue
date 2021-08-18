@@ -40,7 +40,7 @@ export default {
   mounted() {
     let currLang = session.getItem("lang");
     if (!currLang) {
-      session.setItem("lang", "zh");
+      session.setItem("lang", "en");
       window.location.reload();
     }
   },
