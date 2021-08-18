@@ -37,6 +37,7 @@ const StoreWallet = {
   },
   actions: {
     async loadInfo({ rootState, commit, state }, payload) {
+      console.log("====loadInfo======", payload);
       Promise.allSettled([
         // 获取质押额度
         contractsApi.getStakeAmount(
