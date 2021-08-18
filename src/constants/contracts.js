@@ -10,13 +10,13 @@ export const SMART_CONTRACTS_API = "https://starcoin.org";
 export const STC_PRECISION = 1000000000; // STC精度
 
 export const STAKE_STC_FUNCTION_ID =
-  "0x64c66296d98d6ab08579b14487157e05::OfferingScript::staking";
+  "0x64c66296d98d6ab08579b14487157e05::OfferingScript1::staking";
 
 export const UNSTAKE_STC_FUNCTION_ID =
-  "0x64c66296d98d6ab08579b14487157e05::OfferingScript::unstaking";
+  "0x64c66296d98d6ab08579b14487157e05::OfferingScript1::unstaking";
 
 export const PAY_USDT_FUNCTION_ID =
-  "0x64c66296d98d6ab08579b14487157e05::OfferingScript::exchange";
+  "0x64c66296d98d6ab08579b14487157e05::OfferingScript1::exchange";
 
 export const STAR_MASK_PLUGIN_URL =
   "https://chrome.google.com/webstore/detail/starmask/mfhbebgoclkghebffdldpobeajmbecfk";

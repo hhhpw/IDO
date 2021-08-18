@@ -1,6 +1,6 @@
 <template>
   <div
-    class="home-list-wrap animate__animated animate__fadeInUp"
+    class="home-list-wrap wow animate__animated animate__fadeInUp"
     :style="{ '--color': cardsInfo['common-color'] }"
   >
     <div class="home-list-wrap-title">
@@ -69,6 +69,10 @@ import homeListItem from "@components/Home/homeListItem.vue";
 import mixinHome from "@mixins/home.js";
 import { cloneDeep, isUndefined } from "lodash";
 import { countdown } from "@utils/date.js";
+import { WOW } from "wowjs";
+/* eslint-disable*/
+import animated from "animate.css";
+
 export default {
   name: "homelist",
   data() {
@@ -92,6 +96,7 @@ export default {
     },
   },
   mounted() {
+    new WOW().init();
     this.timers = cloneDeep(this.data.cardInfoList);
     if (this.data.cardType === "will") {
       this.timers.map((d) => {

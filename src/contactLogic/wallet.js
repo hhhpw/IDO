@@ -226,12 +226,6 @@ const payUSDT = async ({ provider, tokenCode }) => {
   try {
     const functionId = PAY_USDT_FUNCTION_ID;
     const strTypeArgs = tokenCode;
-    console.log(
-      "tokenCode",
-      tokenCode,
-      "PAY_USDT_FUNCTION_ID",
-      PAY_USDT_FUNCTION_ID
-    );
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
     // const amountHex = (function () {
     //   const se = new bcs.BcsSerializer();
@@ -269,6 +263,49 @@ const payUSDT = async ({ provider, tokenCode }) => {
   return false;
 };
 
+/**
+ * 测试网让用户去获取STC
+ *
+ * */
+const testnetSTC = async ({ provider }) => {
+  try {
+    const amount = "100000000000";
+    const functionId =
+      "0x99a287696c35e978c19249400c616c6a::DummyToken1::mint_token";
+    const strTypeArgs = [
+      "0x99a287696c35e978c19249400c616c6a::DummyToken1::USDT",
+    ];
+    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
+
+    const amountHex = (function () {
+      const se = new bcs.BcsSerializer();
+      se.serializeU128(amount.toString(10));
+      return hexlify(se.getBytes());
+    })();
+
+    const args = [arrayify(amountHex)];
+
+    const scriptFunction = utils.tx.encodeScriptFunction(
+      functionId,
+      tyArgs,
+      args
+    );
+    const payloadInHex = (function () {
+      const se = new bcs.BcsSerializer();
+      scriptFunction.serialize(se);
+      return hexlify(se.getBytes());
+    })();
+    const txhash = await provider.getSigner().sendUncheckedTransaction({
+      data: payloadInHex,
+    });
+
+    return txhash;
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
+};
+
 export default {
   createStcProvider,
   connect,
@@ -281,4 +318,5 @@ export default {
   stakeFunc,
   unStakeFunc,
   payUSDT,
+  testnetSTC,
 };

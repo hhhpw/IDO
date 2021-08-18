@@ -28,7 +28,7 @@
       <div class="green-wrap">
         <img src="../../assets/home/green.png" />
       </div>
-      <support> </support>
+      <!-- <support> </support> -->
     </div>
 
     <div class="star-container">
@@ -53,12 +53,13 @@
 <script>
 import HomeList from "./homeList.vue";
 import StarButton from "@StarUI/StarButton.vue";
-import support from "./support.vue";
+// import support from "./support.vue";
 import { Notification } from "element-ui";
 import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
 import utilsTool from "@utils/tool";
+import { Wallet } from "@contactLogic";
 export default {
   data() {
     return {
@@ -70,7 +71,7 @@ export default {
   },
   components: {
     StarButton,
-    support,
+    // support,
     HomeDetail,
     HomeList,
     StarSpace,
@@ -79,6 +80,18 @@ export default {
     this.getDataList();
   },
   methods: {
+    async getSTC() {
+      // provider: this.stcProvider,
+      // 这里token怎么传
+      // tokenCode: [stakeAddress, payAddress, assignAddress],
+      // chianID: this.stcChianID,
+      let t = await Wallet.testnetSTC({
+        provider: this.stcProvider,
+        // chianID: this.stcChianID,
+      });
+      // 这里token怎么传
+      console.log("t", t);
+    },
     ...mapActions("StoreHome", ["getDataList"]),
     clickMethod(value) {
       if (this.walletStatus !== "connected") {
@@ -120,6 +133,7 @@ export default {
     }),
     ...mapState("StoreWallet", {
       walletStatus: (state) => state.walletStatus,
+      stcProvider: (state) => state.stcProvider,
     }),
   },
 
@@ -129,7 +143,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 
-@keyframes light {
+@keyframes myani {
   0% {
     opacity: 100%;
   }
@@ -147,7 +161,7 @@ export default {
   }
 }
 
-@keyframes lightGreen {
+@keyframes myaniGreen {
   0% {
     opacity: 30%;
   }
@@ -166,7 +180,7 @@ export default {
 }
 
 .red-wrap {
-  animation-name: light;
+  animation-name: myani;
   animation-duration: 3s;
   animation-iteration-count: infinite;
   position: absolute;
@@ -178,7 +192,7 @@ export default {
   }
 }
 .green-wrap {
-  animation-name: lightGreen;
+  animation-name: myaniGreen;
   animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;

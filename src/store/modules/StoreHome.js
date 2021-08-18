@@ -68,14 +68,12 @@ const StoreHome = {
       obj[
         "detail-wrap-content-button"
       ] = require(`../../assets/home/${type}-button.png`);
-      if (type !== "closed") {
-        obj[
-          "detail-input-wrap-bg-actived"
-        ] = require(`../../assets/home/${type}-input-border-actived.png`);
-        obj[
-          "detail-wrap-content-button-actived"
-        ] = require(`../../assets/home/${type}-button-actived.png`);
-      }
+      obj[
+        "detail-input-wrap-bg-actived"
+      ] = require(`../../assets/home/${type}-input-border-actived.png`);
+      obj[
+        "detail-wrap-content-button-actived"
+      ] = require(`../../assets/home/${type}-button-actived.png`);
       return obj;
     },
     detailCardInfo: (state) => (id) => {

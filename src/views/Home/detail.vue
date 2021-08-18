@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-wrap animate__animated animate__fadeInUp">
+  <div class="detail-wrap">
     <star-space :size="30"></star-space>
     <div class="detail-wrap-content">
       <div

@@ -6,7 +6,6 @@
       (cardCountDown = cardContent.startTime))
     "
   >
-    <div style="color: red">{{ proState }} {{ stakeStatus }}</div>
     <div class="detail-input-wrap" :style="setInputBg(isFocus, cardsInfo)">
       <star-input
         class="detail-input"
@@ -302,7 +301,6 @@ export default {
       const { stakeAddress, payAddress, assignAddress } = this.currencyInfo;
       return {
         provider: this.stcProvider,
-        // 这里token怎么传
         tokenCode: [stakeAddress, payAddress, assignAddress],
         chianID: this.stcChianID,
       };

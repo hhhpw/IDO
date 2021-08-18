@@ -70,6 +70,9 @@ module.exports = {
       }),
     ],
   },
+  css: {
+    extract: true,
+  },
 };
 // css: {
 // loaderOptions: {

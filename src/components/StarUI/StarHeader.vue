@@ -21,6 +21,12 @@
     </div>
 
     <div class="star-header-right">
+      <star-button light @click="pushPage">
+        <img
+          src="../../assets/home/video.png"
+          style="width: 12px; height: 12px"
+        />
+      </star-button>
       <star-connect-wallet
         class="star-header-right-btn"
         @click="onClickConnect"
@@ -76,6 +82,9 @@ export default {
     this.currLang = currLang;
   },
   methods: {
+    pushPage() {
+      window.open("https://www.baidu.com", "_blank");
+    },
     ...mapActions("StoreWallet", [
       "setOnboarding",
       "setStcAccounts",
@@ -316,8 +325,14 @@ export default {
   .star-header-right {
     display: flex;
     align-items: center;
+    .star-button {
+      padding: 8px 20px;
+      box-sizing: border-box;
+      height: 36px;
+    }
     .star-header-right-btn {
       margin-right: 20px;
+      margin-left: 20px;
     }
   }
 }

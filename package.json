@@ -23,7 +23,8 @@
     "lodash": "^4.17.21",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "wowjs": "^1.1.3"
   },
   "devDependencies": {
     "@starcoin/starcoin": "^1.4.5",
