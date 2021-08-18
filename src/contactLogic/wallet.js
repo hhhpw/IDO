@@ -149,6 +149,10 @@ const getPermissions = async () => {
 const stakeFunc = async ({ provider, tokenCode, amount }) => {
   try {
     const functionId = STAKE_STC_FUNCTION_ID;
+    console.log("STAKE_STC_FUNCTION_ID", functionId);
+    console.log("tokenCode");
+    console.log(tokenCode);
+    console.log("amount", amount);
     const strTypeArgs = tokenCode;
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
 
@@ -192,7 +196,10 @@ const unStakeFunc = async ({ provider, tokenCode, amount }) => {
     const functionId = UNSTAKE_STC_FUNCTION_ID;
     const strTypeArgs = tokenCode;
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-
+    console.log("UNSTAKE_STC_FUNCTION_ID", functionId);
+    console.log("tokenCode");
+    console.log(tokenCode);
+    console.log("amount", amount);
     const amountHex = (function () {
       const se = new bcs.BcsSerializer();
       se.serializeU128(amount.toString(10));
@@ -226,6 +233,8 @@ const payUSDT = async ({ provider, tokenCode }) => {
   try {
     const functionId = PAY_USDT_FUNCTION_ID;
     const strTypeArgs = tokenCode;
+    console.log("PAY_USDT_FUNCTION_ID", functionId);
+    console.log("tokenCode", tokenCode);
     const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
     // const amountHex = (function () {
     //   const se = new bcs.BcsSerializer();
