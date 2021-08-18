@@ -96,7 +96,9 @@ export default {
     },
   },
   mounted() {
-    new WOW().init();
+    new WOW({
+      live: false,
+    }).init();
     this.timers = cloneDeep(this.data.cardInfoList);
     if (this.data.cardType === "will") {
       this.timers.map((d) => {

@@ -1,2 +1,3 @@
-ie >= 8
-chrome  >= 35
+> 1%
+last 6 versions
+not dead

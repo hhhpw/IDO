@@ -143,37 +143,37 @@ export default {
 <style>
 @keyframes myani {
   0% {
-    opacity: 100%;
+    opacity: 1;
   }
   25% {
-    opacity: 60%;
+    opacity: 0.6;
   }
   50% {
-    opacity: 30%;
+    opacity: 0.3;
   }
   70% {
-    opacity: 60%;
+    opacity: 0.6;
   }
   100% {
-    opacity: 90%;
+    opacity: 0.9;
   }
 }
 
 @keyframes myaniGreen {
   0% {
-    opacity: 30%;
+    opacity: 0.3;
   }
   25% {
-    opacity: 50%;
+    opacity: 0.5;
   }
   50% {
-    opacity: 100%;
+    opacity: 1;
   }
   70% {
-    opacity: 50%;
+    opacity: 0.5;
   }
   100% {
-    opacity: 30%;
+    opacity: 0.3;
   }
 }
 
