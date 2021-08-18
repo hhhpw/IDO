@@ -2,7 +2,7 @@
   <div class="home">
     <div class="home-banner" v-if="status === 'home-list'">
       <div class="red-wrap">
-        <img src="../../assets/home/red.png" />
+        <img src="../../assets/home/red.png" class="light-img" />
       </div>
       <div class="home-banner-wrap star-container">
         <div class="home-banner-content">
@@ -26,7 +26,7 @@
         <img src="../../assets/home/man.png" />
       </div>
       <div class="green-wrap">
-        <img src="../../assets/home/green.png" />
+        <img src="../../assets/home/green.png" class="light-img" />
       </div>
       <!-- <support> </support> -->
     </div>
@@ -140,9 +140,7 @@ export default {
   beforeDestroy() {},
 };
 </script>
-<style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-
+<style scoped>
 @keyframes myani {
   0% {
     opacity: 100%;
@@ -186,11 +184,8 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  img {
-    width: 100%;
-    height: 100%;
-  }
 }
+
 .green-wrap {
   animation-name: myaniGreen;
   animation-duration: 3s;
@@ -199,11 +194,15 @@ export default {
   position: absolute;
   right: 0;
   bottom: 0;
-  img {
-    width: 100%;
-    height: 100%;
-  }
 }
+</style>
+<style lang="scss" scoped>
+@import "~@/styles/mixin.scss";
+.light-img {
+  width: 100%;
+  height: 100%;
+}
+
 .home-banner {
   z-index: 999;
   width: 100%;

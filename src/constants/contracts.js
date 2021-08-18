@@ -5,7 +5,8 @@ export const CONTRACTS_ADDRESS = "null";
 
 export const SMART_CONTRACTS_TEST_API = "https://barnard-seed.starcoin.org"; // 测试网络
 
-export const SMART_CONTRACTS_API = "https://starcoin.org";
+// export const SMART_CONTRACTS_API = "https://starcoin.org";
+export const SMART_CONTRACTS_API = "https://barnard-seed.atlaspad.co";
 
 export const STC_PRECISION = 1000000000; // STC精度
 
