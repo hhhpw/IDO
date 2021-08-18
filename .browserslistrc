@@ -1,6 +1,2 @@
-> 1%
-last 6 versions
-Android >= 4.0
-not ie <= 8
-not dead
-
+ie >= 8
+chrome  >= 35
