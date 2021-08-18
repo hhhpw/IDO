@@ -140,7 +140,7 @@ export default {
   beforeDestroy() {},
 };
 </script>
-<style scoped>
+<style>
 @keyframes myani {
   0% {
     opacity: 100%;
@@ -181,6 +181,7 @@ export default {
   animation-name: myani;
   animation-duration: 3s;
   animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
   position: absolute;
   left: 0;
   top: 0;
