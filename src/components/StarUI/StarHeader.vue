@@ -21,12 +21,12 @@
     </div>
 
     <div class="star-header-right">
-      <star-button light @click="pushPage">
+      <!-- <star-button light @click="pushPage">
         <img
           src="../../assets/home/video.png"
           style="width: 12px; height: 12px"
         />
-      </star-button>
+      </star-button> -->
       <star-connect-wallet
         class="star-header-right-btn"
         @click="onClickConnect"
