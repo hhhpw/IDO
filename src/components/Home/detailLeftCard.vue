@@ -6,16 +6,17 @@
       (cardCountDown = cardContent.startTime))
     "
   >
+    {{ currencyInfo.stakePrecision }}
     <div class="detail-input-wrap" :style="setInputBg(isFocus, cardsInfo)">
       <star-input
         class="detail-input"
-        :precision="currencyInfo.stakePrecision"
+        :precision="9 || currencyInfo.stakePrecision"
         :value="inputValue"
         :maxColor="cardsInfo['common-color']"
         @input="inputEvent"
         @maxEvent="maxEvent"
-        @focus="isFocus = true"
-        @blur="isFocus = false"
+        @focusEvent="isFocus = true"
+        @blurEvent="isFocus = false"
         :stakeCurrency="currencyInfo.stakeCurrency"
         v-if="stakeStatus === 'stake' && proState === 2"
       ></star-input>
@@ -29,8 +30,8 @@
         @input="inputEvent"
         :stakeCurrency="currencyInfo.stakeCurrency"
         @maxEvent="maxEvent"
-        @focus="isFocus = true"
-        @blur="isFocus = false"
+        @focusEvent="isFocus = true"
+        @blurEvent="isFocus = false"
       >
       </star-input>
     </div>

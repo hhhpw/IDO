@@ -1,6 +1,11 @@
 <template>
   <div class="star-input">
-    <Input v-bind="{ ...$attrs }" @input="inputEvent" v-on="$listeners">
+    <Input
+      v-bind="{ ...$attrs }"
+      @input="inputEvent"
+      @blur="blurEvent"
+      @focus="focusEvent"
+    >
       <div slot="suffix" class="star-input-suffix">
         <span
           class="star-input-suffix-max"
@@ -46,6 +51,12 @@ export default {
     maxColor: String,
   },
   methods: {
+    blurEvent() {
+      this.$emit("blurEvent");
+    },
+    focusEvent() {
+      this.$emit("focusEvent");
+    },
     maxEvent() {
       this.$emit("maxEvent");
     },
@@ -58,8 +69,8 @@ export default {
           .replace(/^\./, "0."); // 如果输入的第一位为小数点，则替换成 0. 实现自动补全
         let reg = new RegExp("^\\d*(\\.?\\d{0," + this.precision + "})", "g");
         this.value = val.match(reg)[0] || ""; // 最终匹配得到结果 以数字开头，只有一个小数点，而且小数点后面只能有0到2位小数
+        this.$emit("input", this.value);
       }
-      this.$emit("input", this.value);
     },
   },
 };
