@@ -262,12 +262,8 @@ export default {
       .home-banner-title {
         // font-size: 80px;
       }
-      // margin-top: 100px;
       .home-banner-btns {
         .home-banner-btns-btn {
-          // width: 160px;
-          // height: 50px;
-          // line-height: 50px;
           font-size: 26px !important;
         }
       }

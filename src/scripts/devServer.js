@@ -22,10 +22,7 @@ function devServer() {
     },
     proxy: {
       "/api": {
-        ...proxyRule("/api", "http://60.205.3.84:8991"),
-      },
-      "/smart-contracts": {
-        ...proxyRule("/smart-contracts", "https://barnard-seed.starcoin.org"),
+        ...proxyRule("/api", process.env.VUE_APP_BASE_API),
       },
     },
   };

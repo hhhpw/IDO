@@ -319,6 +319,8 @@ export default {
       margin-left: 20px;
       .detail-card-header-info-currency {
         color: #fff;
+        font-size: 18px;
+        font-weight: 600;
       }
       .detail-card-header-info-hash {
         color: $text_gray_color;

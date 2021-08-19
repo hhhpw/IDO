@@ -6,7 +6,6 @@
       (cardCountDown = cardContent.startTime))
     "
   >
-    {{ currencyInfo.stakePrecision }}
     <div class="detail-input-wrap" :style="setInputBg(isFocus, cardsInfo)">
       <star-input
         class="detail-input"
