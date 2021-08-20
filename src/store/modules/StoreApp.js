@@ -1,21 +1,22 @@
 import i18n from "../../i18n/index";
 import session from "@utils/session";
+import * as types from "../constants/app";
 const StoreApp = {
   namespaced: true,
   state: {
     headerItems: [
       {
         label: i18n.t("项目"),
-        path: "home",
-        value: "home",
+        value: "/",
+        path: "/",
       },
     ],
-    activeHeaderItem: "home",
+    activeHeaderItem: "/",
     language: session.getItem("lang"),
   },
   mutations: {
-    SET_LOGIN_STATE(state, flag) {
-      state.loginState = flag;
+    [types.SET_ACTIVE_ITEM](state, value) {
+      state.activeHeaderItem = value;
     },
   },
   actions: {},

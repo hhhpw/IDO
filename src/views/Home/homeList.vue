@@ -20,14 +20,7 @@
           class="home-list-item-wrap"
           v-for="(cardData, index) in data.cardInfoList"
           :key="index"
-          @click="
-            emit(
-              cardData.cardType,
-              cardData.id,
-              cardData.currencyInfo,
-              cardData
-            )
-          "
+          @click="emit(cardData.id)"
           :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
         >
           <div
@@ -79,6 +72,8 @@ import { countdown } from "@utils/date.js";
 import { WOW } from "wowjs";
 /* eslint-disable*/
 import animated from "animate.css";
+import { Notification } from "element-ui";
+import { mapState } from "vuex";
 
 export default {
   name: "homelist",
@@ -148,14 +143,38 @@ export default {
         }
       }, 1000);
     },
-    emit(cardType, id, currencyInfo, cardData) {
-      console.log("cardData", cardData);
-      this.$emit("clickMethod", {
-        cardType: cardType,
-        cardId: id,
-        currencyInfo,
+    emit(cardId) {
+      if (this.walletStatus !== "connected") {
+        const h = this.$createElement;
+        Notification({
+          message: h(
+            "div",
+            {
+              style: {
+                position: "relative",
+                "font-size": "14px",
+                color: "#FFFFFF",
+              },
+            },
+            [h("p", this.$t("wallet.connect-tip"))]
+          ),
+          duration: 2000,
+          offset: 80,
+          showClose: false,
+        });
+        return;
+      }
+      // 防止footer展露出来
+      window.scrollTo(0, 500);
+      this.$router.push({
+        path: `/prodetail?pid=${cardId}`,
       });
     },
+  },
+  computed: {
+    ...mapState("StoreWallet", {
+      walletStatus: (state) => state.walletStatus,
+    }),
   },
   beforeDestroy() {
     clearInterval(this.timer);

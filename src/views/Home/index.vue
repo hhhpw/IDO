@@ -39,11 +39,7 @@
         :data="d"
         style="margin-top: 70px"
         :cardsInfo="cardTypeColorInfo(d.cardType)"
-        @clickMethod="clickMethod"
       ></home-list>
-      <!-- <template v-if="status === 'home-detail'">
-        <home-detail></home-detail>
-      </template> -->
     </div>
     <star-space :size="120"></star-space>
   </div>
@@ -52,7 +48,6 @@
 import HomeList from "./homeList.vue";
 import StarButton from "@StarUI/StarButton.vue";
 // import support from "./support.vue";
-import { Notification } from "element-ui";
 // import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
@@ -78,33 +73,6 @@ export default {
   },
   methods: {
     ...mapActions("StoreHome", ["getDataList", "setDetailProjectInfo"]),
-    clickMethod(value) {
-      if (this.walletStatus !== "connected") {
-        const h = this.$createElement;
-        Notification({
-          message: h(
-            "div",
-            {
-              style: {
-                position: "relative",
-                "font-size": "14px",
-                color: "#FFFFFF",
-              },
-            },
-            [h("p", this.$t("wallet.connect-tip"))]
-          ),
-          duration: 2000,
-          offset: 80,
-          showClose: false,
-        });
-        return;
-      }
-      // 防止footer展露出来
-      window.scrollTo(0, 500);
-      this.$router.push({
-        path: `/prodetail?pid=${value.cardId}`,
-      });
-    },
   },
   computed: {
     ...mapGetters("StoreHome", ["cardTypeColorInfo"]),

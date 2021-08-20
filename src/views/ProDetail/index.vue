@@ -1,19 +1,25 @@
 <template>
-  <div class="detail-wrap" v-if="detailCardInfo">
-    <star-space :size="30"></star-space>
-    <div class="detail-wrap-content">
-      <div
-        class="detail-wrap-content-left"
-        :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-left-bg.png`)})`"
-      >
-        <!-- <detail-left-card @eventLoop="eventLoop"> </detail-left-card> -->
-      </div>
-      <div
-        class="detail-wrap-content-right"
-        :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-right-bg.png`)})`"
-      >
-        <detail-right-card :detailCardInfo="detailCardInfo">
-        </detail-right-card>
+  <div class="star-container">
+    <div class="detail-wrap" v-if="detailCardInfo">
+      <star-space :size="30"></star-space>
+      <div class="detail-wrap-content">
+        <div
+          class="detail-wrap-content-left"
+          :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-left-bg.png`)})`"
+        >
+          <detail-left-card
+            @eventLoop="eventLoop"
+            :detailCardInfo="detailCardInfo"
+          >
+          </detail-left-card>
+        </div>
+        <div
+          class="detail-wrap-content-right"
+          :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-right-bg.png`)})`"
+        >
+          <detail-right-card :detailCardInfo="detailCardInfo">
+          </detail-right-card>
+        </div>
       </div>
     </div>
   </div>
@@ -21,7 +27,7 @@
 <script>
 import StarSpace from "@StarUI/StarSpace.vue";
 import DetailRightCard from "@components/ProDetail/detailRightCard.vue";
-// import DetailLeftCard from "@components/Home/detailLeftCard.vue";
+import DetailLeftCard from "@components/ProDetail/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
 import { Wallet } from "@contactLogic";
 import { isNil, isUndefined } from "lodash";
@@ -29,7 +35,7 @@ export default {
   components: {
     StarSpace,
     DetailRightCard,
-    // DetailLeftCard,
+    DetailLeftCard,
   },
   data() {
     return {
@@ -97,6 +103,7 @@ export default {
 <style lang="scss" scoped>
 .detail-wrap {
   padding-top: 40px;
+  padding-bottom: 260px;
   .detail-wrap-content {
     display: flex;
     justify-content: space-between;

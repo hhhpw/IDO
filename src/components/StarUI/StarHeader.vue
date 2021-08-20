@@ -6,7 +6,6 @@
         :default-active="activeHeaderItem"
         mode="horizontal"
         class="star-menu"
-        @select="handleSelectTab"
       >
         <MenuItem
           :index="d.value"
@@ -14,6 +13,7 @@
           v-for="(d, index) in headerItems"
           :key="index"
           :class="{ 'star-menu-item-active': activeHeaderItem === d.value }"
+          @click="pushRouter(d.path)"
         >
           {{ $t(`${d.label}`) }}
         </MenuItem>
@@ -21,12 +21,6 @@
     </div>
 
     <div class="star-header-right">
-      <!-- <star-button light @click="pushPage">
-        <img
-          src="../../assets/home/video.png"
-          style="width: 12px; height: 12px"
-        />
-      </star-button> -->
       <star-connect-wallet
         class="star-header-right-btn"
         @click="onClickConnect"
@@ -82,8 +76,18 @@ export default {
     this.currLang = currLang;
   },
   methods: {
-    pushPage() {
-      window.open("https://www.baidu.com", "_blank");
+    pushRouter(path) {
+      this.$router.push({
+        path: path,
+      });
+    },
+    changeTab() {
+      const path = this.$route.path;
+      if (path !== `${this.activeHeaderItem}`) {
+        window.scrollTo(0, 0);
+        // 切换tab
+        this.$store.commit("StoreApp/SET_ACTIVE_ITEM", path);
+      }
     },
     ...mapActions("StoreWallet", [
       "setOnboarding",
@@ -91,14 +95,6 @@ export default {
       "setStcProvider",
       "setStcChianID",
     ]),
-    handleSelectTab() {
-      this.$store.commit("StoreHome/STORE_HOME_CHANGE_STATUS", {
-        status: "home-list",
-      });
-      window.scrollTo(0, 0);
-      // 切换tab
-      // this.activeHeaderItem = key;
-    },
     hanldeChangeLang(value) {
       let currLang = this.language;
       if (currLang === value) return;
@@ -114,27 +110,7 @@ export default {
       // this.setStcChianID(chianID);
       const permissions = await Wallet.getPermissions();
       console.log("permissions", permissions);
-      // if (!permissions.length) {
-      //   this.setPermissions();
-      // }
-      // this.getAccountBalance();
     },
-    // async getAccountBalance() {
-    //   // console.log("stcAccounts", this.stcAccounts);
-    //   if (this.stcProvider) {
-    //     const params = {
-    //       provider: this.stcProvider,
-    //       account: this.stcAccounts[0], // 默认取STC
-    //     };
-    //     // 获取钱包STC额度
-    //     const balance = await Wallet.getAccountBalance(params);
-    //     if (!isNil(balance) || !isUndefined(balance)) {
-    //       this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
-    //         stc: balance,
-    //       });
-    //     }
-    //   }
-    // },
     async setPermissions() {
       const permArr = await Wallet.setPermissions();
       console.log("permissions:", permArr);
@@ -240,6 +216,8 @@ export default {
         this.loadData();
       }
     },
+    // 如果路由有变化，会再次执行该方法
+    $route: "changeTab",
   },
   computed: {
     ...mapState("StoreApp", ["headerItems", "activeHeaderItem", "language"]),
