@@ -7,7 +7,7 @@ function getDataList() {
   });
 }
 
-function getCardInfo(pId) {
+function getProInfoById(pId) {
   return request({
     url: "/v1/ido/dx/product/get?pId=" + pId,
     method: "GET",
@@ -24,6 +24,6 @@ function triggerStakeRecord(params) {
 
 export default {
   getDataList,
-  getCardInfo,
+  getProInfoById,
   triggerStakeRecord,
 };

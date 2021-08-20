@@ -20,7 +20,14 @@
           class="home-list-item-wrap"
           v-for="(cardData, index) in data.cardInfoList"
           :key="index"
-          @click="emit(cardData.cardType, cardData.id, cardData.currencyInfo)"
+          @click="
+            emit(
+              cardData.cardType,
+              cardData.id,
+              cardData.currencyInfo,
+              cardData
+            )
+          "
           :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
         >
           <div
@@ -141,7 +148,8 @@ export default {
         }
       }, 1000);
     },
-    emit(cardType, id, currencyInfo) {
+    emit(cardType, id, currencyInfo, cardData) {
+      console.log("cardData", cardData);
       this.$emit("clickMethod", {
         cardType: cardType,
         cardId: id,

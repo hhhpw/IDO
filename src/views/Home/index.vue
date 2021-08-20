@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="home-banner" v-if="status === 'home-list'">
+    <div class="home-banner">
       <div class="red-wrap">
         <img src="../../assets/home/red.png" class="light-img" />
       </div>
@@ -32,20 +32,18 @@
     </div>
 
     <div class="star-container">
-      <template v-if="status === 'home-list'">
-        <home-list
-          v-for="(d, index) in cardData"
-          :key="index"
-          :cardType="d.cardType"
-          :data="d"
-          style="margin-top: 70px"
-          :cardsInfo="cardTypeColorInfo(d.cardType)"
-          @clickMethod="clickMethod"
-        ></home-list>
-      </template>
-      <template v-if="status === 'home-detail'">
+      <home-list
+        v-for="(d, index) in cardData"
+        :key="index"
+        :cardType="d.cardType"
+        :data="d"
+        style="margin-top: 70px"
+        :cardsInfo="cardTypeColorInfo(d.cardType)"
+        @clickMethod="clickMethod"
+      ></home-list>
+      <!-- <template v-if="status === 'home-detail'">
         <home-detail></home-detail>
-      </template>
+      </template> -->
     </div>
     <star-space :size="120"></star-space>
   </div>
@@ -55,11 +53,12 @@ import HomeList from "./homeList.vue";
 import StarButton from "@StarUI/StarButton.vue";
 // import support from "./support.vue";
 import { Notification } from "element-ui";
-import HomeDetail from "./detail.vue";
+// import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
+// import router from "../../router/index";
 import utilsTool from "@utils/tool";
-import { Wallet } from "@contactLogic";
+
 export default {
   data() {
     return {
@@ -71,8 +70,6 @@ export default {
   },
   components: {
     StarButton,
-    // support,
-    HomeDetail,
     HomeList,
     StarSpace,
   },
@@ -80,19 +77,7 @@ export default {
     this.getDataList();
   },
   methods: {
-    async getSTC() {
-      // provider: this.stcProvider,
-      // 这里token怎么传
-      // tokenCode: [stakeAddress, payAddress, assignAddress],
-      // chianID: this.stcChianID,
-      let t = await Wallet.testnetSTC({
-        provider: this.stcProvider,
-        // chianID: this.stcChianID,
-      });
-      // 这里token怎么传
-      console.log("t", t);
-    },
-    ...mapActions("StoreHome", ["getDataList"]),
+    ...mapActions("StoreHome", ["getDataList", "setDetailProjectInfo"]),
     clickMethod(value) {
       if (this.walletStatus !== "connected") {
         const h = this.$createElement;
@@ -116,10 +101,9 @@ export default {
       }
       // 防止footer展露出来
       window.scrollTo(0, 500);
-      this.$store.commit(
-        "StoreHome/STORE_HOME_CHANGE_STATUS",
-        Object.assign({}, { status: "home-detail" }, { ...value })
-      );
+      this.$router.push({
+        path: `/prodetail?pid=${value.cardId}`,
+      });
     },
   },
   computed: {
@@ -205,7 +189,7 @@ export default {
 }
 
 .home-banner {
-  z-index: 999;
+  z-index: 998;
   width: 100%;
   background-image: url("../../assets/home/nbg.png");
   background-size: contain;

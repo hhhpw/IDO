@@ -62,15 +62,17 @@ const StoreWallet = {
             }
           }
           if (result[1].status === "fulfilled") {
-            let res = fromPairs(result[1].value.result.value);
-            let amount = res.personal_staking_token_amount_limit.U128;
-            let proState = res.state.U8;
-            let stakeTotalAmount = res.staking_token_amount.U128;
-            commit(types.SET_PROJECT_INFO, {
-              amount,
-              proState,
-              stakeTotalAmount,
-            });
+            if (result[1].value.result) {
+              let res = fromPairs(result[1].value.result.value);
+              let amount = res.personal_staking_token_amount_limit.U128;
+              let proState = res.state.U8;
+              let stakeTotalAmount = res.staking_token_amount.U128;
+              commit(types.SET_PROJECT_INFO, {
+                amount,
+                proState,
+                stakeTotalAmount,
+              });
+            }
           }
           if (
             result[0].status === "fulfilled" &&

@@ -274,6 +274,9 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
 .star-header {
+  position: fixed;
+  top: 0;
+  z-index: 9999;
   height: 80px;
   width: calc(100% - 80px);
   display: flex;

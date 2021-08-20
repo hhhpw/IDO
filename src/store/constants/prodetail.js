@@ -1,0 +1,1 @@
+export const SET_PRODETAIL_INFO = "SET_PRODETAIL_INFO";

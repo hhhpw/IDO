@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <star-header></star-header>
-    <router-view></router-view>
+    <div style="padding-top: 80px">
+      <router-view></router-view>
+    </div>
     <star-footer></star-footer>
   </div>
 </template>
@@ -15,5 +17,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss"></style>
