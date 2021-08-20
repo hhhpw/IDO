@@ -64,7 +64,6 @@ import StarSpace from "@StarUI/StarSpace.vue";
 import StarButton from "@StarUI/StarButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
 import StarItemCell from "@StarUI/StarItemCell.vue";
-// import { mapGetters } from "vuex";
 import mixinHome from "@/mixins/home.js";
 import utilsNumber from "@utils/number.js";
 import utilsTool from "@utils/tool";

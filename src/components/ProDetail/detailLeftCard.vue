@@ -2,6 +2,7 @@
   <div
     :set="
       ((detailCardType = detailCardInfo.cardType),
+      (currencyInfo = detailCardInfo.currencyInfo),
       ((colorImgInfo = configInfo(detailCardInfo.cardType)),
       (cardCountDown = detailCardInfo.startTime)))
     "
@@ -114,7 +115,6 @@
       @mouseenter.native.prevent.stop="isHoverBtn = true"
       @mouseleave.native.prevent.stop="isHoverBtn = false"
     >
-      <!-- :style="`background-image: url(${colorImgInfo['detail-wrap-content-button']})`" -->
       <p
         :style="{ color: colorImgInfo['common-color'] }"
         class="detail-wrap-content-button-text"
@@ -146,7 +146,11 @@
           "
           @click="payUSDT"
         >
-          {{ isPaying ? `${$t("支付中")}...` : $t("待支付") }}
+          {{
+            isPaying
+              ? `${$t("支付中")}...`
+              : `${$t("待支付")} ${getPayAmount()} ${currencyInfo.payCurrency}`
+          }}
         </span>
         <span v-if="proState === 5 && stakeStatus === 'stake'">
           {{ $t("已结束") }}
@@ -251,6 +255,7 @@ import { isNil, isUndefined } from "lodash";
 import session from "@utils/session";
 import { Wallet } from "@contactLogic";
 import { countdown } from "@utils/date.js";
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -269,7 +274,7 @@ export default {
   props: ["detailCardInfo"],
   components: { StarInput, StarSpace, StarButton },
   mounted() {
-    if (this.detailCardType === "will") {
+    if (this.detailCardInfo.cardType === "will") {
       let time = this.detailCardInfo(this.detailCardId).startTime;
       this.timer = setInterval(() => {
         this.countdowntime = this.formateDate(countdown(time));
@@ -277,6 +282,36 @@ export default {
     }
   },
   methods: {
+    getPayAmount() {
+      if (!this.currencyShareAmount) return "0";
+      return utilsNumber.formatNumberMeta(
+        utilsNumber
+          .bigNum(this.currencyShareAmount)
+          .times(this.detailCardInfo.rate),
+        {
+          grouped: true,
+        }
+      ).text;
+    },
+    showToast(type) {
+      const content =
+        type === "stake"
+          ? this.$t("质押toast")
+          : type === "unstake"
+          ? this.$t("解押toast")
+          : this.$t("支付toast");
+      const cname =
+        this.detailCardInfo.cardType === "open"
+          ? "open-toast"
+          : this.detailCardInfo.cardType === "will"
+          ? "will-toast"
+          : "closed-toast";
+      Message({
+        message: content,
+        duration: 500,
+        customClass: cname,
+      });
+    },
     ...mapActions("StoreHome", ["triggerStakeRecord"]),
     setFocus() {
       this.isFocus = true;
@@ -344,7 +379,7 @@ export default {
       this.errorText = "";
     },
     inputEvent(e) {
-      if (this.detailCardType === "will") {
+      if (this.detailCardInfo.cardType === "will") {
         return;
       }
       this.errorText = "";
@@ -357,9 +392,27 @@ export default {
       return val;
     },
     maxEvent() {
-      if (this.detailCardType === "will") {
+      if (this.detailCardInfo.cardType === "will") {
         return;
       }
+      if (
+        this.detailCardInfo.currencyInfo.stakeCurrency === "BBB" &&
+        this.stakeStatus === "stake"
+      ) {
+        // 预留gas费用
+        const cname =
+          this.detailCardInfo.cardType === "open"
+            ? "open-toast"
+            : this.detailCardInfo.cardType === "will"
+            ? "will-toast"
+            : "closed-toast";
+        Message({
+          message: this.$t("STC预留"),
+          duration: 5000,
+          customClass: cname,
+        });
+      }
+
       if (this.stakeStatus === "stake") {
         // 最大质押量、钱包余额做比较
         if (
@@ -455,6 +508,7 @@ export default {
       return true;
     },
     async onStakeClick() {
+      this.showToast("stake");
       if (!this.validteStake()) return;
       const params = this.getParams();
       const amount = utilsNumber
@@ -465,6 +519,7 @@ export default {
         ...params,
         amount,
       });
+      this.showToast("stake");
       // 质押成功
       if (res) {
         this.triggerStakeRecord({
@@ -500,7 +555,8 @@ export default {
       return true;
     },
     async onUnstakeClick() {
-      if (this.detailCardType === "will" || this.isPaying === true) {
+      console.log("this.detailCardInfo.currencyInfo", this.detailCardInfo);
+      if (this.detailCardInfo.cardType === "will" || this.isPaying === true) {
         return;
       }
       if (!this.validteUnstake()) return;
@@ -513,6 +569,7 @@ export default {
         ...params,
         amount,
       });
+      this.showToast("unstake");
       if (res) {
         this.triggerStakeRecord({
           userAddress: this.stcAccounts[0],
@@ -544,9 +601,10 @@ export default {
       const res = await Wallet.payUSDT({
         ...params,
       });
+      this.showToast("pay");
       if (res) {
         console.log("=====支付成功=====");
-        this.$emit("eventLoop");
+        // this.$emit("eventLoop");
       }
       // 支付后去轮询接口
       // this.$emit("eventLoop");
@@ -577,12 +635,6 @@ export default {
         };
       };
     },
-    // ...mapState("StoreHome", {
-    //   detailCardType: (state) => state.detailCardType,
-    //   colorInfo: (state) => state.colorInfo,
-    //   detailCardId: (state) => state.detailCardId,
-    //   currencyInfo: (state) => state.currencyInfo,
-    // }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,
       stcProvider: (state) => state.stcProvider,
@@ -597,7 +649,6 @@ export default {
       stakeTotalAmount: (state) => state.stakeTotalAmount,
       payState: (state) => state.payState,
     }),
-    // ...mapGetters("StoreHome", ["cardTypeColorInfo", "detailCardInfo"]),
     ...mapGetters("StoreProDetail", ["configInfo"]),
   },
   beforeDestroy() {
@@ -605,8 +656,38 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.open-toast {
+  background-color: #192a51 !important;
+  .el-icon-info {
+    color: #2afefe !important;
+  }
+  .el-message__content {
+    color: #2afefe !important;
+  }
+}
+.will-toast {
+  background-color: #303244 !important;
+  .el-icon-info {
+    color: #bbff8a !important;
+  }
+  .el-message__content {
+    color: #bbff8a !important;
+  }
+}
+.closed-toast {
+  background-color: #303352 !important;
+  .el-icon-info {
+    color: #a6dfe6 !important;
+  }
+  .el-message__content {
+    color: #a6dfe6 !important;
+  }
+}
+</style>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
+
 .noPointer {
   cursor: default;
 }

@@ -30,28 +30,28 @@
       </div>
       <!-- <support> </support> -->
     </div>
+    <star-loading :data="cardData">
+      <div class="star-container">
+        <home-list
+          v-for="(d, index) in cardData"
+          :key="index"
+          :cardType="d.cardType"
+          :data="d"
+          style="margin-top: 70px"
+          :cardsInfo="cardTypeColorInfo(d.cardType)"
+        ></home-list>
+      </div>
+    </star-loading>
 
-    <div class="star-container">
-      <home-list
-        v-for="(d, index) in cardData"
-        :key="index"
-        :cardType="d.cardType"
-        :data="d"
-        style="margin-top: 70px"
-        :cardsInfo="cardTypeColorInfo(d.cardType)"
-      ></home-list>
-    </div>
     <star-space :size="120"></star-space>
   </div>
 </template>
 <script>
 import HomeList from "./homeList.vue";
 import StarButton from "@StarUI/StarButton.vue";
-// import support from "./support.vue";
-// import HomeDetail from "./detail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
-// import router from "../../router/index";
+import StarLoading from "@StarUI/StarLoading.vue";
 import utilsTool from "@utils/tool";
 
 export default {
@@ -67,6 +67,7 @@ export default {
     StarButton,
     HomeList,
     StarSpace,
+    StarLoading,
   },
   mounted() {
     this.getDataList();
@@ -211,9 +212,6 @@ export default {
     height: 600px;
     .home-banner-content {
       margin-top: -40px;
-      .home-banner-title {
-        // font-size: 80px;
-      }
       .home-banner-btns {
         .home-banner-btns-btn {
           font-size: 26px !important;

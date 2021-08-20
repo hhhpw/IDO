@@ -32,7 +32,6 @@ const StoreWallet = {
     },
     [types.SET_PAY_STATE](state, payload) {
       state.payState = payload;
-      // state.payState = true;
     },
   },
   actions: {

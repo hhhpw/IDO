@@ -1,28 +1,32 @@
 <template>
-  <div class="star-container">
-    <div class="detail-wrap" v-if="detailCardInfo">
-      <star-space :size="30"></star-space>
-      <div class="detail-wrap-content">
-        <div
-          class="detail-wrap-content-left"
-          :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-left-bg.png`)})`"
-        >
-          <detail-left-card
-            @eventLoop="eventLoop"
-            :detailCardInfo="detailCardInfo"
+  <star-loading :data="detailCardInfo" :height="loadingH">
+    <div class="star-container">
+      <star-space :size="80"></star-space>
+      <div class="detail-wrap" v-if="detailCardInfo">
+        <star-space :size="30"></star-space>
+        <div class="detail-wrap-content">
+          <div
+            class="detail-wrap-content-left"
+            :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-left-bg.png`)})`"
           >
-          </detail-left-card>
-        </div>
-        <div
-          class="detail-wrap-content-right"
-          :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-right-bg.png`)})`"
-        >
-          <detail-right-card :detailCardInfo="detailCardInfo">
-          </detail-right-card>
+            <detail-left-card
+              @eventLoop="eventLoop"
+              :detailCardInfo="detailCardInfo"
+            >
+            </detail-left-card>
+          </div>
+          <div
+            class="detail-wrap-content-right"
+            :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-right-bg.png`)})`"
+          >
+            <detail-right-card :detailCardInfo="detailCardInfo">
+            </detail-right-card>
+          </div>
         </div>
       </div>
+      <star-space :size="200"></star-space>
     </div>
-  </div>
+  </star-loading>
 </template>
 <script>
 import StarSpace from "@StarUI/StarSpace.vue";
@@ -31,15 +35,18 @@ import DetailLeftCard from "@components/ProDetail/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
 import { Wallet } from "@contactLogic";
 import { isNil, isUndefined } from "lodash";
+import StarLoading from "@StarUI/StarLoading.vue";
+import utilsStyle from "@utils/style";
 export default {
   components: {
     StarSpace,
     DetailRightCard,
     DetailLeftCard,
+    StarLoading,
   },
   data() {
     return {
-      inputValue: "",
+      loadingH: utilsStyle.getLoadingHeight(),
     };
   },
   props: ["pid"],
@@ -85,9 +92,7 @@ export default {
       //   });
       // }, 7000);
     },
-    inputEvent(e) {
-      this.inputValue = e;
-    },
+
     ...mapActions("StoreContracts", ["getStakeAmount", "loadInfo"]),
     ...mapActions("StoreProDetail", ["getProInfoById"]),
   },
@@ -102,8 +107,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail-wrap {
-  padding-top: 40px;
-  padding-bottom: 260px;
   .detail-wrap-content {
     display: flex;
     justify-content: space-between;

@@ -145,19 +145,15 @@ const StoreProDetail = {
           raiseTotal,
         ];
         const cardType = mapKey.get(state);
-        console.log("cardType", cardType);
 
         const result = Object.assign({}, res.data, {
           cardType,
-          decentralizedList,
           decentralizedList,
           proTimeList,
           currencyInfo,
           capTotal,
         });
-
         commit(types.SET_PRODETAIL_INFO, result);
-        console.log("result", result);
         return "ok";
       }
     },

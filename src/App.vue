@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <star-header></star-header>
-    <div style="padding-top: 80px">
+    <div class="wrap">
       <router-view></router-view>
     </div>
     <star-footer></star-footer>
@@ -17,3 +17,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.wrap {
+  padding-top: 80px;
+}
+</style>

@@ -44,15 +44,15 @@
           ></home-list-item>
           <div class="home-list-item-wrap-footer">
             <span v-if="cardType === 'open'">
-              {{ $t("进行中") }}
+              {{ $t("进行中的项目") }}
             </span>
             <span v-if="cardType === 'will'">
-              {{ $t("即将推出") }}
+              {{ $t("即将到来的项目") }}
 
               {{ timers && timers[index].countdown }}
             </span>
             <span v-if="cardType === 'closed'">
-              {{ $t("已经结束") }}
+              {{ $t("已结束的项目") }}
             </span>
           </div>
         </div>
