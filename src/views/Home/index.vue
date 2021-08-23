@@ -18,7 +18,16 @@
             >
               {{ $t("加入我们") }}
             </star-button>
-            <star-button trborder dark class="home-banner-btns-btn">
+            <star-button
+              trborder
+              dark
+              class="home-banner-btns-btn"
+              @click="
+                utilsTool.openNewWindow(
+                  'https://medium.com/@atlaspad/how-to-acquire-stc-e1139df4d77a'
+                )
+              "
+            >
               {{ $t("购买STC") }}
             </star-button>
           </div>

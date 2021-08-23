@@ -4,7 +4,7 @@
       class="star-loadig-loading"
       v-if="!data"
       :style="{
-        height: `${height}px`,
+        height: `${height < 600 ? 600 : height}px`,
       }"
     >
       <img src="../../assets/loading/loading.gif" />

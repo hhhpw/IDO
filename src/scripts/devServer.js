@@ -22,7 +22,7 @@ function devServer() {
     },
     proxy: {
       "/api": {
-        ...proxyRule("/api", process.env.VUE_APP_BASE_API),
+        ...proxyRule("/api", process.env.VUE_APP_BASE_URL),
       },
     },
   };

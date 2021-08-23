@@ -11,7 +11,7 @@
     "最小质押100": "Min. staking amount: 100 {currency}"
   },
   "constants": {
-    "STC预留": "Please reserve sufficient STC for gas fee",
+    "STC预留": "Please reserve sufficient STC for gas fee (in both Staking and Unstaking process)",
     "质押toast": "Staking is in progress, please refresh and check later",
     "解押toast": "Unstaking is in progress, please refresh and check later",
     "支付toast": "Payment is in progress, please refresh and check later",

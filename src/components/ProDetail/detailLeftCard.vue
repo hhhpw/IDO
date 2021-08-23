@@ -289,7 +289,9 @@ export default {
           .bigNum(this.currencyShareAmount)
           .times(this.detailCardInfo.rate),
         {
+          precision: 2,
           grouped: true,
+          round: "ceil",
         }
       ).text;
     },
@@ -308,7 +310,7 @@ export default {
           : "closed-toast";
       Message({
         message: content,
-        duration: 500,
+        duration: 5000,
         customClass: cname,
       });
     },
@@ -396,10 +398,9 @@ export default {
         return;
       }
       if (
-        this.detailCardInfo.currencyInfo.stakeCurrency === "BBB" &&
+        this.detailCardInfo.currencyInfo.stakeCurrency === "STC" &&
         this.stakeStatus === "stake"
       ) {
-        // 预留gas费用
         const cname =
           this.detailCardInfo.cardType === "open"
             ? "open-toast"
@@ -411,8 +412,8 @@ export default {
           duration: 5000,
           customClass: cname,
         });
+        return;
       }
-
       if (this.stakeStatus === "stake") {
         // 最大质押量、钱包余额做比较
         if (
@@ -508,7 +509,6 @@ export default {
       return true;
     },
     async onStakeClick() {
-      this.showToast("stake");
       if (!this.validteStake()) return;
       const params = this.getParams();
       const amount = utilsNumber
@@ -555,7 +555,6 @@ export default {
       return true;
     },
     async onUnstakeClick() {
-      console.log("this.detailCardInfo.currencyInfo", this.detailCardInfo);
       if (this.detailCardInfo.cardType === "will" || this.isPaying === true) {
         return;
       }
