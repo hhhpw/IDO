@@ -1,17 +1,18 @@
 import * as types from "../constants/wallet";
+import CONSTANTS_STARMASK from "@constants/starmask.js";
 
 const StoreWallet = {
   namespaced: true,
   moduleName: "StoreWallet",
   state: {
     token: "STC",
-    stcChianID: "",
     stcProvider: "",
     stcAccounts: [],
     onboarding: "",
     precision: {}, // {stc: 1000000000}
     balances: {}, // {stc: bigNumber}
     walletStatus: "unConnected", // 钱包链接状态 "unConnected", "connected"
+    stcChianID: CONSTANTS_STARMASK.MAIN_CHIA_ID,
   },
   mutations: {
     [types.SET_STC_CHIANID](state, chianID) {

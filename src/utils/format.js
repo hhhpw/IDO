@@ -1,7 +1,7 @@
-const format = {
-  shortAddress: (address) => {
-    return address ? `${address.slice(0, 6)}...${address.slice(-6)}` : "";
-  },
+import utilsNumber from "./number.js";
+
+const formatBalance = (balance, precision) => {
+  return utilsNumber.bigNum(balance).div(Math.pow(10, precision)).toString();
 };
 
-export default format;
+export default { formatBalance };

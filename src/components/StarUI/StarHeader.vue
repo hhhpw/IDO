@@ -1,7 +1,8 @@
 <template>
   <div class="star-header">
     <div class="star-header-left">
-      <img src="../../assets/header/logo.png" />
+      <!-- <img src="../../assets/header/logo.png" /> -->
+      <img src="../../assets/header/logo.png" /> -
       <Menu
         :default-active="activeHeaderItem"
         mode="horizontal"
@@ -26,7 +27,7 @@
         trigger="click"
         :itemList="langs"
         @handleClick="hanldeChangeLang"
-        :activeValue="currLang"
+        :activeValue="session.getItem('lang')"
       >
         <template #tag>
           <star-button light>
@@ -44,6 +45,7 @@ import StarDropDown from "@StarUI/StarDropDown.vue";
 import session from "@utils/session.js";
 import { mapState } from "vuex";
 import StarConnectWallet from "./StarConnectWallet.vue";
+import i18n from "@/i18n";
 
 export default {
   name: "StarHeader",
@@ -55,6 +57,7 @@ export default {
         { text: "ENG", value: "en" },
       ],
       isStarMaskInstalled: null,
+      session,
     };
   },
   components: {
@@ -63,10 +66,6 @@ export default {
     StarButton,
     StarDropDown,
     StarConnectWallet,
-  },
-  mounted() {
-    const currLang = session.getItem("lang");
-    this.currLang = currLang;
   },
   methods: {
     pushRouter(path) {
@@ -78,16 +77,14 @@ export default {
       const path = this.$route.path;
       if (path !== `${this.activeHeaderItem}`) {
         window.scrollTo(0, 0);
-        // 切换tab
         this.$store.commit("StoreApp/SET_ACTIVE_ITEM", path);
       }
     },
     hanldeChangeLang(value) {
-      let currLang = this.language;
+      let currLang = session.getItem("lang");
       if (currLang === value) return;
       if (currLang !== value) {
-        session.setItem("lang", value);
-        window.location.reload();
+        i18n.locale = value;
       }
     },
   },
@@ -157,6 +154,7 @@ export default {
   .star-header-right {
     display: flex;
     align-items: center;
+    font-family: Denmark;
     .star-button {
       padding: 8px 20px;
       box-sizing: border-box;

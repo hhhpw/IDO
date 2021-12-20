@@ -70,7 +70,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
 .star-footer {
-  background: #2e345b;
+  background: #292929;
   text-align: center;
   color: #fff;
   padding: 70px 90px 30px;

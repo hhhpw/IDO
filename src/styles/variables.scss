@@ -12,18 +12,23 @@ $white: #ffffff;
 
 // 文本
 $text_base_color: #191d28;
-$text_light_color: #2afefe;
+$text_light_color: #fec944;
 $text_gray_color: #babbc7;
 $text_error_color: #f36346;
 
 //button
-$btn_base_bgcolor: #2afefe;
+$btn_base_bgcolor: #fec944;
 // border
-$light_bordercolor: #2afefe;
+$light_bordercolor: #fec944;
 
 $open_color: #2afefe;
 $will_color: #bbff8a;
 $closed_color: #a6dfe6;
+
+$fontEnStyle: Denmark;
+
+$base_bg_color: #341f07;
+$base_hover_color: #d6872d;
 
 :export {
   openColor: $open_color;

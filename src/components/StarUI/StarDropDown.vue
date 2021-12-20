@@ -55,11 +55,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @mixin hoverStyle {
-  background: #29f3f6 !important;
+  // background: #29f3f6 !important;
+  background: #d6872d !important;
   color: #170c39 !important;
 }
 .star-dropdown-menu {
-  background-color: #333d5c;
+  background: #341f07 !important;
   color: #fff;
   border: none;
   border-radius: 0px;
@@ -84,7 +85,8 @@ export default {
   }
 }
 .star-dropdown-menu-item.is-active {
-  background: rgba(42, 254, 254, 0.6) !important;
+  background: #fec944 !important;
+  // background: #341f07 !important;
   color: #170c39 !important;
   &:hover {
     @include hoverStyle();

@@ -1,5 +1,8 @@
 <template>
   <div class="home-list-item">
+    <div>
+      <!-- {{ data }} -->
+    </div>
     <div class="home-list-item-rough">
       <div class="home-list-item-rough-header">
         <star-item-cell cellType="vertical">
@@ -42,8 +45,6 @@
           @mouseleave.stop.prevent="changeHoverList(index, false)"
           @click.stop.prevent="openURL(iconkey.url)"
         ></svg-icon>
-        <!-- getSvgName(iconkey.name, cardType) -->
-        <!-- :name="iconkey.name + '-' + cardType" -->
       </div>
       <star-space :size="20"></star-space>
       <div class="home-list-item-rough-infos">
@@ -70,9 +71,6 @@ import utilsTool from "@utils/tool";
 export default {
   components: { StarButton, StarSpace, SvgIcon, StarItemCell },
   mixins: [mixinHome],
-  data() {
-    return {};
-  },
   props: {
     colorsInfo: { type: Object },
     cardType: {

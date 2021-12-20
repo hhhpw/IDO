@@ -75,6 +75,9 @@ export default {
   -ms-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+  :hover {
+    opacity: 0.8 !important;
+  }
 }
 .star-button + .star-button {
   margin-left: 10px;
@@ -131,8 +134,8 @@ export default {
     background-image: linear-gradient(
       to right,
       rgba(255, 0, 0, 0),
-      rgba(42, 254, 254, 0.7),
-      rgba(42, 254, 254, 1)
+      rgba(254, 201, 68, 0.7),
+      rgba(254, 201, 68, 1)
     );
   }
 
@@ -147,8 +150,8 @@ export default {
     background-image: linear-gradient(
       to top,
       rgba(255, 0, 0, 0),
-      rgba(42, 254, 254, 0.7),
-      rgba(42, 254, 254, 1)
+      rgba(254, 201, 68, 0.7),
+      rgba(254, 201, 68, 1)
     );
   }
 }
