@@ -24,3 +24,7 @@ export const countdown = (timestamp) => {
   }
   return "";
 };
+
+export default {
+  countdown,
+};

@@ -10,7 +10,7 @@
         </star-item-cell>
       </div>
       <star-space :size="20"></star-space>
-      <div class="home-list-mul-item-rough-labels">
+      <!-- <div class="home-list-mul-item-rough-labels">
         <star-button
           v-for="(d, i) in data.labels"
           :key="i"
@@ -23,25 +23,25 @@
           "
           >{{ $t(`${d.label}`) }}</star-button
         >
+      </div> -->
+      <div class="home-list-single-item-label">
+        <div
+          v-for="(d, i) in data.labels"
+          :key="i"
+          class="home-list-single-item-label-item"
+        >
+          {{ d.label }}
+        </div>
       </div>
       <star-space :size="10"></star-space>
-      <div
-        class="home-list-mul-item-rough-icons"
-        @mouseout.stop.prevent="changeHoverList(null, null, true)"
-      >
+      <div class="home-list-mul-item-link">
         <svg-icon
-          v-for="(iconkey, index) in data.links"
-          :key="index"
-          :name="
-            isHoverList && isHoverList[index]
-              ? svgName(iconkey.name, cardType, true)
-              : svgName(iconkey.name, cardType)
-          "
-          class="home-list-mul-item-rough-icons-icon"
-          @mouseenter.stop.prevent="changeHoverList(index, true)"
-          @mouseleave.stop.prevent="changeHoverList(index, false)"
-          @click.stop.prevent="openURL(iconkey.url)"
-        ></svg-icon>
+          v-for="(d, i) in data.links"
+          :key="i"
+          class="home-list-mul-item-link-item"
+          :name="d.name"
+        >
+        </svg-icon>
       </div>
       <star-space :size="20"></star-space>
       <div class="home-list-mul-item-rough-infos">
@@ -58,6 +58,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import StarSpace from "@StarUI/StarSpace.vue";
 import StarButton from "@StarUI/StarButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
@@ -145,18 +146,31 @@ export default {
         margin-left: 15px;
       }
     }
-    .home-list-mul-item-rough-labels {
+    .home-list-single-item-label {
+      // margin-top: 20px;
+      color: red;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      .star-button {
-        margin-right: 10px;
+      .home-list-single-item-label-item {
+        padding: 3px 10px;
+        color: #d6872d;
+        font-size: 12px;
+        background: rgba(214, 135, 45, 0.11);
         border-radius: 2px;
-        padding: 3px 6px;
-        margin-bottom: 10px;
+        border: 1px solid rgba(214, 135, 45, 0.58);
+        &:not(:first-child) {
+          margin-left: 10px;
+        }
       }
-      .star-button + .star-button {
-        margin-left: 0px;
+    }
+    .home-list-mul-item-link {
+      display: flex;
+      .home-list-mul-item-link-item {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        :hover {
+          opacity: 0.7;
+        }
       }
     }
     .home-list-mul-item-rough-icons {
@@ -172,17 +186,8 @@ export default {
       }
     }
     .home-list-mul-item-rough-infos {
-      .home-list-mul-item-rough-infos-title {
-        font-size: 12px;
-        font-weight: 400;
-        color: #ffffff;
-        opacity: 0.7;
-      }
-      .home-list-mul-item-rough-infos-amount {
-        font-size: 16px;
-        font-weight: 500;
-        color: #ffffff;
-      }
+      color: #ffffff;
+      font-family: Denmark;
     }
   }
 }

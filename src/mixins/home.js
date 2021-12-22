@@ -1,3 +1,4 @@
+import { isUndefined } from "lodash";
 export default {
   data() {
     return {
@@ -6,6 +7,18 @@ export default {
     };
   },
   methods: {
+    formateDate(timeObj) {
+      const { day, hour, minute, second } = timeObj;
+      if (
+        isUndefined(day) &&
+        isUndefined(hour) &&
+        isUndefined(minute) &&
+        isUndefined(second)
+      ) {
+        return null;
+      }
+      return [day, hour, minute, second];
+    },
     changeHoverList(index, flag, t) {
       if (t) {
         // 为了鼠标移动过快，hover没更新

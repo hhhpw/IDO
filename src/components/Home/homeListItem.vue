@@ -68,7 +68,13 @@ import StarItemCell from "@StarUI/StarItemCell.vue";
 import mixinHome from "@/mixins/home.js";
 import utilsNumber from "@utils/number.js";
 import utilsTool from "@utils/tool";
+import { isUndefined } from "lodash";
 export default {
+  data() {
+    return {
+      countdown: null,
+    };
+  },
   components: { StarButton, StarSpace, SvgIcon, StarItemCell },
   mixins: [mixinHome],
   props: {
@@ -93,6 +99,19 @@ export default {
     openURL(url) {
       utilsTool.openNewWindow(url);
     },
+    formateDate(timeObj) {
+      const { day, hour, minute, second } = timeObj;
+      if (
+        isUndefined(day) &&
+        isUndefined(hour) &&
+        isUndefined(minute) &&
+        isUndefined(second)
+      ) {
+        return null;
+      }
+      return [day, hour, minute, second];
+    },
+    setCountDown() {},
     cellData(key, currency, currencyB) {
       let name, text;
       if (key === "raiseTotal") {

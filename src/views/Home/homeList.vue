@@ -196,6 +196,7 @@ export default {
     background-repeat: no-repeat;
     height: 80px;
     color: var(--color);
+    font-family: Denmark;
   }
 }
 .home-list {

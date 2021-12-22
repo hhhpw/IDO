@@ -20,6 +20,8 @@
     </star-loading>
 
     <star-space :size="120"></star-space>
+
+    <star-wallet-dialog></star-wallet-dialog>
   </div>
 </template>
 <script>
@@ -30,7 +32,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
 import StarLoading from "@StarUI/StarLoading.vue";
 import Screen from "./screen.vue";
-
+import StarWalletDialog from "@StarUI/StarWalletDialog.vue";
 export default {
   data() {
     return {
@@ -44,6 +46,7 @@ export default {
     HomeList,
     StarSpace,
     StarLoading,
+    StarWalletDialog,
   },
   mounted() {
     this.getDataList();

@@ -15,12 +15,16 @@
             :cardType="cardType"
             :data="cardData"
           ></single-item>
-          <mul-item
+          <div
+            class="home-list-content-mul-item-wrap"
             v-if="data.cardInfoList.length > 1"
-            :colorsInfo="cardsInfo"
-            :cardType="cardType"
-            :data="cardData"
-          ></mul-item>
+          >
+            <mul-item
+              :colorsInfo="cardsInfo"
+              :cardType="cardType"
+              :data="cardData"
+            ></mul-item>
+          </div>
         </div>
         <!-- <single-item
           v-if="data.cardInfoList.length === 1"
@@ -224,6 +228,7 @@ export default {
     background-repeat: no-repeat;
     height: 80px;
     color: #d6872d;
+    font-family: Denmark;
     // color: var(--color);
     background-image: url("../../assets/home/homelist-top.png");
   }
@@ -241,45 +246,36 @@ export default {
     overflow: hidden;
     // margin-top: 20px;
     padding: 0px 48px;
-    // .home-list-item-wrap {
-    //   border: 3px solid transparent;
-    //   padding: 60px 30px 0px;
-    //   background-size: 100% 100%;
-    //   background-repeat: no-repeat;
-    //   float: left;
-    //   box-sizing: border-box;
-    //   overflow: hidden;
-    //   height: 544px;
-    //   width: 374px;
-    //   margin-bottom: 20px;
-    //   margin-left: 15px;
-    //   position: relative;
-    //   &:hover {
-    //     transition: all ease 0.15s;
-    //     border: 3px solid #d6872d;
-    //   }
-    //   .home-list-item-wrap-labels {
-    //     position: absolute;
-    //     top: 0;
-    //     right: 0;
-    //     background-size: 100% 100%;
-    //     height: 26px;
-    //     background-repeat: no-repeat;
-    //     span {
-    //       position: relative;
-    //       top: -2px;
-    //       height: 100%;
-    //       display: inline-block;
-    //       width: 94px;
-    //       text-align: center;
-    //       font-size: 12px;
-    //       padding-left: 12px;
-    //     }
-    //   }
-    // }
-    .home-list-item-wrap:nth-child(3n + 1) {
-      margin-left: 0%;
+    border: 1px solid green;
+    .home-list-content-mul-item-wrap:nth-child(3n + 1) {
+      margin-left: 0px;
     }
+    .home-list-content-mul-item-wrap {
+      border: 1px solid;
+      border-image: linear-gradient(
+          135deg,
+          rgba(214, 135, 45, 1),
+          rgba(214, 135, 45, 0.26)
+        )
+        1 1;
+      // border: 3px solid transparent;
+      padding: 60px 30px 0px;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      float: left;
+      box-sizing: border-box;
+      overflow: hidden;
+      height: 464px;
+      width: 350px;
+      margin-bottom: 20px;
+      margin-left: 24px !important;
+      position: relative;
+      &:hover {
+        transition: all ease 0.15s;
+        border: 1px solid #d6872d;
+      }
+    }
+
     .home-list-item-wrap-footer {
       text-align: center;
       font-size: 16px;
