@@ -138,9 +138,7 @@ export default {
       };
     },
   },
-  computed: {
-    // ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
-  },
+  computed: {},
   beforeDestroy() {},
 };
 </script>

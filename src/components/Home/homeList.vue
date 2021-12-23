@@ -1,8 +1,6 @@
 <template>
   <div class="home-list-wrap wow animate__animated animate__fadeInUp">
-    <!-- :style="{ '--color': cardsInfo['common-color'] }" -->
     <div class="home-list-wrap-title">
-      <!-- :style="`background-image: url(${require(`../../assets/home/${cardType}-homelist-top.png`)})`" -->
       <p class="home-list-title">
         {{ renderTitle(cardType) }}
       </p>
@@ -10,15 +8,20 @@
     <div class="home-list">
       <div class="home-list-content">
         <div v-for="(cardData, index) in data.cardInfoList" :key="index">
-          <single-item
-            v-if="data.cardInfoList.length === 1"
-            :cardType="cardType"
-            :data="cardData"
-          ></single-item>
+          <div v-if="data.cardInfoList.length === 1" @click="emit(cardData.id)">
+            <single-item :cardType="cardType" :data="cardData"></single-item>
+          </div>
+
           <div
             class="home-list-content-mul-item-wrap"
+            @click="emit(cardData.id)"
             v-if="data.cardInfoList.length > 1"
           >
+            <img
+              src="../../assets/home/home-item-square.png"
+              alt=""
+              class="home-list-content-mul-item-wrap-square"
+            />
             <mul-item
               :colorsInfo="cardsInfo"
               :cardType="cardType"
@@ -26,67 +29,6 @@
             ></mul-item>
           </div>
         </div>
-        <!-- <single-item
-          v-if="data.cardInfoList.length === 1"
-          :colorsInfo="cardsInfo"
-          :cardType="cardType"
-          :data="cardData"
-        ></single-item> -->
-        {{ data.cardInfoList.length }}
-        <!-- <div
-          class="home-list-item-wrap"
-          v-for="(cardData, index) in data.cardInfoList"
-          :key="index"
-          @click="emit(cardData.id)"
-          :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
-        > -->
-        <!-- <div
-            v-if="cardData.attributes"
-            class="home-list-item-wrap-labels"
-            :style="
-              mixinSetLabelsBg(
-                cardType,
-                cardData.attributes.length > 2 ? 2 : cardData.attributes.length
-              )
-            "
-          >
-            <span v-for="(l, ix) in cardData.attributes.slice(0, 2)" :key="ix">
-              {{ $t(`${l.name}`) }}
-            </span>
-          </div> -->
-        <!-- 
-          <div>{{ data.cardInfoList.length }}</div>
-          <single-item
-            v-if="data.cardInfoList.length === 1"
-            :colorsInfo="cardsInfo"
-            :cardType="cardType"
-            :data="cardData"
-          ></single-item> -->
-        <!-- <mul-item
-            v-if="data.cardInfoList.length > 1"
-            :colorsInfo="cardsInfo"
-            :cardType="cardType"
-            :data="cardData"
-          ></mul-item> -->
-        <!-- <home-list-item
-            :cardType="cardType"
-            :colorsInfo="cardsInfo"
-            :data="cardData"
-          ></home-list-item> -->
-        <!-- <div class="home-list-item-wrap-footer">
-            <span v-if="cardType === 'open'">
-              {{ $t("进行中的项目") }}
-            </span>
-            <span v-if="cardType === 'will'">
-              {{ $t("即将到来的项目") }}
-
-              {{ timers && timers[index].countdown }}
-            </span>
-            <span v-if="cardType === 'closed'">
-              {{ $t("已结束的项目") }}
-            </span>
-          </div> -->
-        <!-- </div> -->
       </div>
     </div>
     <img class="banner-img" src="../../assets/home/homelist-bottom.png" />
@@ -95,8 +37,7 @@
 <script>
 import homeListItem from "@components/Home/homeListItem.vue";
 import mixinHome from "@mixins/home.js";
-import { cloneDeep, isUndefined } from "lodash";
-import { countdown } from "@utils/date.js";
+// import { cloneDeep, isUndefined } from "lodash";
 import { WOW } from "wowjs";
 /* eslint-disable*/
 import animated from "animate.css";
@@ -133,13 +74,13 @@ export default {
     new WOW({
       live: false,
     }).init();
-    this.timers = cloneDeep(this.data.cardInfoList);
-    if (this.data.cardType === "will") {
-      this.timers.map((d) => {
-        this.$set(d, "countdown", d.startTime);
-      });
-      this.playTimer();
-    }
+    // this.timers = cloneDeep(this.data.cardInfoList);
+    // if (this.data.cardType === "will") {
+    //   this.timers.map((d) => {
+    //     this.$set(d, "countdown", d.startTime);
+    //   });
+    //   this.playTimer();
+    // }
   },
   methods: {
     renderTitle(type) {
@@ -152,28 +93,6 @@ export default {
       if (type === "closed") {
         return this.$t("已经结束");
       }
-    },
-    formateDate(obj) {
-      const { day, hour, minute, second } = obj;
-      if (
-        isUndefined(day) &&
-        isUndefined(hour) &&
-        isUndefined(minute) &&
-        isUndefined(second)
-      ) {
-        window.location.reload();
-        return;
-      }
-      return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
-    },
-    playTimer() {
-      this.timer = setInterval(() => {
-        for (let key in this.timers) {
-          this.timers[key].countdown = this.formateDate(
-            countdown(this.timers[key].startTime)
-          );
-        }
-      }, 1000);
     },
     emit(cardId) {
       if (this.walletStatus !== "connected") {
@@ -220,6 +139,14 @@ export default {
 }
 .home-list-wrap {
   width: 100%;
+  .home-list-content-mul-item-wrap-square {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 87px;
+    height: 20px;
+    z-index: 88;
+  }
   .home-list-title {
     font-size: 32px;
     padding-top: 20px;
@@ -251,15 +178,11 @@ export default {
       margin-left: 0px;
     }
     .home-list-content-mul-item-wrap {
-      border: 1px solid;
-      border-image: linear-gradient(
-          135deg,
-          rgba(214, 135, 45, 1),
-          rgba(214, 135, 45, 0.26)
-        )
-        1 1;
-      // border: 3px solid transparent;
-      padding: 60px 30px 0px;
+      background-image: url("../../assets/home/home-mul-bg.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      border: 1px solid transparent;
+      padding: 30px 30px 0px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       float: left;

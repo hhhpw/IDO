@@ -1,7 +1,6 @@
 <template>
   <div class="star-header">
     <div class="star-header-left">
-      <!-- <img src="../../assets/header/logo.png" /> -->
       <img src="../../assets/header/logo.png" /> -
       <Menu
         :default-active="activeHeaderItem"
@@ -102,7 +101,7 @@ export default {
 .star-header {
   position: fixed;
   top: 0;
-  z-index: 9999;
+  z-index: 999;
   height: 80px;
   width: calc(100% - 80px);
   display: flex;

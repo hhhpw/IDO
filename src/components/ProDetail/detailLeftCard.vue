@@ -3,16 +3,22 @@
     :set="
       ((detailCardType = detailCardInfo.cardType),
       (currencyInfo = detailCardInfo.currencyInfo),
-      ((colorImgInfo = configInfo(detailCardInfo.cardType)),
-      (cardCountDown = detailCardInfo.startTime)))
+      (cardCountDown = detailCardInfo.startTime))
     "
   >
-    <div class="detail-input-wrap" :style="setInputBg(isFocus, colorImgInfo)">
+    <div
+      class="detail-input-wrap"
+      :style="
+        isFocus
+          ? `background-image: url(${require(`../../assets/home/detail-left-input-actived.png`)})`
+          : ''
+      "
+    >
       <star-input
         class="detail-input"
         :precision="9 || currencyInfo.stakePrecision"
         :value="inputValue"
-        :maxColor="colorImgInfo['common-color']"
+        maxColor="#FEC944"
         @input="inputEvent"
         @maxEvent="maxEvent"
         @focusEvent="isFocus = true"
@@ -26,7 +32,7 @@
         v-if="stakeStatus === 'unstake'"
         :precision="currencyInfo.stakePrecision"
         :value="inputValue"
-        :maxColor="colorImgInfo['common-color']"
+        maxColor="#FEC944"
         @input="inputEvent"
         :stakeCurrency="currencyInfo.stakeCurrency"
         @maxEvent="maxEvent"
@@ -111,14 +117,8 @@
         noPointer:
           (proState === 3 || proState === 1) && stakeStatus === 'stake',
       }"
-      :style="setButtonBg(isHoverBtn, colorImgInfo)"
-      @mouseenter.native.prevent.stop="isHoverBtn = true"
-      @mouseleave.native.prevent.stop="isHoverBtn = false"
     >
-      <p
-        :style="{ color: colorImgInfo['common-color'] }"
-        class="detail-wrap-content-button-text"
-      >
+      <p class="detail-wrap-content-button-text">
         <span
           v-if="
             stakeStatus === 'stake' &&
@@ -174,7 +174,6 @@
       <star-space :size="20"></star-space>
       <span
         class="detail-wrap-content-left-unstake"
-        :style="{ color: colorImgInfo['common-color'] }"
         @click="changeStakeStatus('unstake')"
         v-if="stakeStatus === 'stake' && proState !== 1"
       >
@@ -237,7 +236,7 @@
       <star-space :size="10"></star-space>
       <p class="detail-wrap-content-left-rule-content">
         {{
-          this.lang === "zh"
+          this.language === "zh"
             ? detailCardInfo.ruleDesc
             : detailCardInfo.ruleDescEn
         }}
@@ -246,10 +245,11 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import StarButton from "@StarUI/StarButton.vue";
 import StarInput from "@StarUI/StarInput.vue";
 import StarSpace from "@StarUI/StarSpace.vue";
-import { mapGetters, mapState, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import utilsNumber from "@utils/number.js";
 import { isNil, isUndefined } from "lodash";
 import session from "@utils/session";
@@ -261,7 +261,7 @@ export default {
     return {
       inputValue: "",
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
-      lang: session.getItem("lang"),
+      // lang: session.getItem("lang"),
       errorText: "",
       countdowntime: null,
       currencyShareAmount: "0", // 为0没有份额，说明没有参与活动
@@ -610,30 +610,9 @@ export default {
     },
   },
   computed: {
-    setButtonBg() {
-      return function (focus, data) {
-        if (!focus) {
-          return {
-            "background-image": `url(${data["detail-wrap-content-button"]})`,
-          };
-        }
-        return {
-          "background-image": `url(${data["detail-wrap-content-button-actived"]})`,
-        };
-      };
-    },
-    setInputBg() {
-      return function (focus, data) {
-        if (!focus) {
-          return {
-            "background-image": `url(${data["detail-input-wrap-bg"]})`,
-          };
-        }
-        return {
-          "background-image": `url(${data["detail-input-wrap-bg-actived"]})`,
-        };
-      };
-    },
+    ...mapState("StoreApp", {
+      language: (state) => state.language,
+    }),
     ...mapState("StoreWallet", {
       balances: (state) => state.balances,
       stcProvider: (state) => state.stcProvider,
@@ -648,7 +627,6 @@ export default {
       stakeTotalAmount: (state) => state.stakeTotalAmount,
       payState: (state) => state.payState,
     }),
-    ...mapGetters("StoreProDetail", ["configInfo"]),
   },
   beforeDestroy() {
     clearInterval(this.timer);
@@ -656,33 +634,33 @@ export default {
 };
 </script>
 <style lang="scss">
-.open-toast {
-  background-color: #192a51 !important;
-  .el-icon-info {
-    color: #2afefe !important;
-  }
-  .el-message__content {
-    color: #2afefe !important;
-  }
-}
-.will-toast {
-  background-color: #303244 !important;
-  .el-icon-info {
-    color: #bbff8a !important;
-  }
-  .el-message__content {
-    color: #bbff8a !important;
-  }
-}
-.closed-toast {
-  background-color: #303352 !important;
-  .el-icon-info {
-    color: #a6dfe6 !important;
-  }
-  .el-message__content {
-    color: #a6dfe6 !important;
-  }
-}
+// .open-toast {
+//   background-color: #192a51 !important;
+//   .el-icon-info {
+//     color: #2afefe !important;
+//   }
+//   .el-message__content {
+//     color: #2afefe !important;
+//   }
+// }
+// .will-toast {
+//   background-color: #303244 !important;
+//   .el-icon-info {
+//     color: #bbff8a !important;
+//   }
+//   .el-message__content {
+//     color: #bbff8a !important;
+//   }
+// }
+// .closed-toast {
+//   background-color: #303352 !important;
+//   .el-icon-info {
+//     color: #a6dfe6 !important;
+//   }
+//   .el-message__content {
+//     color: #a6dfe6 !important;
+//   }
+// }
 </style>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
@@ -693,6 +671,10 @@ export default {
 .detail-input-wrap {
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  background-image: url("../../assets/home/detail-left-input.png");
+  &:hover {
+    background-image: url("../../assets/home/detail-left-input-hover.png");
+  }
   .detail-input {
     width: 100%;
   }
@@ -705,7 +687,8 @@ export default {
   justify-content: space-between;
 }
 .detail-wrap-content-button {
-  color: $btn_base_bgcolor;
+  background-image: url("../../assets/home/detail-left-btn.png");
+  color: #fec944;
   height: 54px;
   text-align: center;
   width: 100%;
@@ -714,6 +697,9 @@ export default {
   background-color: transparent;
   line-height: 54px;
   padding: 0;
+  &:hover {
+    background-image: url("../../assets/home/detail-left-btn-hover.png");
+  }
   .detail-wrap-content-button-text {
     font-weight: 500;
     font-size: 24px;

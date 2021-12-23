@@ -1,5 +1,6 @@
 import * as types from "../constants/wallet";
 import CONSTANTS_STARMASK from "@constants/starmask.js";
+import Cookies from "js-cookie";
 
 const StoreWallet = {
   namespaced: true,
@@ -15,7 +16,7 @@ const StoreWallet = {
     stcChianID: CONSTANTS_STARMASK.MAIN_CHIA_ID,
   },
   mutations: {
-    [types.SET_STC_CHIANID](state, chianID) {
+    [types.SET_STC_CHAINID](state, chianID) {
       state.stcChianID = chianID;
     },
     [types.SET_STC_ACCOUNTS](state, accounts) {
@@ -32,12 +33,15 @@ const StoreWallet = {
       console.log("state.balances", state.balances);
     },
     [types.SET_WALLET_CONNECT_STATUS](state, payload) {
+      if (payload === "connected") {
+        Cookies.set("connect-status", "connected", { expires: 7 });
+      }
       state.walletStatus = payload;
     },
   },
   actions: {
     setStcChianID({ commit }, chianID) {
-      commit(types.SET_STC_CHIANID, chianID);
+      commit(types.SET_STC_CHAINID, chianID);
     },
     setStcAccounts({ commit }, accounts) {
       commit(types.SET_STC_ACCOUNTS, accounts);

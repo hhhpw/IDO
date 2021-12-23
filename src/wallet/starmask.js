@@ -67,20 +67,19 @@ const connect = async () => {
 };
 
 /**
- * Get chianID
+ * Get getNetworkChainId
  *
  * */
-const getStcChianID = async () => {
-  let chianID;
+const getNetworkChainId = async () => {
   try {
-    const { id } = await window.starcoin.request({
+    const chainInfo = await window.starcoin.request({
       method: "chain.id",
     });
-    chianID = id;
+    console.log("====getNetworkChainId====", chainInfo);
+    return `0x${chainInfo.id.toString(16)}`;
   } catch (error) {
     console.error(error);
   }
-  return chianID;
 };
 /**
  * Get account balance
@@ -320,7 +319,7 @@ export default {
   connect,
   createStarMaskOnboarding,
   checkStarMaskInstalled,
-  getStcChianID,
+  getNetworkChainId,
   getAccountBalance,
   setPermissions,
   getPermissions,

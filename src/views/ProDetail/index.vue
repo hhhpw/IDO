@@ -5,20 +5,14 @@
       <div class="detail-wrap" v-if="detailCardInfo">
         <star-space :size="30"></star-space>
         <div class="detail-wrap-content">
-          <div
-            class="detail-wrap-content-left"
-            :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-left-bg.png`)})`"
-          >
+          <div class="detail-wrap-content-left">
             <detail-left-card
               @eventLoop="eventLoop"
               :detailCardInfo="detailCardInfo"
             >
             </detail-left-card>
           </div>
-          <div
-            class="detail-wrap-content-right"
-            :style="`background-image: url(${require(`../../assets/home/${detailCardInfo.cardType}-right-bg.png`)})`"
-          >
+          <div class="detail-wrap-content-right">
             <detail-right-card :detailCardInfo="detailCardInfo">
             </detail-right-card>
           </div>
@@ -54,10 +48,10 @@ export default {
     if (!this.pid) return;
     const res = await this.getProInfoById(this.pid);
     if (res === "ok") {
-      if (this.walletStatus !== "connected") {
-        console.error("wallet not conneceted");
-        return;
-      }
+      // if (this.walletStatus !== "connected") {
+      //   console.error("wallet not conneceted");
+      //   return;
+      // }
       this.getBanlance();
       this.loadInfo({
         stakeToken: this.detailCardInfo.currencyInfo.stakeAddress,
@@ -116,11 +110,12 @@ export default {
       padding: 40px 20px 50px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      background-image: url("../../assets/home/detail-left-bg.png");
     }
     .detail-wrap-content-right {
       width: 55%;
       background-repeat: no-repeat;
-      background-image: url("../../assets/home/open-right-bg.png");
+      background-image: url("../../assets/home/detail-right-bg.png");
       background-size: 100% 100%;
     }
   }

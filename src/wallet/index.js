@@ -13,7 +13,7 @@ export default function connectLogic(store, h) {
   // const store = store;
   // 网络切换
   const handleChainIdChange = (id) => {
-    store.commit("StoreWallet/SET_STC_CHIANID", id);
+    store.commit("StoreWallet/SET_STC_CHAINID", id);
   };
 
   const walletState = (store) => {
@@ -65,6 +65,7 @@ export default function connectLogic(store, h) {
   const isStarMaskInstalled = () => starmask.checkStarMaskInstalled();
 
   const walletInit = async () => {
+    const onboarding = walletState(store).onboarding;
     // const onboarding = computed(() => store.state.StoreWallet.onboarding);
     /* eslint-disable */
     if (!onboarding) {
@@ -76,15 +77,17 @@ export default function connectLogic(store, h) {
     const stcProvider = starmask.createStcProvider();
     store.dispatch("StoreWallet/setStcProvider", stcProvider);
     if (isStarMaskInstalled) {
-      const chaind = await starmask.getNetworkChainId();
-      handleChainIdChange(chaind);
+      const chainId = await starmask.getNetworkChainId();
+      console.log("chainId", chainId);
+      handleChainIdChange(chainId);
       window.starcoin &&
         window.starcoin.on("accountsChanged", (account) => {
           // handleAccountsChange(account);
         });
       window.starcoin &&
-        window.starcoin.on("chainChanged", (id) => {
-          // handleChainIdChange(id);
+        window.starcoin.on("chainChanged", (chainId) => {
+          console.log("chainId", chainId);
+          handleChainIdChange(chainId);
         });
     }
   };

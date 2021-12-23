@@ -33,50 +33,6 @@ const StoreHome = {
     },
   },
   getters: {
-    cardTypeColorInfo: () => (type) => {
-      let obj = {};
-      if (type === "open") {
-        obj = {
-          "list-bg-color": "#192A51",
-          "common-color": "#2afefe",
-          "label-text-color": "#23B0B4",
-          "label-border-color": "rgba(42, 254, 254, 0.25)",
-        };
-      }
-      if (type === "will") {
-        obj = {
-          "list-bg-color": "#303244",
-          "common-color": "#bbff8a",
-          "label-text-color": "#86B66B",
-          "label-border-color": "rgba(187, 255, 138, 0.26)",
-        };
-      }
-      if (type === "closed") {
-        obj = {
-          "list-bg-color": "#303352",
-          "common-color": "#A6DFE6",
-          "label-text-color": "#7DA2B3",
-          "label-border-color": "rgba(166, 223, 230, 0.28)",
-        };
-      }
-      obj[
-        "list-item-wrap-bg"
-      ] = require(`../../assets/card/${type}-card-item.png`);
-      obj[
-        "detail-input-wrap-bg"
-      ] = require(`../../assets/home/${type}-input-border.png`);
-
-      obj[
-        "detail-wrap-content-button"
-      ] = require(`../../assets/home/${type}-button.png`);
-      obj[
-        "detail-input-wrap-bg-actived"
-      ] = require(`../../assets/home/${type}-input-border-actived.png`);
-      obj[
-        "detail-wrap-content-button-actived"
-      ] = require(`../../assets/home/${type}-button-actived.png`);
-      return obj;
-    },
     detailCardInfo: (state) => (id) => {
       return state.cardData
         .filter((d) => d.cardType === state.detailCardType)[0]

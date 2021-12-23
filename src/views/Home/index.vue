@@ -14,7 +14,6 @@
           :cardType="d.cardType"
           :data="d"
           style="margin-top: 70px"
-          :cardsInfo="cardTypeColorInfo(d.cardType)"
         ></home-list>
       </div>
     </star-loading>
@@ -28,7 +27,7 @@
 // import HomeList from "./homeList.vue";
 import HomeList from "@components/Home/homeList.vue";
 // import StarButton from "@StarUI/StarButton.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
 import StarLoading from "@StarUI/StarLoading.vue";
 import Screen from "./screen.vue";
@@ -55,7 +54,6 @@ export default {
     ...mapActions("StoreHome", ["getDataList", "setDetailProjectInfo"]),
   },
   computed: {
-    ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
     ...mapState("StoreHome", {
       status: (state) => state.status,
       cardData: (state) => state.cardData,

@@ -1,10 +1,6 @@
 <template>
   <div class="star-list">
-    <div
-      class="star-list-item prodetail"
-      v-if="type === 'prodetail'"
-      :style="setStyle()"
-    >
+    <div class="star-list-item prodetail" v-if="type === 'prodetail'">
       <span class="title">
         {{ data.name }}
       </span>
@@ -12,7 +8,7 @@
         {{ data.text }}
       </span>
     </div>
-    <div class="star-list-item time" v-if="type === 'time'" :style="setStyle()">
+    <div class="star-list-item time" v-if="type === 'time'">
       <span class="title">
         {{ $t(`${data.title}`) }}
       </span>
@@ -55,13 +51,7 @@ export default {
     type: String,
   },
   mounted() {},
-  methods: {
-    setStyle() {
-      if (this.bgColor) {
-        return { "background-color": this.bgColor };
-      }
-    },
-  },
+  methods: {},
   computed: {},
   beforeDestroy() {},
 };
@@ -74,8 +64,10 @@ export default {
     margin-top: 3px;
   }
   .star-list-item {
+    font-family: Denmark;
     width: 100%;
     padding: 15px;
+    background-color: #2d2d2d;
     // background-color: red;
     &.prodetail {
       display: flex;

@@ -3,27 +3,11 @@
     class="detail-card"
     :set="
       ((detailCardType = detailCardInfo.cardType),
-      ((colorImgInfo = configInfo(detailCardInfo.cardType)),
-      (detailListAmount = changeDisplayList(detailCardInfo.decentralizedList))))
+      (detailListAmount = changeDisplayList(detailCardInfo.decentralizedList)))
     "
   >
-    <div
-      v-if="detailCardInfo.attributes"
-      class="detail-card-labels-top"
-      :style="
-        mixinSetLabelsBg(
-          detailCardType,
-          detailCardInfo.attributes.length > 2
-            ? 2
-            : detailCardInfo.attributes.length
-        )
-      "
-    >
-      <span
-        v-for="(l, ix) in detailCardInfo.attributes.slice(0, 2)"
-        :key="ix"
-        :style="{ color: colorImgInfo['common-color'] }"
-      >
+    <div v-if="detailCardInfo.attributes" class="detail-card-labels-top">
+      <span v-for="(l, ix) in detailCardInfo.attributes.slice(0, 2)" :key="ix">
         {{ $t(`${l.name}`) }}
       </span>
     </div>
@@ -50,10 +34,9 @@
             class="detail-card-header-info-copy"
           >
             <svg-icon
-              :name="setSvgName(detailCardType, isHover)"
+              class="detail-card-header-info-copy-icon"
+              name="copy"
               @click="clipHash(detailCardInfo.currencyInfo.assignAddress)"
-              @mouseenter.native.prevent="isHover = true"
-              @mouseleave.native.prevent="isHover = false"
             ></svg-icon>
           </star-tool-tip>
         </div>
@@ -61,18 +44,9 @@
     </div>
     <star-space :size="20"></star-space>
     <div class="detail-card-labels">
-      <star-button
-        v-for="(d, i) in detailCardInfo.labels"
-        :key="i"
-        light
-        :style="
-          mixinLabelColor(
-            colorImgInfo['label-text-color'],
-            colorImgInfo['label-border-color']
-          )
-        "
-        >{{ $t(`${d.label}`) }}</star-button
-      >
+      <star-button v-for="(d, i) in detailCardInfo.labels" :key="i" light>{{
+        $t(`${d.label}`)
+      }}</star-button>
     </div>
     <star-space :size="20"></star-space>
     <div
@@ -99,7 +73,6 @@
         :value="tabCategory"
         @input="hanleTabChange"
         :items="tabItmes"
-        :color="colorImgInfo['common-color']"
       >
       </star-tab-bar>
       <div class="detail-card-tabs-list">
@@ -109,7 +82,6 @@
             :key="index"
             :data="d"
             type="prodetail"
-            :bgColor="colorImgInfo['list-bg-color']"
           >
           </star-list>
         </template>
@@ -119,7 +91,6 @@
             :key="index"
             :data="d"
             type="time"
-            :bgColor="colorImgInfo['list-bg-color']"
           ></star-list>
         </template>
       </div>
@@ -133,6 +104,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import StarSpace from "@StarUI/StarSpace.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
 import StarButton from "@StarUI/StarButton.vue";
@@ -140,7 +112,7 @@ import StarTabBar from "@StarUI/StarTabBar.vue";
 import StarList from "@StarUI/StarList.vue";
 import StarToolTip from "@StarUI/StarToolTip.vue";
 import * as clipboard from "clipboard-polyfill/text";
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import mixinHome from "@mixins/home.js";
 import session from "@utils/session";
 import { cloneDeep } from "lodash";
@@ -280,22 +252,11 @@ export default {
     },
   },
   computed: {
-    setSvgName() {
-      return function (type, isHover) {
-        if (isHover) {
-          return `copy-${type}-actived`;
-        }
-        return `copy-${type}`;
-      };
-    },
-
     ...mapState("StoreContracts", {
       stakeAmount: (state) => state.stakeAmount,
       myStakeAmount: (state) => state.myStakeAmount,
       stakeTotalAmount: (state) => state.stakeTotalAmount,
     }),
-
-    ...mapGetters("StoreProDetail", ["configInfo"]),
   },
   beforeDestroy() {},
 };
@@ -344,6 +305,13 @@ export default {
       }
       .detail-card-header-info-copy {
         display: inline-block;
+        .detail-card-header-info-copy-icon {
+          width: 16px;
+          height: 16px;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
       }
     }
   }

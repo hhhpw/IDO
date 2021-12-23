@@ -23,16 +23,7 @@
           @click="emit(cardData.id)"
           :style="`background-image: url(${cardsInfo['list-item-wrap-bg']})`"
         >
-          <div
-            v-if="cardData.attributes"
-            class="home-list-item-wrap-labels"
-            :style="
-              mixinSetLabelsBg(
-                cardType,
-                cardData.attributes.length > 2 ? 2 : cardData.attributes.length
-              )
-            "
-          >
+          <div v-if="cardData.attributes" class="home-list-item-wrap-labels">
             <span v-for="(l, ix) in cardData.attributes.slice(0, 2)" :key="ix">
               {{ $t(`${l.name}`) }}
             </span>

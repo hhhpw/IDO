@@ -1263,10 +1263,10 @@
   resolved "https://registry.npm.taobao.org/@soda/get-current-script/download/@soda/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha1-pTUV2yXYA4N0OBtzryC7Ty5QjYc=
 
-"@starcoin/starcoin@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@starcoin/starcoin/-/starcoin-1.4.5.tgz#42a010bb2894703495170724bd20d59dc55c3b2f"
-  integrity sha512-P9mJDd7HzpPLSKhm3T4I+6PDQsmBxOwN6f/y7oONk2UwZLsuT+c4CjQTm0rZcQ2Pcp4VLdMm4oJg/tyN+f0Bpg==
+"@starcoin/starcoin@^1.5.3":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@starcoin/starcoin/-/starcoin-1.6.2.tgz#457e5f0ed7d7af44532aba64aab69ceee5ae200c"
+  integrity sha512-zr5oYgBwi+xzfKD6+kCeqWqccbzMdBwz+kMr9hGIX915L4T2POgK8Y9w98r/0WqgEuMsx4iB9JHUBg3K1DNdOg==
   dependencies:
     "@ethersproject/basex" "^5.0.4"
     "@ethersproject/bignumber" "^5.0"
@@ -1280,6 +1280,7 @@
     "@starcoin/stc-ed25519" "^0.1.0"
     bech32 "^2.0.0"
     ethereumjs-util "5.1.0"
+    fs "^0.0.1-security"
     is-alphabetical "^1.0.4"
     is-alphanumerical "^1.0.4"
     is-decimal "^1.0.4"
@@ -1288,6 +1289,7 @@
     is-word-character "^1.0.4"
     js-sha3 "^0.8.0"
     jssha "^3.2.0"
+    lodash "^4.17.21"
     read-bigint "^0.1.6"
     ws "7.2.3"
 
@@ -5502,6 +5504,11 @@ fs.realpath@^1.0.0:
   resolved "https://registry.nlark.com/fs.realpath/download/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
+
 fsevents@^1.2.7:
   version "1.2.13"
   resolved "https://registry.npm.taobao.org/fsevents/download/fsevents-1.2.13.tgz?cache=0&sync_timestamp=1612536546156&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffsevents%2Fdownload%2Ffsevents-1.2.13.tgz#f325cb0455592428bcf11b383370ef70e3bfcc38"
@@ -6952,6 +6959,11 @@ js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.6.4"
   resolved "https://registry.nlark.com/js-base64/download/js-base64-2.6.4.tgz?cache=0&sync_timestamp=1621703335082&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fjs-base64%2Fdownload%2Fjs-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
   integrity sha1-9OaGxd4eofhn28rT1G2WlCjfmMQ=
+
+js-cookie@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
 
 js-message@1.0.7:
   version "1.0.7"

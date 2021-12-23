@@ -4,10 +4,21 @@
       <span v-if="walletStatus === 'unConnected'">
         {{ $t("连接钱包") }}
       </span>
-      <span v-if="walletStatus === 'connected' && stcAccounts.length > 0">
+      <span v-if="walletStatus === 'connected'">
+        <!-- <transition name="slide-fade"> -->
+        <span
+          v-if="balances && balances[CONSTANTS_TOKENS.STC]"
+          style="margin-right: 10px"
+        >
+          {{ renderBalance(balances) }}
+        </span>
+        <!-- </transition> -->
+        <span class="">{{ renderAccount }}</span>
+      </span>
+      <!-- <span v-if="walletStatus === 'connected' && stcAccounts.length > 0">
         {{ stcAccounts[0].slice(0, 3) + "..." + stcAccounts[0].slice(-3) }}
         <span v-if="balances"> {{ renderBalance(balances) }} </span>
-      </span>
+      </span> -->
     </span>
   </star-button>
 </template>
@@ -18,12 +29,11 @@ import StarButton from "@StarUI/StarButton.vue";
 import CONSTANTS_TOKENS from "@constants/tokens.js";
 import session from "@utils/session.js";
 import { mapState, mapActions } from "vuex";
-import { Wallet } from "@contactLogic";
+// import { Wallet } from "@contactLogic";
 import utilsTool from "@utils/tool";
-import { STAR_MASK_PLUGIN_URL } from "@constants/contracts";
 import utilsFormat from "@utils/format";
 import store from "@store";
-import connectLogic from "../../wallet/index";
+import starMaskWallet from "@starMaskWallet";
 export default {
   name: "StarConnectWallet",
   data() {
@@ -43,13 +53,19 @@ export default {
       "walletStatus",
       "balances",
     ]),
+    renderAccount() {
+      if (this.stcAccounts && this.stcAccounts.length > 0) {
+        const account = this.stcAccounts[0];
+        return `${account.slice(0, 3)}...${account.slice(-3)}`;
+      }
+    },
   },
   created() {},
 
   methods: {
     connectToWallet() {
       const h = this.$createElement;
-      const { connectWallet } = connectLogic(store, h);
+      const { connectWallet } = starMaskWallet(store, h);
       connectWallet();
     },
     renderBalance(balances) {

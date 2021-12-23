@@ -1,5 +1,11 @@
 <template>
   <div class="home-list-single-item">
+    <img
+      src="../../assets/home/home-item-square.png"
+      alt=""
+      class="home-list-single-item-square"
+    />
+    <star-space :size="20"></star-space>
     <div class="home-list-single-item-mask">
       <div class="home-list-single-item-left">
         <p class="home-list-single-item-left-title">
@@ -98,14 +104,17 @@ export default {
         }
       },
       deep: true,
+      immediate: true,
     },
   },
   methods: {
     setCountDown(timestamp) {
       const times = this.formateDate(utilsDate.countdown(timestamp));
-      this.countdown = `${times[0] ? times[0] + "D" : times[0]} ${times[1]} ${
-        times[2]
-      } ${times[3]}`;
+      if (times) {
+        this.countdown = `${times[0] ? times[0] + "D" : times[0]} ${times[1]} ${
+          times[2]
+        } ${times[3]}`;
+      }
       if (!this.countdown) {
         clearTimeout(this.timer);
         return;
@@ -150,9 +159,7 @@ export default {
       };
     },
   },
-  computed: {
-    // ...mapGetters("StoreHome", ["cardTypeColorInfo"]),
-  },
+  computed: {},
   beforeDestroy() {},
 };
 </script>
@@ -167,6 +174,15 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 1px;
+  position: relative;
+  .home-list-single-item-square {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 87px;
+    height: 20px;
+    z-index: 88;
+  }
   .home-list-single-item-mask {
     border: 5px solid;
     border-image: linear-gradient(
@@ -275,7 +291,7 @@ export default {
         display: inline-block;
         margin-top: 40px;
         color: #fec944;
-        font-family: Denmark;
+        // font-family: Denmark;
       }
     }
   }

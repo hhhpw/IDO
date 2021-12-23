@@ -20,7 +20,6 @@ export default {
     return {
       tabValue: this.value,
       activeName: "second",
-      "--testcolor": "red",
     };
   },
   components: {
@@ -49,13 +48,14 @@ export default {
 .star-tabs {
   ::v-deep {
     .el-tabs__item.is-active {
-      color: var(--color);
+      // color: var(--color);
+      color: #fec944;
     }
     .el-tabs__item {
       color: #fff;
     }
     .el-tabs__active-bar {
-      background-color: var(--color);
+      background-color: #fec944;
     }
     .el-tabs__item:hover {
       color: none;

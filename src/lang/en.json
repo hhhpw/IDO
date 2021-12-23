@@ -1,7 +1,11 @@
 {
   "wallet": {
     "download-tip": "StarMask wallet has not been installed in your browser, please download and install",
-    "connect-tip": "Please connect the wallet first"
+    "connect-tip": "Please connect the wallet first",
+    "在钱包确认操作": "Please confirm in your wallet",
+    "请耐心等待网络确认": "Please wait until network confirm the transaction",
+    "网络错误": "Network Error",
+    "网络错误，请切换钱包网络": "Network error, please choose the correct network"
   },
   "errors": {
     "账户余额不足": "Insufficient Account Balance",
@@ -87,6 +91,8 @@
     "算法稳定币": "Algorithmic Stablecoin",
     "聚合交易": "Aggregator",
     "公链": "Public Chain",
-    "粉丝代币": "Fan Token"
+    "粉丝代币": "Fan Token",
+    "操作成功": "Action succeeded",
+    "确认": "Confirm"
   }
 }

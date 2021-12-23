@@ -1,5 +1,5 @@
 <template>
-  <Dialog :visible="true" class="star-wallet-dialog">
+  <Dialog :visible="false" class="star-wallet-dialog">
     <div
       class="star-wallet-dialog-body"
       :style="{ width: setDiaglogStyle.dialogWidth }"
