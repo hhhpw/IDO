@@ -51,7 +51,6 @@ export default {
     },
   },
   mounted() {
-    console.log("this.stcChianID", this.stcChianID);
     const h = this.$createElement;
     const { connectWallet, isStarMaskInstalled, walletInit } = starMaskWallet(
       store,

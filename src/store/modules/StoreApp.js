@@ -12,11 +12,15 @@ const StoreApp = {
       },
     ],
     activeHeaderItem: "/",
-    language: session.getItem("lang"),
+    language: session.getItem("language") || "en",
   },
   mutations: {
     [types.SET_ACTIVE_ITEM](state, value) {
       state.activeHeaderItem = value;
+    },
+    [types.SET_APP_LANGUAGE](state, value) {
+      state.language = value;
+      session.setItem("language", value);
     },
   },
   actions: {},

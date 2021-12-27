@@ -1,11 +1,5 @@
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
-import { providers, utils, bcs } from "@starcoin/starcoin";
-import { arrayify, hexlify } from "@ethersproject/bytes";
-import {
-  STAKE_STC_FUNCTION_ID,
-  UNSTAKE_STC_FUNCTION_ID,
-  PAY_USDT_FUNCTION_ID,
-} from "@constants/contracts";
+import { providers } from "@starcoin/starcoin";
 import utilsNumber from "@utils/number.js";
 
 /**
@@ -75,7 +69,6 @@ const getNetworkChainId = async () => {
     const chainInfo = await window.starcoin.request({
       method: "chain.id",
     });
-    console.log("====getNetworkChainId====", chainInfo);
     return `0x${chainInfo.id.toString(16)}`;
   } catch (error) {
     console.error(error);
@@ -141,179 +134,6 @@ const getPermissions = async () => {
   return permissionsArray.map((perm) => perm.parentCapability);
 };
 
-/**
- * stake STC
- *
- * */
-const stakeFunc = async ({ provider, tokenCode, amount }) => {
-  try {
-    const functionId = STAKE_STC_FUNCTION_ID;
-    console.log("STAKE_STC_FUNCTION_ID", functionId);
-    console.log("tokenCode");
-    console.log(tokenCode);
-    console.log("amount", amount);
-    const strTypeArgs = tokenCode;
-    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-
-    const amountHex = (function () {
-      const se = new bcs.BcsSerializer();
-      se.serializeU128(amount);
-      return hexlify(se.getBytes());
-    })();
-
-    const args = [arrayify(amountHex)];
-
-    const scriptFunction = utils.tx.encodeScriptFunction(
-      functionId,
-      tyArgs,
-      args
-    );
-
-    const payloadInHex = (function () {
-      const se = new bcs.BcsSerializer();
-      scriptFunction.serialize(se);
-      return hexlify(se.getBytes());
-    })();
-
-    const txhash = await provider.getSigner().sendUncheckedTransaction({
-      data: payloadInHex,
-    });
-
-    return txhash;
-  } catch (error) {
-    console.error(error);
-  }
-  return false;
-};
-
-/**
- * unstake STC
- *
- * */
-const unStakeFunc = async ({ provider, tokenCode, amount }) => {
-  try {
-    const functionId = UNSTAKE_STC_FUNCTION_ID;
-    const strTypeArgs = tokenCode;
-    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-    console.log("UNSTAKE_STC_FUNCTION_ID", functionId);
-    console.log("tokenCode");
-    console.log(tokenCode);
-    console.log("amount", amount);
-    const amountHex = (function () {
-      const se = new bcs.BcsSerializer();
-      se.serializeU128(amount.toString(10));
-      return hexlify(se.getBytes());
-    })();
-
-    const args = [arrayify(amountHex)];
-
-    const scriptFunction = utils.tx.encodeScriptFunction(
-      functionId,
-      tyArgs,
-      args
-    );
-    const payloadInHex = (function () {
-      const se = new bcs.BcsSerializer();
-      scriptFunction.serialize(se);
-      return hexlify(se.getBytes());
-    })();
-    const txhash = await provider.getSigner().sendUncheckedTransaction({
-      data: payloadInHex,
-    });
-
-    return txhash;
-  } catch (error) {
-    console.error(error);
-  }
-  return false;
-};
-
-const payUSDT = async ({ provider, tokenCode }) => {
-  try {
-    const functionId = PAY_USDT_FUNCTION_ID;
-    const strTypeArgs = tokenCode;
-    console.log("PAY_USDT_FUNCTION_ID", functionId);
-    console.log("tokenCode", tokenCode);
-    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-    // const amountHex = (function () {
-    //   const se = new bcs.BcsSerializer();
-    //   se.serializeU128(amount.toString(10));
-    //   return hexlify(se.getBytes());
-    // })();
-
-    // const args = [arrayify(amountHex)];
-    // const args = {
-    //   args: [],
-    // };
-
-    const args = [];
-
-    const scriptFunction = utils.tx.encodeScriptFunction(
-      functionId,
-      tyArgs,
-      args
-    );
-
-    const payloadInHex = (function () {
-      const se = new bcs.BcsSerializer();
-      scriptFunction.serialize(se);
-      return hexlify(se.getBytes());
-    })();
-
-    const txhash = await provider.getSigner().sendUncheckedTransaction({
-      data: payloadInHex,
-    });
-
-    return txhash;
-  } catch (error) {
-    console.error(error);
-  }
-  return false;
-};
-
-/**
- * 测试网让用户去获取STC
- *
- * */
-const testnetSTC = async ({ provider }) => {
-  try {
-    const amount = "100000000000";
-    const functionId =
-      "0x99a287696c35e978c19249400c616c6a::DummyToken1::mint_token";
-    const strTypeArgs = [
-      "0x99a287696c35e978c19249400c616c6a::DummyToken1::USDT",
-    ];
-    const tyArgs = utils.tx.encodeStructTypeTags(strTypeArgs);
-
-    const amountHex = (function () {
-      const se = new bcs.BcsSerializer();
-      se.serializeU128(amount.toString(10));
-      return hexlify(se.getBytes());
-    })();
-
-    const args = [arrayify(amountHex)];
-
-    const scriptFunction = utils.tx.encodeScriptFunction(
-      functionId,
-      tyArgs,
-      args
-    );
-    const payloadInHex = (function () {
-      const se = new bcs.BcsSerializer();
-      scriptFunction.serialize(se);
-      return hexlify(se.getBytes());
-    })();
-    const txhash = await provider.getSigner().sendUncheckedTransaction({
-      data: payloadInHex,
-    });
-
-    return txhash;
-  } catch (error) {
-    console.error(error);
-  }
-  return false;
-};
-
 export default {
   createStcProvider,
   connect,
@@ -323,8 +143,4 @@ export default {
   getAccountBalance,
   setPermissions,
   getPermissions,
-  stakeFunc,
-  unStakeFunc,
-  payUSDT,
-  testnetSTC,
 };

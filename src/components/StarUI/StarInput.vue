@@ -77,6 +77,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/styles/mixin.scss";
 .star-input {
   color: #fff;
   height: 54px;
@@ -97,10 +98,7 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
-    -webkit-user-select: none; /*webkit浏览器*/
-    -ms-user-select: none; /*IE10*/
-    -khtml-user-select: none; /*早期浏览器*/
-    user-select: none;
+    @include userNoSelect();
     .star-input-suffix-max {
       margin-right: 10px;
       cursor: pointer;

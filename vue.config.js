@@ -33,8 +33,7 @@ module.exports = {
       .set("@scripts", resolve("src/scripts"))
       .set("@constants", resolve("src/constants"))
       .set("@mixins", resolve("src/mixins"))
-      .set("@starMaskWallet", resolve("src/wallet"))
-      .set("@contactLogic", resolve("src/contactLogic"));
+      .set("@starMaskWallet", resolve("src/wallet"));
 
     // set svg-sprite-loader
     config.module.rule("svg").exclude.add(resolve("src/icons")).end();

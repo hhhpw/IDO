@@ -24,9 +24,7 @@
   </div>
 </template>
 <script>
-// import HomeList from "./homeList.vue";
 import HomeList from "@components/Home/homeList.vue";
-// import StarButton from "@StarUI/StarButton.vue";
 import { mapState, mapActions } from "vuex";
 import StarSpace from "@StarUI/StarSpace.vue";
 import StarLoading from "@StarUI/StarLoading.vue";
@@ -83,8 +81,8 @@ export default {
   height: 600px;
   position: relative;
   padding: 20px;
+  box-sizing: border-box;
   .home-banner-wrap {
-    border: 1px solid red;
     height: 100%;
     margin: 0 auto;
     align-items: center;

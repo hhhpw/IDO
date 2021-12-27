@@ -45,6 +45,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
+@import "~@/styles/mixin.scss";
 
 @mixin btnstyle($color, $bgcolor: false, $border: false) {
   color: $color;
@@ -71,10 +72,7 @@ export default {
   font-size: 14px;
   text-align: center;
   box-sizing: content-box;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -khtml-user-select: none;
-  user-select: none;
+  @include userNoSelect();
   :hover {
     opacity: 0.8 !important;
   }

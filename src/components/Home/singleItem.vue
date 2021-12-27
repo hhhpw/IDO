@@ -9,7 +9,7 @@
     <div class="home-list-single-item-mask">
       <div class="home-list-single-item-left">
         <p class="home-list-single-item-left-title">
-          {{ $t(`${data.prdName}`) }}
+          {{ data.prdName }}
         </p>
         <star-space :size="20"></star-space>
         <div class="home-list-single-item-left-label">
@@ -69,9 +69,7 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import StarSpace from "@StarUI/StarSpace.vue";
-import StarButton from "@StarUI/StarButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
 import StarItemCell from "@StarUI/StarItemCell.vue";
 import mixinHome from "@/mixins/home.js";
@@ -79,7 +77,7 @@ import utilsNumber from "@utils/number.js";
 import utilsTool from "@utils/tool";
 import utilsDate from "@utils/date";
 export default {
-  components: { StarButton, StarSpace, SvgIcon, StarItemCell },
+  components: { StarSpace, SvgIcon, StarItemCell },
   mixins: [mixinHome],
   data() {
     return {
@@ -197,7 +195,6 @@ export default {
   }
   .home-list-single-item-left {
     margin-left: 30px;
-    border: 1px solid red;
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -209,8 +206,6 @@ export default {
       font-size: 20px;
     }
     .home-list-single-item-left-label {
-      // margin-top: 20px;
-      color: red;
       display: flex;
       .home-list-single-item-left-label-item {
         font-size: 12px;

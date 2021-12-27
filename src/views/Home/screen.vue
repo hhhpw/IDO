@@ -4,7 +4,7 @@
       src="../../assets/home/banner-logo.png"
       class="home-banner-content-logo"
     />
-    <p>{{ $t("通往StarCoin游戏元宇宙的第一站") }}</p>
+    <p>{{ $t("通往Starcoin游戏元宇宙的第一站") }}</p>
     <div class="home-banner-btns">
       <star-button
         blborder
@@ -23,7 +23,8 @@
           )
         "
       >
-        {{ $t("购买STC") }}
+        <!-- {{ $t("购买STC") }} -->
+        {{ $t("了解更多") }}
       </star-button>
     </div>
 
@@ -70,6 +71,7 @@ export default {
   .home-banner-content-logo {
     width: 180px;
     margin-top: 100px;
+    margin-bottom: 20px;
   }
 
   color: #fff;

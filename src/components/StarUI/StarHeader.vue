@@ -19,14 +19,13 @@
         </MenuItem>
       </Menu>
     </div>
-
     <div class="star-header-right">
       <star-connect-wallet class="star-header-right-btn"></star-connect-wallet>
       <star-drop-down
         trigger="click"
         :itemList="langs"
-        @handleClick="hanldeChangeLang"
-        :activeValue="session.getItem('lang')"
+        @handleClick="handleLangChange"
+        :activeValue="language"
       >
         <template #tag>
           <star-button light>
@@ -38,6 +37,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import { Menu, MenuItem } from "element-ui";
 import StarButton from "@StarUI/StarButton.vue";
 import StarDropDown from "@StarUI/StarDropDown.vue";
@@ -79,12 +79,10 @@ export default {
         this.$store.commit("StoreApp/SET_ACTIVE_ITEM", path);
       }
     },
-    hanldeChangeLang(value) {
-      let currLang = session.getItem("lang");
-      if (currLang === value) return;
-      if (currLang !== value) {
-        i18n.locale = value;
-      }
+    handleLangChange(value) {
+      if (value === this.language) return;
+      this.$store.commit("StoreApp/SET_APP_LANGUAGE", value);
+      i18n.locale = value;
     },
   },
   watch: {
@@ -140,10 +138,11 @@ export default {
     background: linear-gradient(
       180deg,
       rgba(84, 255, 255, 0) 0%,
-      rgba(42, 254, 254, 0.21) 100%
+      rgba(254, 201, 68, 0.54) 100%
     );
   }
   .star-header-left {
+    font-family: Denmark;
     display: flex;
     align-items: center;
     img {

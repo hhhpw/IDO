@@ -8,8 +8,8 @@
         <star-item-cell cellType="vertical">
           <!-- 项目logo -->
           <img :src="data.icon" />
-          <span>{{ $t(`${data.prdName}`) }}</span>
-          <span>({{ $t(`${data.assignCurrency}`) }})</span>
+          <span>{{ prdName }}</span>
+          <span>({{ assignCurrency }})</span>
         </star-item-cell>
       </div>
       <star-space :size="20"></star-space>

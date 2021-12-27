@@ -1,4 +1,5 @@
 function proxyRule(key, targetUrl) {
+  console.log("process.env.VUE_APP_BASE_URL", process.env.VUE_APP_BASE_URL);
   return {
     target: targetUrl,
     changeOrigin: true,

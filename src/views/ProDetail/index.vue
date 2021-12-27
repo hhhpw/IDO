@@ -6,10 +6,7 @@
         <star-space :size="30"></star-space>
         <div class="detail-wrap-content">
           <div class="detail-wrap-content-left">
-            <detail-left-card
-              @eventLoop="eventLoop"
-              :detailCardInfo="detailCardInfo"
-            >
+            <detail-left-card :detailCardInfo="detailCardInfo">
             </detail-left-card>
           </div>
           <div class="detail-wrap-content-right">
@@ -20,6 +17,7 @@
       </div>
       <star-space :size="200"></star-space>
     </div>
+    <star-wallet-dialog :dialogParams="dialogParams"></star-wallet-dialog>
   </star-loading>
 </template>
 <script>
@@ -27,16 +25,18 @@ import StarSpace from "@StarUI/StarSpace.vue";
 import DetailRightCard from "@components/ProDetail/detailRightCard.vue";
 import DetailLeftCard from "@components/ProDetail/detailLeftCard.vue";
 import { mapActions, mapState } from "vuex";
-import { Wallet } from "@contactLogic";
 import { isNil, isUndefined } from "lodash";
 import StarLoading from "@StarUI/StarLoading.vue";
 import utilsStyle from "@utils/style";
+import StarWalletDialog from "@StarUI/StarWalletDialog.vue";
+import starmask from "@starMaskWallet/starmask";
 export default {
   components: {
     StarSpace,
     DetailRightCard,
     DetailLeftCard,
     StarLoading,
+    StarWalletDialog,
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
       //   console.error("wallet not conneceted");
       //   return;
       // }
-      this.getBanlance();
+      this.getBalance();
       this.loadInfo({
         stakeToken: this.detailCardInfo.currencyInfo.stakeAddress,
         payToken: this.detailCardInfo.currencyInfo.payAddress,
@@ -61,14 +61,14 @@ export default {
     }
   },
   methods: {
-    async getBanlance() {
+    async getBalance() {
       const params = {
         provider: this.stcProvider,
         account: this.stcAccounts[0],
         token: this.detailCardInfo.currencyInfo.stakeAddress,
       };
       // 获取钱包下特定币种S额度
-      const balance = await Wallet.getAccountBalance(params);
+      const balance = await starmask.getAccountBalance(params);
       console.log("balance", balance);
       if (!isNil(balance) || !isUndefined(balance)) {
         this.$store.commit("StoreWallet/SET_WALLET_BALANCE", {
@@ -77,15 +77,15 @@ export default {
       }
     },
     // 支付后轮询查询状态
-    eventLoop() {
-      // this.timer = setInterval(() => {
-      //   this.loadInfo({
-      //     stakeToken: this.currencyInfo.stakeAddress,
-      //     payToken: this.currencyInfo.payAddress,
-      //     assignToken: this.currencyInfo.assignAddress,
-      //   });
-      // }, 7000);
-    },
+    // eventLoop() {
+    // this.timer = setInterval(() => {
+    //   this.loadInfo({
+    //     stakeToken: this.currencyInfo.stakeAddress,
+    //     payToken: this.currencyInfo.payAddress,
+    //     assignToken: this.currencyInfo.assignAddress,
+    //   });
+    // }, 7000);
+    // },
 
     ...mapActions("StoreContracts", ["getStakeAmount", "loadInfo"]),
     ...mapActions("StoreProDetail", ["getProInfoById"]),
@@ -93,6 +93,7 @@ export default {
   computed: {
     ...mapState("StoreProDetail", {
       detailCardInfo: (state) => state.detailCardInfo,
+      dialogParams: (state) => state.dialogParams,
     }),
     ...mapState("StoreWallet", ["stcAccounts", "stcProvider", "walletStatus"]),
   },

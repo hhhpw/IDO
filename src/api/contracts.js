@@ -24,7 +24,6 @@ function getContractsProjectInfo({ stakeToken, payToken, assignToken }) {
       `${process.env.VUE_APP_IGO_CONTRACTS_ADDRESS}::Offering${COUNT}::Offering<${stakeToken},${payToken},${assignToken}>`,
     ],
   };
-  console.log("params", params);
   return request({
     headers: {
       "content-type": "application/json",

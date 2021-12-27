@@ -1,1 +1,2 @@
 export const SET_ACTIVE_ITEM = "SET_ACTIVE_ITEM";
+export const SET_APP_LANGUAGE = "SET_APP_LANGUAGE";

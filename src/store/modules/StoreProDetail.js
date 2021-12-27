@@ -1,6 +1,9 @@
 import * as types from "../constants/prodetail";
 import dayjs from "dayjs";
-import homeApi from "../../api/home.js";
+import homeApi from "@api/home.js";
+import IGOContract from "@starMaskWallet/igo";
+import utilsTool from "@utils/tool";
+import CONSTANTS_DIALOG from "@constants/dialog";
 const mapKey = new Map([
   ["processing", "open"],
   ["init", "will"],
@@ -10,29 +13,21 @@ const StoreProDetail = {
   namespaced: true,
   state: {
     detailCardInfo: null,
+    dialogParams: CONSTANTS_DIALOG.WALLET_DIALOG_PARAMS,
   },
   mutations: {
+    [types.SET_PRODETAIL_DIALOG_PARAMS](state, payload) {
+      state.dialogParams = Object.assign({}, state.dialogParams, payload);
+      console.log("  state.dialogParams", state.dialogParams);
+    },
     [types.SET_PRODETAIL_INFO](state, payload) {
       state.detailCardInfo = payload;
     },
   },
-  getters: {
-    detailCardInfo: (state) => (id) => {
-      return state.cardData
-        .filter((d) => d.cardType === state.detailCardType)[0]
-        .cardInfoList.filter((dd) => dd.id === id)[0];
-    },
-  },
   actions: {
-    /* eslint-disable*/
-    async triggerStakeRecord({}, params) {
-      const res = await homeApi.triggerStakeRecord(params);
-      console.log("=====triggerStakeRecord====", res);
-    },
     async getProInfoById({ commit }, pid) {
       // let pId = state.detailCardId;
       let res = await homeApi.getProInfoById(pid);
-      console.log(res);
       if (res.code === 200 && res.data) {
         const {
           raiseTotal,
@@ -111,6 +106,67 @@ const StoreProDetail = {
         });
         commit(types.SET_PRODETAIL_INFO, result);
         return "ok";
+      }
+    },
+
+    async contractFunc({ commit, rootState }, payload) {
+      commit(types.SET_PRODETAIL_DIALOG_PARAMS, {
+        dialogVisible: true,
+      });
+      console.log("=====payload====", payload);
+      const provider = rootState.StoreWallet.stcProvider;
+      const params = {
+        provider,
+        tokenCode: payload.tokenCode,
+        amount: payload.amount,
+      };
+      try {
+        let txnHash;
+        if (payload.type === "stake") {
+          txnHash = await IGOContract.stakeFunc(params);
+        } else if (payload.type === "unstake") {
+          txnHash = await IGOContract.unStakeFunc(params);
+        } else if (payload.type === "pay") {
+          txnHash = await IGOContract.payFunc(params);
+        }
+        console.log("====txnHash=====", txnHash);
+        if (txnHash === "error") {
+          throw new Error(`${payload.type}-error`);
+        } else {
+          const reloadEvent = () => {
+            window.location.reload();
+          };
+          commit(types.SET_PRODETAIL_DIALOG_PARAMS, {
+            phase1: "succeed",
+          });
+          console.log("transactionHash", txnHash);
+          utilsTool
+            .getChainTransactionInfo({ txnHash, resolveCallBack: null })
+            .then((res) => {
+              console.log("=====res=======", res);
+              if (res.status === "Executed") {
+                commit(types.SET_PRODETAIL_DIALOG_PARAMS, {
+                  phase2: "succeed",
+                });
+                setTimeout(() => {
+                  commit(types.SET_PRODETAIL_DIALOG_PARAMS, {
+                    status: "succeed",
+                    handleSucceed: reloadEvent,
+                  });
+                }, 1500);
+              } else {
+                throw new Error(`${payload.type}-error`);
+              }
+            });
+        }
+      } catch (e) {
+        commit(types.SET_PRODETAIL_DIALOG_PARAMS, {
+          status: "failed",
+          handleFailed: () => {
+            window.location.reload();
+          },
+          dialogVisible: true,
+        });
       }
     },
   },

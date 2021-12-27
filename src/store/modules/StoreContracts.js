@@ -3,7 +3,7 @@ import * as types from "../constants/contracts";
 import { fromPairs } from "lodash";
 import utilsNumber from "@utils/number.js";
 
-const StoreWallet = {
+const StoreContracts = {
   namespaced: true,
   moduleName: "StoreContracts",
   state: {
@@ -36,7 +36,6 @@ const StoreWallet = {
   },
   actions: {
     async loadInfo({ rootState, commit, state }, payload) {
-      console.log("====loadInfo======", payload);
       Promise.allSettled([
         // 获取质押额度
         contractsApi.getStakeAmount(
@@ -91,4 +90,4 @@ const StoreWallet = {
   },
 };
 
-export default StoreWallet;
+export default StoreContracts;

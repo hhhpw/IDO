@@ -74,24 +74,20 @@ export default {
     new WOW({
       live: false,
     }).init();
-    // this.timers = cloneDeep(this.data.cardInfoList);
-    // if (this.data.cardType === "will") {
-    //   this.timers.map((d) => {
-    //     this.$set(d, "countdown", d.startTime);
-    //   });
-    //   this.playTimer();
-    // }
   },
   methods: {
     renderTitle(type) {
       if (type === "open") {
-        return this.$t("进行中");
+        return "OPEN NOW";
+        // return this.$t("进行中");
       }
       if (type === "will") {
-        return this.$t("即将推出");
+        return "COMING SOON";
+        // return this.$t("即将推出");
       }
       if (type === "closed") {
-        return this.$t("已经结束");
+        return "CLOSED";
+        // return this.$t("已经结束");
       }
     },
     emit(cardId) {
@@ -171,9 +167,7 @@ export default {
   .home-list-content {
     cursor: pointer;
     overflow: hidden;
-    // margin-top: 20px;
     padding: 0px 48px;
-    border: 1px solid green;
     .home-list-content-mul-item-wrap:nth-child(3n + 1) {
       margin-left: 0px;
     }

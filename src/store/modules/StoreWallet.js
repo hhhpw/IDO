@@ -6,7 +6,6 @@ const StoreWallet = {
   namespaced: true,
   moduleName: "StoreWallet",
   state: {
-    token: "STC",
     stcProvider: "",
     stcAccounts: [],
     onboarding: "",
@@ -30,7 +29,6 @@ const StoreWallet = {
     },
     [types.SET_WALLET_BALANCE](state, payload) {
       state.balances = Object.assign({}, state.balances, payload);
-      console.log("state.balances", state.balances);
     },
     [types.SET_WALLET_CONNECT_STATUS](state, payload) {
       if (payload === "connected") {
@@ -39,20 +37,7 @@ const StoreWallet = {
       state.walletStatus = payload;
     },
   },
-  actions: {
-    setStcChianID({ commit }, chianID) {
-      commit(types.SET_STC_CHAINID, chianID);
-    },
-    setStcAccounts({ commit }, accounts) {
-      commit(types.SET_STC_ACCOUNTS, accounts);
-    },
-    setOnboarding({ commit }, onboarding) {
-      commit(types.SET_STARMASK_ONBOARDING, onboarding);
-    },
-    setStcProvider({ commit }, provider) {
-      commit(types.SET_STARMASK_PROVIDER, provider);
-    },
-  },
+  actions: {},
 };
 
 export default StoreWallet;

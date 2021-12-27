@@ -1,8 +1,6 @@
 import * as types from "../constants/home.js";
-// import dayjs from "dayjs";
 import homeApi from "../../api/home.js";
 import router from "../../router/index";
-// import utilsNumber from "@utils/number.js";
 const mapKey = new Map([
   ["processing", "open"],
   ["init", "will"],
@@ -32,14 +30,12 @@ const StoreHome = {
       state.cardData = payload;
     },
   },
-  getters: {
-    detailCardInfo: (state) => (id) => {
-      return state.cardData
-        .filter((d) => d.cardType === state.detailCardType)[0]
-        .cardInfoList.filter((dd) => dd.id === id)[0];
-    },
-  },
   actions: {
+    /* eslint-disable*/
+    async triggerStakeRecord({}, params) {
+      const res = await homeApi.triggerStakeRecord(params);
+      console.log("=====triggerStakeRecord====", res);
+    },
     setDetailProjectInfo({ commit }, payload) {
       commit(types.STORE_HOME_CHANGE_STATUS, payload);
       router.push({
@@ -49,17 +45,6 @@ const StoreHome = {
         },
       });
     },
-
-    /* eslint-disable*/
-    async triggerStakeRecord({}, params) {
-      const res = await homeApi.triggerStakeRecord(params);
-      console.log("=====triggerStakeRecord====", res);
-    },
-    async getProInfoById() {
-      // let pId = state.detailCardId;
-      let res = await homeApi.getCardInfo(1);
-      console.log(res);
-    },
     async getDataList({ commit }) {
       let res = await homeApi.getDataList();
       let results = [];
@@ -67,17 +52,17 @@ const StoreHome = {
       for (let i = 0; i < endStates.length; i++) {
         const cardInfoList = res.data[endStates[i]].map((d) => {
           const {
-            raiseTotal,
-            rate,
-            pledgeEndTime, // 质押结束时间
-            lockStartTime, // 锁仓开始时间
-            lockEndTime, // 锁仓结束时间
-            pledgeStartTime, // 质押开始时间
-            payStartTime, // 支付开始时间
-            payEndTime, // 支付结束时间
-            assignmentStartTime, // 代币分配开始时间
-            assignmentEndTime, // 代币分配结束时间
-            currencyTotal, //代币发行总量
+            // raiseTotal,
+            // rate,
+            // pledgeEndTime, // 质押结束时间
+            // lockStartTime, // 锁仓开始时间
+            // lockEndTime, // 锁仓结束时间
+            // pledgeStartTime, // 质押开始时间
+            // payStartTime, // 支付开始时间
+            // payEndTime, // 支付结束时间
+            // assignmentStartTime, // 代币分配开始时间
+            // assignmentEndTime, // 代币分配结束时间
+            // currencyTotal, //代币发行总量
             payCurrency,
             payPrecision,
             payAddress,

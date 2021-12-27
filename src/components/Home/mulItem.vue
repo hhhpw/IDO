@@ -179,7 +179,6 @@ export default {
       }
     }
     .home-list-single-item-label {
-      color: red;
       display: flex;
       .home-list-single-item-label-item {
         padding: 3px 10px;

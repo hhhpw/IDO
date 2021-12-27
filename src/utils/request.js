@@ -1,9 +1,10 @@
 import axios from "axios";
+import utilsTool from "@utils/tool.js";
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.NODE_ENV === "development" ? "/api" : "", // url = base url + request url
-  timeout: 10000, // request timeout
+  timeout: 30000, // request timeout
 });
 
 // request interceptor
@@ -17,6 +18,10 @@ service.interceptors.request.use(
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
     // config.headers['X-Token'] = getToken()
+    const reg = new RegExp("(^/v1)", "g");
+    if (reg.test(config.url)) {
+      config.headers["X-Token"] = utilsTool.setJWT();
+    }
     return config;
   },
   (error) => {

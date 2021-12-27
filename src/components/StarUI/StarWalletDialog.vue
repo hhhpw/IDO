@@ -1,9 +1,13 @@
 <template>
-  <Dialog :visible="false" class="star-wallet-dialog">
+  <Dialog :visible="dialogParams.dialogVisible" class="star-wallet-dialog">
     <div
       class="star-wallet-dialog-body"
       :style="{ width: setDiaglogStyle.dialogWidth }"
     >
+      <img
+        src="../../assets/wallet/loading.gif"
+        class="star-wallet-dialog-body-loading"
+      />
       <div v-if="dialogParams.status === 'ongoing'">
         <div class="star-wallet-dialog-body-feedback">
           <div class="star-wallet-dialog-body-feedback-phase1">
@@ -42,9 +46,9 @@
           @click="
             () => {
               dialogParams.status === 'succeed'
-                ? dialogParams.succeedEvent()
+                ? dialogParams.handleSucceed()
                 : dialogParams.status === 'failed'
-                ? dialogParams.failedEvent()
+                ? dialogParams.handleFailed()
                 : '';
             }
           "
@@ -77,15 +81,15 @@ export default {
     dialogParams: {
       default() {
         return {
-          phase1: "loading",
+          phase1: "loading", // succeed
           dialogVisible: false,
-          phase2: "succeed",
-          status: "succeed", // ongoing  succeed failed
-          failedEvent: () => {
-            alert("failedEvent");
+          phase2: "loading",
+          status: "ongoing", // ongoing  succeed failed
+          handleSucceed: () => {
+            console.log("failedEvent");
           },
-          succeedEvent: () => {
-            alert("succeedEvent");
+          handleFailed: () => {
+            console.log("succeedEvent");
           },
         };
       },
@@ -123,11 +127,9 @@ export default {
       language: (state) => state.language,
     }),
     setDiaglogStyle() {
-      console.log("language", this.language);
       if (this.language === "en") {
         return {
           dialogWidth: "500px",
-          feedBackWith: "440px",
           loadingMarLeft: "20px",
         };
       }
@@ -145,9 +147,7 @@ export default {
   background-color: transparent;
   .el-dialog {
     background-color: transparent;
-    height: 400px;
     margin: 0 auto;
-    // width: 440px;
   }
   .el-dialog__header {
     display: none !important;
@@ -158,7 +158,7 @@ export default {
     height: 400px;
     background-position: center center;
     padding: 0px 0px;
-    width: 600px;
+    width: 520px;
     margin: 0 auto;
   }
 }
@@ -178,19 +178,20 @@ export default {
 .star-wallet-dialog {
   .star-wallet-dialog-body {
     height: 100%;
-    // border: 1px solid red;
     margin: 0 auto;
+    text-align: center;
+    .star-wallet-dialog-body-loading {
+      margin-top: 80px;
+    }
   }
   .star-wallet-dialog-body-feedback {
-    width: 323px;
+    // width: 323px;
+    width: 450px;
     height: 109px;
     border-radius: 16px;
     margin: 0 auto;
     margin-top: 20px;
     overflow: hidden;
-    // display: flex;
-    // justify-content: center;
-    // flex-direction: column;
     div {
       display: flex;
       align-items: center;
@@ -199,8 +200,8 @@ export default {
         color: #8b8b8b;
       }
       img {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         margin-left: 60px;
         display: inline-block;
       }
@@ -219,7 +220,7 @@ export default {
       margin-top: 30px;
     }
     .star-wallet-dialog-body-feedback-phase2 {
-      margin-top: 10px;
+      margin-top: 15px;
     }
   }
   .star-wallet-dialog-body-cb {
@@ -230,7 +231,7 @@ export default {
     justify-content: center;
     height: 100%;
     img {
-      width: 160px;
+      width: 100px;
     }
     p {
       font-size: 16px;

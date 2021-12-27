@@ -6,18 +6,20 @@
       (detailListAmount = changeDisplayList(detailCardInfo.decentralizedList)))
     "
   >
-    <div v-if="detailCardInfo.attributes" class="detail-card-labels-top">
+    <!-- <div v-if="detailCardInfo.attributes" class="detail-card-labels-top">
       <span v-for="(l, ix) in detailCardInfo.attributes.slice(0, 2)" :key="ix">
         {{ $t(`${l.name}`) }}
       </span>
-    </div>
+    </div> -->
+    <img :src="detailCardInfo.prdImg" class="detail-card-img" />
+    <star-space :size="20"></star-space>
     <div class="detail-card-header">
       <img class="detail-card-header-logo" :src="detailCardInfo.icon" />
       <!-- <star-space :size="30" :horizontal="true"></star-space> -->
       <div class="detail-card-header-info">
         <div class="detail-card-header-info-currency">
           <span>
-            {{ $t(`${detailCardInfo.prdName}`) }}
+            {{ detailCardInfo.prdName }}
           </span>
           <span>
             ({{ $t(`${detailCardInfo.currencyInfo.assignCurrency}`) }})
@@ -44,27 +46,21 @@
     </div>
     <star-space :size="20"></star-space>
     <div class="detail-card-labels">
-      <star-button v-for="(d, i) in detailCardInfo.labels" :key="i" light>{{
-        $t(`${d.label}`)
-      }}</star-button>
+      <div
+        v-for="(d, i) in detailCardInfo.labels"
+        :key="i"
+        class="detail-card-labels-item"
+      >
+        {{ d.label }}
+      </div>
     </div>
     <star-space :size="20"></star-space>
-    <div
-      class="detail-card-icons"
-      @mouseout.stop.prevent="changeHoverList(null, null, true)"
-    >
+    <div class="detail-card-icons">
       <svg-icon
         v-for="(iconkey, index) in detailCardInfo.links"
         :key="index"
-        :name="
-          isHoverList && isHoverList[index]
-            ? svgName(iconkey.name, detailCardType, true)
-            : svgName(iconkey.name, detailCardType)
-        "
+        :name="iconkey.name"
         class="detail-card-icons-icon"
-        @mouseenter.native.prevent="changeHoverList(index, true)"
-        @mouseleave.native.prevent="changeHoverList(index, false)"
-        @click.stop.prevent="handleToPath(iconkey)"
       ></svg-icon>
     </div>
     <star-space :size="20"></star-space>
@@ -266,22 +262,9 @@ export default {
 .detail-card {
   padding: 40px 20px;
   position: relative;
-  .detail-card-labels-top {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-size: 100% 100%;
-    height: 26px;
-    background-repeat: no-repeat;
-    span {
-      position: relative;
-      top: -2px;
-      height: 100%;
-      display: inline-block;
-      width: 94px;
-      text-align: center;
-      font-size: 12px;
-    }
+  .detail-card-img {
+    height: 273px;
+    width: 100%;
   }
   .detail-card-header {
     display: flex;
@@ -315,17 +298,28 @@ export default {
       }
     }
   }
+
   .detail-card-labels {
-    .star-button {
+    display: flex;
+    .detail-card-labels-item {
+      padding: 3px 10px;
+      color: #d6872d;
+      font-size: 12px;
+      background: rgba(214, 135, 45, 0.11);
       border-radius: 2px;
-      padding: 5px 10px;
-      cursor: default;
+      border: 1px solid rgba(214, 135, 45, 0.58);
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
     }
   }
   .detail-card-icons {
     .detail-card-icons-icon {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
+      &:hover {
+        opacity: 0.7;
+      }
     }
     .detail-card-icons-icon + .detail-card-icons-icon {
       margin-left: 10px;
