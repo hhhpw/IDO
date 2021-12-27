@@ -35,7 +35,6 @@
   </div>
 </template>
 <script>
-import homeListItem from "@components/Home/homeListItem.vue";
 import mixinHome from "@mixins/home.js";
 // import { cloneDeep, isUndefined } from "lodash";
 import { WOW } from "wowjs";
@@ -57,7 +56,6 @@ export default {
   },
   mixins: [mixinHome],
   components: {
-    homeListItem,
     mulItem,
     singleItem,
   },
@@ -78,16 +76,15 @@ export default {
   methods: {
     renderTitle(type) {
       if (type === "open") {
-        return "OPEN NOW";
-        // return this.$t("进行中");
+        // return "OPEN NOW";
+        return this.$t("进行中");
       }
       if (type === "will") {
-        return "COMING SOON";
-        // return this.$t("即将推出");
+        return this.$t("即将推出");
       }
       if (type === "closed") {
-        return "CLOSED";
-        // return this.$t("已经结束");
+        // return "CLOSED";
+        return this.$t("已经结束");
       }
     },
     emit(cardId) {

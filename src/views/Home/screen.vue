@@ -9,7 +9,7 @@
       <star-button
         blborder
         class="home-banner-btns-btn"
-        @click="utilsTool.openNewWindow('https://t.me/atlaspad')"
+        @click="utilsTool.openNewWindow('https://twitter.com/Kiko_verse')"
       >
         {{ $t("加入我们") }}
       </star-button>
@@ -76,7 +76,6 @@ export default {
 
   color: #fff;
   .home-banner-title {
-    @include fontRigelstar();
     font-weight: 400;
     font-size: 70px;
   }

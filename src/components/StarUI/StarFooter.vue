@@ -16,7 +16,7 @@
             v-for="(dd, ii) in d.list"
             :key="ii"
             class="star-footer-right-item"
-            @click="pushPage(dd.url)"
+            @click="pushPage(dd)"
           >
             {{ $t(dd.name) }}
           </p>
@@ -34,6 +34,7 @@
 </template>
 <script>
 import utilsTool from "@utils/tool";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -41,30 +42,52 @@ export default {
         {
           name: "Social",
           list: [
-            { name: "Twitter", url: "https://twitter.com/AtlasPad" },
-            { name: "Medium", url: "https://medium.com/@atlaspad" },
-            { name: "Telegram", url: "https://t.me/atlaspad" },
+            { name: "Twitter", url: "https://twitter.com/Kiko_verse" },
+            { name: "Medium", url: "https://medium.com/@kikoresearch" },
             {
-              name: "Github",
-              url: "https://github.com/xfhxfh1212/initial-dex-offering",
+              name: "Telegram",
+              url: "https://t.me/kikoswap",
+              enURL: "https://t.me/kikoverseEnglish",
+            },
+            {
+              name: "Discord",
+              url: "https://discord.gg/rmyQh2ncY7",
             },
           ],
         },
         {
           name: "KGStarter",
-          list: [{ name: "Whitepaper", url: "https://twitter.com/AtlasPad" }],
+          list: [
+            {
+              name: "Whitepaper",
+              url: "https://kiko-verse.gitbook.io/kiko-yuan-yu-zhou/chan-pin/kgstarter",
+              enURL:
+                "https://kiko-verse.gitbook.io/kiko-verse/products/kgstarter",
+            },
+          ],
         },
         {
           name: "Get In Touch",
-          list: [{ name: "Twitter", url: "https://twitter.com/AtlasPad" }],
+          list: [{ name: "support@kikoverse.com", url: null }],
         },
       ],
     };
   },
   methods: {
-    pushPage(url) {
-      utilsTool.openNewWindow(url);
+    pushPage(item) {
+      if (this.language === "zh" && item.url) {
+        utilsTool.openNewWindow(item.url);
+        return;
+      }
+      if (this.language === "en" && item.enURL) {
+        utilsTool.openNewWindow(item.enURL);
+      }
     },
+  },
+  computed: {
+    ...mapState("StoreApp", {
+      language: (state) => state.language,
+    }),
   },
 };
 </script>

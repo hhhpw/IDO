@@ -44,7 +44,7 @@ export default {
       handler(val) {
         if (val === constants_starmask.MAIN_CHIA_ID) {
           this.netWorkDialogVisible = false;
-        } else {
+        } else if (val && val !== constants_starmask.MAIN_CHIA_ID) {
           this.netWorkDialogVisible = true;
         }
       },

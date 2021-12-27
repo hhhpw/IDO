@@ -79,7 +79,6 @@ export default {
   p {
     font-size: 35px;
     color: $text_light_color;
-    @include fontRigelstar();
   }
 }
 </style>

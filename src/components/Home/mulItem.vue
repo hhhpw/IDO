@@ -29,6 +29,7 @@
           :key="i"
           class="home-list-mul-item-link-item"
           :name="d.name"
+          @click.prevent.stop="openURL(d.url)"
         >
         </svg-icon>
       </div>
@@ -71,17 +72,12 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import StarSpace from "@StarUI/StarSpace.vue";
-import StarButton from "@StarUI/StarButton.vue";
 import SvgIcon from "@components/SvgIcon/index.vue";
 import StarItemCell from "@StarUI/StarItemCell.vue";
 import mixinHome from "@/mixins/home.js";
-import utilsNumber from "@utils/number.js";
-import utilsTool from "@utils/tool";
-import utilsDate from "@utils/date";
 export default {
-  components: { StarButton, StarSpace, SvgIcon, StarItemCell },
+  components: { StarSpace, SvgIcon, StarItemCell },
   mixins: [mixinHome],
   data() {
     return {
@@ -109,52 +105,6 @@ export default {
       immediate: true,
     },
   },
-  mounted() {},
-  methods: {
-    openURL(url) {
-      utilsTool.openNewWindow(url);
-    },
-    setCountDown(timestamp) {
-      const times = this.formateDate(utilsDate.countdown(timestamp));
-      if (times) {
-        this.countdown = `${times[0] ? times[0] + "D" : times[0]} ${times[1]} ${
-          times[2]
-        } ${times[3]}`;
-      }
-      if (!this.countdown) {
-        clearTimeout(this.timer);
-        return;
-      }
-      this.timer = setTimeout(() => this.setCountDown(timestamp), 1000);
-    },
-    cellData(key, currency, currencyB) {
-      let name, text;
-      if (key === "raiseTotal") {
-        name = this.$t("总募资");
-        text = `${
-          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
-        } ${currency}`;
-      }
-      if (key === "rate") {
-        name = this.$t("兑换比例");
-        text = `1 ${currency} = ${
-          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
-        } ${currencyB}`;
-      }
-      if (key === "capTotal") {
-        name = this.$t("总销售量");
-        text = `${
-          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
-        } ${currency}`;
-      }
-      return {
-        title: name,
-        text,
-      };
-    },
-  },
-  computed: {},
-  beforeDestroy() {},
 };
 </script>
 <style lang="scss" scoped>

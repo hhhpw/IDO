@@ -112,6 +112,7 @@ export default {
   box-sizing: content-box;
   display: flex;
   justify-content: space-between;
+  background-position: center center;
   .star-menu {
     background-color: transparent;
     border-bottom: none;

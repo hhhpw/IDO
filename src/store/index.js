@@ -2,9 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import StoreApp from "./modules/StoreApp.js";
-import StoreHome from "./modules/StoreHome.js";
 import StoreWallet from "./modules/StoreWallet";
-import StoreContracts from "./modules/StoreContracts";
+import StoreHome from "./modules/StoreHome.js";
 import StoreProDetail from "./modules/StoreProDetail";
 
 Vue.use(Vuex);
@@ -17,9 +16,8 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     StoreApp,
-    StoreHome,
     StoreWallet,
-    StoreContracts,
+    StoreHome,
     StoreProDetail,
   },
 });

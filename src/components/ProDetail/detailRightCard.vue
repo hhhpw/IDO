@@ -248,7 +248,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("StoreContracts", {
+    ...mapState("StoreProDetail", {
       stakeAmount: (state) => state.stakeAmount,
       myStakeAmount: (state) => state.myStakeAmount,
       stakeTotalAmount: (state) => state.stakeTotalAmount,

@@ -87,7 +87,7 @@ export default {
     // }, 7000);
     // },
 
-    ...mapActions("StoreContracts", ["getStakeAmount", "loadInfo"]),
+    ...mapActions("StoreProDetail", ["getStakeAmount", "loadInfo"]),
     ...mapActions("StoreProDetail", ["getProInfoById"]),
   },
   computed: {

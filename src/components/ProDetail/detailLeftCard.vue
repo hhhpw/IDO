@@ -6,9 +6,9 @@
       (cardCountDown = detailCardInfo.startTime))
     "
   >
-    <div style="color: red">
+    <!-- <div style="color: red">
       {{ proState }} {{ detailCardType }} {{ stakeStatus }}
-    </div>
+    </div> -->
     <div
       class="detail-input-wrap"
       :style="
@@ -260,7 +260,6 @@ export default {
     return {
       inputValue: "",
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
-      // lang: session.getItem("lang"),
       errorText: "",
       countdowntime: null,
       currencyShareAmount: "0", // 为0没有份额，说明没有参与活动
@@ -474,7 +473,7 @@ export default {
       stcProvider: (state) => state.stcProvider,
       stcAccounts: (state) => state.stcAccounts,
     }),
-    ...mapState("StoreContracts", {
+    ...mapState("StoreProDetail", {
       restStakeAmount: (state) => state.restStakeAmount,
       stakeAmount: (state) => state.stakeAmount,
       proState: (state) => state.proState,

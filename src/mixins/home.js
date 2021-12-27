@@ -1,12 +1,15 @@
+import utilsDate from "@utils/date";
+import utilsTool from "@utils/tool";
+import utilsNumber from "@utils/number.js";
 import { isUndefined } from "lodash";
 export default {
   data() {
-    return {
-      timer: null,
-      isHoverList: [],
-    };
+    return {};
   },
   methods: {
+    openURL(url) {
+      utilsTool.openNewWindow(url);
+    },
     formateDate(timeObj) {
       const { day, hour, minute, second } = timeObj;
       if (
@@ -19,50 +22,42 @@ export default {
       }
       return [day, hour, minute, second];
     },
-    changeHoverList(index, flag, t) {
-      if (t) {
-        // 为了鼠标移动过快，hover没更新
-        // throttle应该会更好
-        this.isHoverList = [].concat(
-          this.isHoverList.map(() => {
-            return false;
-          })
-        );
+    setCountDown(timestamp) {
+      const times = this.formateDate(utilsDate.countdown(timestamp));
+      if (times) {
+        this.countdown = `${times[0] ? times[0] + "D" : times[0]} ${times[1]} ${
+          times[2]
+        } ${times[3]}`;
+      }
+      if (!this.countdown) {
+        clearTimeout(this.timer);
         return;
       }
-      if (!flag) {
-        this.$set(this.isHoverList, index, false);
-        return;
+      this.timer = setTimeout(() => this.setCountDown(timestamp), 1000);
+    },
+    cellData(key, currency, currencyB) {
+      let name, text;
+      if (key === "raiseTotal") {
+        name = this.$t("总募资");
+        text = `${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } ${currency}`;
       }
-      this.$set(this.isHoverList, index, true);
-    },
-  },
-  computed: {
-    // 右上角的label
-    mixinSetLabelsBg() {
-      return function (type, len) {
-        if (len && Number(len) > 0)
-          return {
-            "background-image": `url(${require(`../assets/home/${type}-card-label-${len}.png`)})`,
-          };
-      };
-    },
-    // 列表里的label
-    mixinLabelColor() {
-      return function (a, b) {
-        return {
-          color: a,
-          border: `1px solid ${b}`,
-        };
-      };
-    },
-    // svgHover状态
-    svgName() {
-      return function (name, type, flag) {
-        if (flag) {
-          return `${name}-${type}-actived`;
-        }
-        return `${name}-${type}`;
+      if (key === "rate") {
+        name = this.$t("兑换比例");
+        text = `1 ${currency} = ${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } ${currencyB}`;
+      }
+      if (key === "capTotal") {
+        name = this.$t("总销售量");
+        text = `${
+          utilsNumber.formatNumberMeta(this.data[key], { grouped: true }).text
+        } ${currency}`;
+      }
+      return {
+        title: name,
+        text,
       };
     },
   },

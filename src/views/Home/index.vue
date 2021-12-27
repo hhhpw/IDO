@@ -49,7 +49,7 @@ export default {
     this.getDataList();
   },
   methods: {
-    ...mapActions("StoreHome", ["getDataList", "setDetailProjectInfo"]),
+    ...mapActions("StoreHome", ["getDataList"]),
   },
   computed: {
     ...mapState("StoreHome", {

@@ -1,16 +1,28 @@
 import request from "@utils/request";
+
 const COUNT = "";
 
-// let CONTRACTS_URL, CONTRACTS_ADD;
-// if (process.env.NODE_ENV !== "development") {
-//   // 线上
-//   CONTRACTS_URL = SMART_CONTRACTS_API;
-//   CONTRACTS_ADD = CONTRACTS_ADDRESS;
-// } else {
-//   // 开发
-//   CONTRACTS_URL = SMART_CONTRACTS_TEST_API;
-//   CONTRACTS_ADD = CONTRACTS_TEST_ADDRESS;
-// }
+function getDataList() {
+  return request({
+    url: "/v1/ido/dx/product/getAll",
+    method: "GET",
+  });
+}
+
+function getProInfoById(pId) {
+  return request({
+    url: "/v1/ido/dx/product/get?pId=" + pId,
+    method: "GET",
+  });
+}
+
+function triggerStakeRecord(params) {
+  return request({
+    url: "/v1/ido/dx/user/updateUserRecord",
+    method: "POST",
+    data: params,
+  });
+}
 
 // 合约项目详情
 function getContractsProjectInfo({ stakeToken, payToken, assignToken }) {
@@ -57,6 +69,9 @@ function getStakeAmount(accountToken, { stakeToken, payToken, assignToken }) {
 }
 
 export default {
+  getDataList,
+  getProInfoById,
   getContractsProjectInfo,
   getStakeAmount,
+  triggerStakeRecord,
 };

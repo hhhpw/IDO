@@ -1,6 +1,5 @@
 import * as types from "../constants/home.js";
-import homeApi from "../../api/home.js";
-import router from "../../router/index";
+import igoApi from "@api/igo.js";
 const mapKey = new Map([
   ["processing", "open"],
   ["init", "will"],
@@ -33,20 +32,11 @@ const StoreHome = {
   actions: {
     /* eslint-disable*/
     async triggerStakeRecord({}, params) {
-      const res = await homeApi.triggerStakeRecord(params);
+      const res = await igoApi.triggerStakeRecord(params);
       console.log("=====triggerStakeRecord====", res);
     },
-    setDetailProjectInfo({ commit }, payload) {
-      commit(types.STORE_HOME_CHANGE_STATUS, payload);
-      router.push({
-        path: "prodetail",
-        query: {
-          pid: payload.cardId,
-        },
-      });
-    },
     async getDataList({ commit }) {
-      let res = await homeApi.getDataList();
+      let res = await igoApi.getDataList();
       let results = [];
       const endStates = ["processing", "init", "finish"];
       for (let i = 0; i < endStates.length; i++) {
