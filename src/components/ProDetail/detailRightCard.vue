@@ -68,7 +68,7 @@
       <star-tab-bar
         :value="tabCategory"
         @input="hanleTabChange"
-        :items="tabItmes"
+        :items="tabItems"
       >
       </star-tab-bar>
       <div class="detail-card-tabs-list">
@@ -120,16 +120,7 @@ export default {
       isHover: false,
       copyContent: this.$t("复制"),
       tabCategory: "prodetail",
-      tabItmes: [
-        {
-          label: this.$t("项目详情"),
-          value: "prodetail",
-        },
-        {
-          label: this.$t("时间"),
-          value: "time",
-        },
-      ],
+
       lang: session.getItem("lang"),
     };
   },
@@ -253,8 +244,19 @@ export default {
       myStakeAmount: (state) => state.myStakeAmount,
       stakeTotalAmount: (state) => state.stakeTotalAmount,
     }),
+    tabItems() {
+      return [
+        {
+          label: this.$t("项目详情"),
+          value: "prodetail",
+        },
+        {
+          label: this.$t("时间"),
+          value: "time",
+        },
+      ];
+    },
   },
-  beforeDestroy() {},
 };
 </script>
 <style lang="scss" scoped>

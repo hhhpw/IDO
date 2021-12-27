@@ -3,9 +3,6 @@ import utilsTool from "@utils/tool";
 import utilsNumber from "@utils/number.js";
 import { isUndefined } from "lodash";
 export default {
-  data() {
-    return {};
-  },
   methods: {
     openURL(url) {
       utilsTool.openNewWindow(url);
@@ -32,6 +29,9 @@ export default {
       if (!this.countdown) {
         clearTimeout(this.timer);
         return;
+      }
+      if (times.every((d) => String(d) === "00")) {
+        window.location.reload();
       }
       this.timer = setTimeout(() => this.setCountDown(timestamp), 1000);
     },

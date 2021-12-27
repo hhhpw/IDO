@@ -28,7 +28,7 @@
         :activeValue="language"
       >
         <template #tag>
-          <star-button light>
+          <star-button light class="star-header-right-lang">
             {{ $t("语言") }}
           </star-button>
         </template>
@@ -162,6 +162,9 @@ export default {
     .star-header-right-btn {
       margin-right: 20px;
       margin-left: 20px;
+    }
+    .star-header-right-lang {
+      width: 110px;
     }
   }
 }

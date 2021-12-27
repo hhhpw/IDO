@@ -65,7 +65,7 @@
         v-if="cardType === 'will'"
       >
         <star-space :size="20"> </star-space>
-        <span> Registration opens：</span>
+        <span> {{ $t("项目开始") }}：</span>
         <span>{{ countdown }}</span>
       </div>
     </div>

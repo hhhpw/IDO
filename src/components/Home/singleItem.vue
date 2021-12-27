@@ -61,7 +61,7 @@
             v-if="cardType === 'will'"
             class="home-list-single-item-right-will-box"
           >
-            <span> Registration opens：</span>
+            <span> {{ $t("项目开始") }}：</span>
             <span>{{ countdown }}</span>
           </div>
         </div>

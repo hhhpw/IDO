@@ -86,9 +86,11 @@ export default {
     //   });
     // }, 7000);
     // },
-
-    ...mapActions("StoreProDetail", ["getStakeAmount", "loadInfo"]),
-    ...mapActions("StoreProDetail", ["getProInfoById"]),
+    ...mapActions("StoreProDetail", [
+      "getProInfoById",
+      "getStakeAmount",
+      "loadInfo",
+    ]),
   },
   computed: {
     ...mapState("StoreProDetail", {
@@ -97,7 +99,9 @@ export default {
     }),
     ...mapState("StoreWallet", ["stcAccounts", "stcProvider", "walletStatus"]),
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    this.$store.commit("StoreProDetail/SET_PRODETAIL_INFO", null);
+  },
 };
 </script>
 <style lang="scss" scoped>
