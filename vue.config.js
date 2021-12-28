@@ -6,6 +6,8 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
+console.log(" process.env", process.env.NODE_ENV);
+
 const isProduction = process.env.NODE_ENV === "production";
 const plugins = isProduction
   ? [
