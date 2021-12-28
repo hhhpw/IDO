@@ -2,18 +2,19 @@
   <Dialog :visible="dialogParams.dialogVisible" class="star-wallet-dialog">
     <div
       class="star-wallet-dialog-body"
-      :style="{ width: setDiaglogStyle.dialogWidth }"
+      :style="{ width: setDIalogStyle.dialogWidth }"
     >
       <img
         src="../../assets/wallet/loading.gif"
         class="star-wallet-dialog-body-loading"
+        v-if="dialogParams.status === 'ongoing'"
       />
       <div v-if="dialogParams.status === 'ongoing'">
         <div class="star-wallet-dialog-body-feedback">
           <div class="star-wallet-dialog-body-feedback-phase1">
             <img
               :src="renderPhaseStatus(dialogParams.phase1)"
-              :style="{ marginLeft: setDiaglogStyle.loadingMarLeft }"
+              :style="{ marginLeft: setDIalogStyle.loadingMarLeft }"
               alt=""
               :class="rotateAni(dialogParams.phase1)"
             />
@@ -24,7 +25,7 @@
               :src="renderPhaseStatus(dialogParams.phase2)"
               alt=""
               :class="rotateAni(dialogParams.phase2)"
-              :style="{ marginLeft: setDiaglogStyle.loadingMarLeft }"
+              :style="{ marginLeft: setDIalogStyle.loadingMarLeft }"
             />
             <span>{{ $t("请耐心等待网络确认") }}</span>
           </div>
@@ -126,19 +127,20 @@ export default {
     ...mapState("StoreApp", {
       language: (state) => state.language,
     }),
-    setDiaglogStyle() {
+    setDIalogStyle() {
       if (this.language === "en") {
         return {
           dialogWidth: "500px",
           loadingMarLeft: "20px",
+          loadingMarLeft: "60px",
         };
       }
       return {
         dialogWidth: "400px",
+        loadingMarLeft: "100px",
       };
     },
   },
-  beforeDestroy() {},
 };
 </script>
 
@@ -155,7 +157,7 @@ export default {
   .el-dialog__body {
     background-image: url("../../assets/wallet/wallet-bg.png");
     background-size: 100% 100%;
-    height: 400px;
+    height: 300px;
     background-position: center center;
     padding: 0px 0px;
     width: 520px;
@@ -186,23 +188,26 @@ export default {
   }
   .star-wallet-dialog-body-feedback {
     // width: 323px;
-    width: 450px;
-    height: 109px;
+    // width: 450px;
+    // height: 109px;
     border-radius: 16px;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 10px;
     overflow: hidden;
+    text-align: center;
+    // border: 1px solid green;
     div {
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      // border: 1px solid red;
       &.loading-div {
         color: #8b8b8b;
       }
       img {
         width: 18px;
         height: 18px;
-        margin-left: 60px;
+        // margin-left: 60px !important;
         display: inline-block;
       }
       span {
@@ -231,7 +236,7 @@ export default {
     justify-content: center;
     height: 100%;
     img {
-      width: 100px;
+      width: 90px;
     }
     p {
       font-size: 16px;

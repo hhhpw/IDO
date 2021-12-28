@@ -97,7 +97,7 @@ export default {
   watch: {
     data: {
       handler(val) {
-        if (val?.startTime) {
+        if (val?.startTime && this.cardType === "will") {
           this.setCountDown(val.startTime);
         }
       },

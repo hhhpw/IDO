@@ -1,36 +1,30 @@
-import utilsDate from "@utils/date";
 import utilsTool from "@utils/tool";
 import utilsNumber from "@utils/number.js";
-import { isUndefined } from "lodash";
+import dayjs from "dayjs";
+import * as isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import * as duration from "dayjs/plugin/duration";
+dayjs.extend(isSameOrAfter);
+dayjs.extend(duration);
 export default {
   methods: {
     openURL(url) {
       utilsTool.openNewWindow(url);
     },
-    formateDate(timeObj) {
-      const { day, hour, minute, second } = timeObj;
-      if (
-        isUndefined(day) &&
-        isUndefined(hour) &&
-        isUndefined(minute) &&
-        isUndefined(second)
-      ) {
-        return null;
-      }
-      return [day, hour, minute, second];
-    },
     setCountDown(timestamp) {
-      const times = this.formateDate(utilsDate.countdown(timestamp));
-      if (times) {
-        this.countdown = `${times[0] ? times[0] + "D" : times[0]} ${times[1]} ${
-          times[2]
-        } ${times[3]}`;
-      }
+      const diffTime = dayjs.duration(timestamp - dayjs());
+      const day = diffTime.days();
+      const hours =
+        diffTime.hours() < 10 ? `0${diffTime.hours()}` : diffTime.hours(); //小时
+      const minutes =
+        diffTime.minutes() < 10 ? `0${diffTime.minutes()}` : diffTime.minutes(); //分钟
+      const seconds =
+        diffTime.seconds() < 10 ? `0${diffTime.seconds()}` : diffTime.seconds(); //秒
+      this.countdown = `${day}D ${hours}:${minutes}:${seconds}`;
       if (!this.countdown) {
         clearTimeout(this.timer);
         return;
       }
-      if (times.every((d) => String(d) === "00")) {
+      if (dayjs().isSameOrAfter(dayjs(timestamp))) {
         window.location.reload();
       }
       this.timer = setTimeout(() => this.setCountDown(timestamp), 1000);

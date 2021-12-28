@@ -61,6 +61,7 @@
         :key="index"
         :name="iconkey.name"
         class="detail-card-icons-icon"
+        @click="handleToPath(iconkey)"
       ></svg-icon>
     </div>
     <star-space :size="20"></star-space>
@@ -222,7 +223,7 @@ export default {
       this.tabCategory = val;
     },
     handleToPath(val) {
-      utilsTool.openNewWindow(val.url);
+      utilsTool.openNewWindow(val?.url);
     },
     clipHash(val) {
       clipboard.writeText(val).then(

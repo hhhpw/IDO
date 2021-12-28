@@ -2,13 +2,9 @@
   <div
     :set="
       ((detailCardType = detailCardInfo.cardType),
-      (currencyInfo = detailCardInfo.currencyInfo),
-      (cardCountDown = detailCardInfo.startTime))
+      (currencyInfo = detailCardInfo.currencyInfo))
     "
   >
-    <!-- <div style="color: red">
-      {{ proState }} {{ detailCardType }} {{ stakeStatus }}
-    </div> -->
     <div
       class="detail-input-wrap"
       :style="
@@ -114,7 +110,7 @@
     </div>
     <star-space :size="12"></star-space>
     <star-button
-      v-if="showRule('closed', payState)"
+      v-if="showRule(detailCardType, payState)"
       class="detail-wrap-content-button"
       :class="{
         noPointer:
@@ -165,7 +161,7 @@
             detailCardType === 'will'
           "
         >
-          {{ $t("未开始") }}: {{ countdowntime }}
+          {{ $t("未开始") }}: {{ countdown }}
         </span>
 
         <span v-if="stakeStatus === 'unstake'" @click="onUnstakeClick">
@@ -251,17 +247,18 @@ import StarInput from "@StarUI/StarInput.vue";
 import StarSpace from "@StarUI/StarSpace.vue";
 import { mapState, mapActions } from "vuex";
 import utilsNumber from "@utils/number.js";
-import { isNil, isUndefined } from "lodash";
-import { countdown } from "@utils/date.js";
+import { isNil } from "lodash";
+// import { countdown } from "@utils/date.js";
 import { Message } from "element-ui";
 import mixinTool from "./tool";
+import utilsFormat from "@utils/format";
 export default {
   data() {
     return {
       inputValue: "",
       stakeStatus: "stake", // 质押状态 质押stake   解压unstake
       errorText: "",
-      countdowntime: null,
+      countdown: null,
       currencyShareAmount: "0", // 为0没有份额，说明没有参与活动
       isPaying: false,
       timer: null,
@@ -272,31 +269,9 @@ export default {
   mixins: [mixinTool],
   props: ["detailCardInfo"],
   components: { StarInput, StarSpace, StarButton },
-  mounted() {
-    if (this.detailCardInfo.cardType === "will") {
-      let time = this.detailCardInfo(this.detailCardId).startTime;
-      this.timer = setInterval(() => {
-        this.countdowntime = this.formateDate(countdown(time));
-      }, 1000);
-    }
-  },
   methods: {
     ...mapActions("StoreProDetail", ["contractFunc"]),
     ...mapActions("StoreHome", ["triggerStakeRecord"]),
-    formateDate(obj) {
-      const { day, hour, minute, second } = obj;
-      if (
-        isUndefined(day) &&
-        isUndefined(hour) &&
-        isUndefined(minute) &&
-        isUndefined(second)
-      ) {
-        window.location.reload();
-        return;
-      }
-      return `${day === 0 ? "" : `${day}D`} ${hour}:${minute}:${second}`;
-    },
-
     // 获取代币份额
     getCurrencyShare(capTotal, precision) {
       if (!this.myStakeAmount) {
@@ -342,18 +317,12 @@ export default {
         this.detailCardInfo.currencyInfo.stakeCurrency === "STC" &&
         this.stakeStatus === "stake"
       ) {
-        const cname =
-          this.detailCardInfo.cardType === "open"
-            ? "open-toast"
-            : this.detailCardInfo.cardType === "will"
-            ? "will-toast"
-            : "closed-toast";
+        const cname = "reset-toast";
         Message({
           message: this.$t("STC预留"),
           duration: 5000,
           customClass: cname,
         });
-        return;
       }
       if (this.stakeStatus === "stake") {
         // 最大质押量、钱包余额做比较
@@ -363,21 +332,19 @@ export default {
             .gte(this.balances[this.detailCardInfo.currencyInfo.stakeCurrency])
         ) {
           this.inputValue = this.isNilCheck(
-            utilsNumber
-              .bigNum(
-                this.balances[this.detailCardInfo.currencyInfo.stakeCurrency]
-              )
-              .div(
-                Math.pow(10, this.detailCardInfo.currencyInfo.stakePrecision)
+            utilsFormat
+              .formatBalance(
+                this.balances[this.detailCardInfo.currencyInfo.stakeCurrency],
+                this.detailCardInfo.currencyInfo.stakePrecision
               )
               .toString()
           );
         } else {
           this.inputValue = this.isNilCheck(
-            utilsNumber
-              .bigNum(this.restStakeAmount)
-              .div(
-                Math.pow(10, this.detailCardInfo.currencyInfo.stakePrecision)
+            utilsFormat
+              .formatBalance(
+                this.restStakeAmount,
+                this.detailCardInfo.currencyInfo.stakePrecision
               )
               .toString()
           );
@@ -388,9 +355,11 @@ export default {
           return;
         }
         this.inputValue = this.isNilCheck(
-          utilsNumber
-            .bigNum(this.stakeAmount)
-            .div(Math.pow(10, this.detailCardInfo.currencyInfo.stakePrecision))
+          utilsFormat
+            .formatBalance(
+              this.stakeAmount,
+              this.detailCardInfo.currencyInfo.stakePrecision
+            )
             .toString()
         );
       }
@@ -399,9 +368,11 @@ export default {
     async onStakeClick() {
       if (!this.validateStake()) return;
       let params = this.getParams();
-      const amount = utilsNumber
-        .bigNum(this.inputValue)
-        .times(Math.pow(10, this.detailCardInfo.currencyInfo.stakePrecision))
+      const amount = utilsFormat
+        .decimalBalance(
+          this.inputValue,
+          this.detailCardInfo.currencyInfo.stakePrecision
+        )
         .toString();
       params = {
         ...params,
@@ -426,9 +397,11 @@ export default {
       }
       if (!this.validateUnstake()) return;
       let params = this.getParams();
-      const amount = utilsNumber
-        .bigNum(this.inputValue)
-        .times(Math.pow(10, this.detailCardInfo.currencyInfo.stakePrecision))
+      const amount = utilsFormat
+        .decimalBalance(
+          this.inputValue,
+          this.detailCardInfo.currencyInfo.stakePrecision
+        )
         .toString();
       params = {
         ...params,
@@ -482,11 +455,33 @@ export default {
       payState: (state) => state.payState,
     }),
   },
+  watch: {
+    detailCardInfo: {
+      handler(val) {
+        if (val?.startTime && val?.cardType === "will") {
+          this.setCountDown(val.startTime);
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   beforeDestroy() {
     clearInterval(this.timer);
   },
 };
 </script>
+<style lang="scss">
+.reset-toast {
+  background: rgba(214, 135, 45, 0.11) !important;
+  .el-icon-info {
+    color: rgb(254, 201, 68) !important;
+  }
+  .el-message__content {
+    color: rgb(254, 201, 68) !important;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
@@ -530,7 +525,7 @@ export default {
   .detail-wrap-content-button-text {
     font-weight: 500;
     font-size: 24px;
-    z-index: 999;
+    z-index: 222;
     position: relative;
     span {
       display: inline-block;

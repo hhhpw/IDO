@@ -1,5 +1,5 @@
 <template>
-  <star-loading :data="detailCardInfo" :height="loadingH">
+  <star-loading :data="isDataReady && detailCardInfo" :height="loadingH">
     <div class="star-container">
       <star-space :size="80"></star-space>
       <div class="detail-wrap" v-if="detailCardInfo">
@@ -76,16 +76,6 @@ export default {
         });
       }
     },
-    // 支付后轮询查询状态
-    // eventLoop() {
-    // this.timer = setInterval(() => {
-    //   this.loadInfo({
-    //     stakeToken: this.currencyInfo.stakeAddress,
-    //     payToken: this.currencyInfo.payAddress,
-    //     assignToken: this.currencyInfo.assignAddress,
-    //   });
-    // }, 7000);
-    // },
     ...mapActions("StoreProDetail", [
       "getProInfoById",
       "getStakeAmount",
@@ -96,6 +86,7 @@ export default {
     ...mapState("StoreProDetail", {
       detailCardInfo: (state) => state.detailCardInfo,
       dialogParams: (state) => state.dialogParams,
+      isDataReady: (state) => state.isDataReady,
     }),
     ...mapState("StoreWallet", ["stcAccounts", "stcProvider", "walletStatus"]),
   },

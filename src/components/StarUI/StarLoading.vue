@@ -16,7 +16,7 @@
 <script>
 export default {
   props: {
-    data: [Object, Array],
+    data: [Object, Array, Boolean],
     height: Number,
   },
 };

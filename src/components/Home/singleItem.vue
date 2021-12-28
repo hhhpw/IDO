@@ -33,13 +33,19 @@
           </svg-icon>
         </div>
         <div class="home-list-single-item-left-infos">
-          <star-item-cell :data="cellData('raiseTotal', data.payCurrency)">
-          </star-item-cell>
           <star-item-cell
-            :data="cellData('rate', data.assignCurrency, data.payCurrency)"
+            :data="cellData('raiseTotal', data.payCurrency) || '- -'"
           >
           </star-item-cell>
-          <star-item-cell :data="cellData('capTotal', data.assignCurrency)">
+          <star-item-cell
+            :data="
+              cellData('rate', data.assignCurrency, data.payCurrency) || '- -'
+            "
+          >
+          </star-item-cell>
+          <star-item-cell
+            :data="cellData('capTotal', data.assignCurrency) || '- -'"
+          >
           </star-item-cell>
         </div>
       </div>
@@ -95,7 +101,7 @@ export default {
   watch: {
     data: {
       handler(val) {
-        if (val?.startTime) {
+        if (val?.startTime && this.cardType === "will") {
           this.setCountDown(val.startTime);
         }
       },

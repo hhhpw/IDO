@@ -61,7 +61,9 @@ export default {
     },
     renderBalance(balances) {
       if (!balances[CONSTANTS_TOKENS.STC]) return;
-      return utilsFormat.formatBalance(balances[CONSTANTS_TOKENS.STC], 9);
+      return utilsFormat
+        .formatBalance(balances[CONSTANTS_TOKENS.STC], 9)
+        .toString();
     },
   },
 };

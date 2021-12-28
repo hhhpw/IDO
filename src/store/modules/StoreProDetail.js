@@ -23,8 +23,12 @@ const StoreProDetail = {
     payState: false, // 支付状态
     detailCardInfo: null,
     dialogParams: CONSTANTS_DIALOG.WALLET_DIALOG_PARAMS,
+    isDataReady: false,
   },
   mutations: {
+    [types.IS_DATA_READY](state, payload) {
+      state.isDataReady = payload;
+    },
     [types.SET_PRODETAIL_DIALOG_PARAMS](state, payload) {
       state.dialogParams = Object.assign({}, state.dialogParams, payload);
       console.log("  state.dialogParams", state.dialogParams);
@@ -94,6 +98,7 @@ const StoreProDetail = {
               .minus(state.stakeAmount || 0)
               .toString();
             commit(types.SET_REST_STAKE_AMOUNT, restStakeAmount);
+            commit(types.IS_DATA_READY, true);
           }
         })
         .catch((e) => {
@@ -179,6 +184,7 @@ const StoreProDetail = {
           currencyInfo,
           capTotal,
         });
+        console.log("=====prodetail=====", result);
         commit(types.SET_PRODETAIL_INFO, result);
         return "ok";
       }

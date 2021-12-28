@@ -18,12 +18,17 @@
         dark
         class="home-banner-btns-btn"
         @click="
-          utilsTool.openNewWindow(
-            'https://medium.com/@atlaspad/how-to-acquire-stc-e1139df4d77a'
-          )
+          () => {
+            language === 'en'
+              ? utilsTool.openNewWindow(
+                  'https://kiko-verse.gitbook.io/kiko-verse/products/kgstarter'
+                )
+              : utilsTool.openNewWindow(
+                  'https://kiko-verse.gitbook.io/kiko-yuan-yu-zhou/chan-pin/kgstarter'
+                );
+          }
         "
       >
-        <!-- {{ $t("购买STC") }} -->
         {{ $t("了解更多") }}
       </star-button>
     </div>
@@ -43,19 +48,21 @@
 <script>
 import StarButton from "@StarUI/StarButton.vue";
 import utilsTool from "@utils/tool";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       utilsTool,
     };
   },
+  computed: {
+    ...mapState("StoreApp", {
+      language: (state) => state.language,
+    }),
+  },
   components: {
     StarButton,
   },
-  mounted() {},
-  methods: {},
-  computed: {},
-  beforeDestroy() {},
 };
 </script>
 <style lang="scss" scoped>
@@ -63,11 +70,9 @@ export default {
 .home-banner-content {
   width: 100%;
   height: 100%;
-  // display: inline-block;
   display: flex;
   align-items: center;
   flex-direction: column;
-  // justify-content: center;
   .home-banner-content-logo {
     width: 180px;
     margin-top: 100px;
