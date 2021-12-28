@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve && webpack-dev-server --open --mode development",
     "test": "vue-cli-service build --mode test",
-    "build-test": "vue-cli-service build --mode production",
+    "build-stage": "vue-cli-service build --mode stageprod",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint"
   },
