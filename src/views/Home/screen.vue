@@ -106,7 +106,6 @@ export default {
     margin-top: 30px;
   }
   .home-banner-content-item-wrap {
-    margin-top: 20px;
     display: flex;
     justify-content: space-around;
     width: calc(100% - 100px);

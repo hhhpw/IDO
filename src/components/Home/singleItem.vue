@@ -55,7 +55,7 @@
       >
         <div class="home-list-single-item-right-mask"></div>
         <div class="home-list-single-item-right-box">
-          <img :src="data.prdImg" />
+          <img :src="data.prdImg" style="margin-top: 40px" />
           <div
             v-if="cardType === 'open'"
             class="home-list-single-item-right-open-box"
@@ -114,7 +114,7 @@ export default {
 <style lang="scss" scoped>
 .home-list-single-item {
   border: 1px solid #d6872d;
-  height: 550px;
+  height: 380px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -182,16 +182,17 @@ export default {
     }
     .home-list-single-item-left-infos {
       margin-top: 20px;
-      font-family: Denmark;
     }
   }
   .home-list-single-item-right {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-position: left top;
+    background-size: cover;
+    // background-repeat: no-repeat;
+    // background-origin: center center;
+    // background-size: cover;
     width: 750px;
     position: relative;
     .home-list-single-item-right-mask {
@@ -200,7 +201,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.6);
       z-index: 2;
     }
     img {
@@ -218,9 +219,9 @@ export default {
     }
     .home-list-single-item-right-open-box {
       position: relative;
-      height: 100px;
+      height: 80px;
       img {
-        height: 100px;
+        height: 80px;
       }
       span {
         position: absolute;
@@ -228,7 +229,6 @@ export default {
         top: 50%;
         transform: translate(-50%, -50%);
         color: #fec944;
-        font-family: Denmark;
       }
     }
     .home-list-single-item-right-will-box {

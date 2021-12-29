@@ -98,7 +98,6 @@ export default {
   text-align: center;
   color: #fff;
   padding: 70px 90px 30px;
-  font-family: Denmark;
   position: relative;
   height: 300px;
   animation-duration: 1s;

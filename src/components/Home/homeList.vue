@@ -131,6 +131,7 @@ export default {
   display: block;
 }
 .home-list-wrap {
+  min-height: 510px;
   width: 100%;
   .home-list-content-mul-item-wrap-square {
     position: absolute;
@@ -142,13 +143,12 @@ export default {
   }
   .home-list-title {
     font-size: 32px;
-    padding-top: 20px;
     padding-left: 48px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
     height: 80px;
+    line-height: 80px;
     color: #d6872d;
-    font-family: Denmark;
     // color: var(--color);
     background-image: url("../../assets/home/homelist-top.png");
   }
@@ -157,10 +157,9 @@ export default {
   background-image: url("../../assets/home/homelist-middle.png");
   background-size: 100% 100%;
   background-repeat: repeat-y;
-  min-height: 550px;
   width: 100%;
   overflow: hidden;
-  // color: var(--color);
+  min-height: 380px;
   .home-list-content {
     cursor: pointer;
     overflow: hidden;

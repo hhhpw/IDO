@@ -2,6 +2,11 @@
 @import "element";
 @import "starui";
 
+@font-face {
+  font-family: Denmark;
+  src: url("../fonts/Denmark Regular.ttf");
+}
+
 html,
 body,
 * {
@@ -11,9 +16,5 @@ body,
 }
 body {
   background-color: #03040b;
-}
-
-@font-face {
   font-family: Denmark;
-  src: url("../fonts/Denmark Regular.ttf");
 }

@@ -102,7 +102,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     .detail-wrap-content-left {
-      width: 36%;
+      width: 38%;
       padding: 40px 20px 50px;
       background-repeat: no-repeat;
       background-size: 100% 100%;

@@ -155,7 +155,6 @@ export default {
     }
     .home-list-mul-item-rough-infos {
       color: #ffffff;
-      font-family: Denmark;
       .home-list-mul-item-rough-infos-closed {
         position: absolute;
         width: 100%;

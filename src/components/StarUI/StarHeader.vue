@@ -143,7 +143,6 @@ export default {
     );
   }
   .star-header-left {
-    font-family: Denmark;
     display: flex;
     align-items: center;
     img {
@@ -153,7 +152,6 @@ export default {
   .star-header-right {
     display: flex;
     align-items: center;
-    font-family: Denmark;
     .star-button {
       padding: 8px 20px;
       box-sizing: border-box;
