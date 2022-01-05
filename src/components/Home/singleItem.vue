@@ -172,8 +172,8 @@ export default {
     .home-list-single-item-left-link {
       display: flex;
       .home-list-single-item-left-link-item {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         margin-right: 10px;
         :hover {
           opacity: 0.7;

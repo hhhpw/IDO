@@ -95,7 +95,9 @@
     <star-space :size="30"></star-space>
     <div class="detail-card-footer">
       {{
-        this.lang === "zh" ? detailCardInfo.prdDesc : detailCardInfo.prdDescEn
+        this.language === "zh"
+          ? detailCardInfo.prdDesc
+          : detailCardInfo.prdDescEn
       }}
     </div>
   </div>
@@ -121,8 +123,6 @@ export default {
       isHover: false,
       copyContent: this.$t("复制"),
       tabCategory: "prodetail",
-
-      lang: session.getItem("lang"),
     };
   },
   mixins: [mixinHome],
@@ -240,6 +240,9 @@ export default {
     },
   },
   computed: {
+    ...mapState("StoreApp", {
+      language: (state) => state.language,
+    }),
     ...mapState("StoreProDetail", {
       stakeAmount: (state) => state.stakeAmount,
       myStakeAmount: (state) => state.myStakeAmount,
@@ -318,8 +321,8 @@ export default {
   }
   .detail-card-icons {
     .detail-card-icons-icon {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       &:hover {
         opacity: 0.7;
       }

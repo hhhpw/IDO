@@ -145,8 +145,8 @@ export default {
     .home-list-mul-item-link {
       display: flex;
       .home-list-mul-item-link-item {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         margin-right: 10px;
         :hover {
           opacity: 0.7;
