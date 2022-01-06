@@ -201,7 +201,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: linear-gradient(90deg, #03040b, rgba(0, 0, 0, 0.8));
       z-index: 2;
     }
     img {
