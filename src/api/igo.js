@@ -36,6 +36,12 @@ function getContractsProjectInfo({ stakeToken, payToken, assignToken }) {
       `${process.env.VUE_APP_IGO_CONTRACTS_ADDRESS}::Offering${COUNT}::Offering<${stakeToken},${payToken},${assignToken}>`,
     ],
   };
+  console.log("getContractsProjectInfo", params);
+  console.log(
+    " process.env.VUE_APP_CONTRACTS_URL",
+    process.env.VUE_APP_CONTRACTS_URL
+  );
+
   return request({
     headers: {
       "content-type": "application/json",
@@ -58,6 +64,11 @@ function getStakeAmount(accountToken, { stakeToken, payToken, assignToken }) {
       `${process.env.VUE_APP_IGO_CONTRACTS_ADDRESS}::Offering${COUNT}::Staking<${stakeToken},${payToken},${assignToken}>`,
     ],
   };
+  console.log("getStakeAmount", params);
+  console.log(
+    " process.env.VUE_APP_CONTRACTS_URL",
+    process.env.VUE_APP_CONTRACTS_URL
+  );
   return request({
     headers: {
       "content-type": "application/json",
