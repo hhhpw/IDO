@@ -1,6 +1,7 @@
 # Branch
 
-- main
+- main 线上
+- test 测试环境
 
 # 打包
 
