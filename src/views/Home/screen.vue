@@ -9,9 +9,9 @@
       <star-button
         blborder
         class="home-banner-btns-btn"
-        @click="utilsTool.openNewWindow('https://twitter.com/Kiko_verse')"
+        @click="utilsTool.openNewWindow('https://discord.gg/qCznEQ2R')"
       >
-        {{ $t("加入我们") }}
+        {{ $t("领取空投") }}
       </star-button>
       <star-button
         trborder

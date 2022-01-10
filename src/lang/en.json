@@ -90,12 +90,14 @@
     "公链": "Public Chain",
     "粉丝代币": "Fan Token",
     "home-item-1-desc": "The first game publishing platform on Starcoin network, committed to becoming a full-scale gaming ecosystem",
-    "home-item-2-desc": "Designed and built based on MOVE, the safest programming language, to protect your assets in Kikoverse",
-    "home-item-3-desc": "Discover excellent blockchain games and create truly playable blockchain games",
+    "home-item-2-desc": "Discover excellent blockchain games and create truly playable blockchain games",
+    "home-item-3-desc": "Designed and built based on MOVE, the safest programming language, to protect your assets in Kikoverse",
     "操作成功": "Action succeeded",
     "确认": "Confirm",
     "了解更多": "Learn More",
     "通往Starcoin游戏元宇宙的第一站": "Your first stop to GameFi on Starcoin",
-    "注册开放": "Registration opens"
+    "注册开放": "Registration opens",
+    "无上限": "Unlimited",
+    "领取空投": "Airdrop"
   }
 }
