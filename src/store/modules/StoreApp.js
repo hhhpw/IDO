@@ -1,4 +1,4 @@
-import i18n from "../../i18n/index";
+// import i18n from "../../i18n/index";
 import session from "@utils/session";
 import * as types from "../constants/app";
 const StoreApp = {
@@ -6,7 +6,7 @@ const StoreApp = {
   state: {
     headerItems: [
       {
-        label: i18n.t("项目"),
+        label: "项目",
         value: "/",
         path: "/",
       },

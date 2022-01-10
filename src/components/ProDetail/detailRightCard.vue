@@ -117,6 +117,7 @@ import session from "@utils/session";
 import { cloneDeep } from "lodash";
 import utilsNumber from "@utils/number.js";
 import utilsTool from "@utils/tool";
+import i18n from "../../i18n";
 export default {
   data() {
     return {
@@ -171,12 +172,17 @@ export default {
           };
         }
         if (i === 2) {
+          const showText =
+            String(d) === "0"
+              ? i18n.t("无上限")
+              : utilsNumber.formatNumberMeta(d, { grouped: true }).text;
+          const showCurrency =
+            String(d) === "0"
+              ? ""
+              : `${this.detailCardInfo.currencyInfo.assignCurrency}`;
           return {
             name: this.$t(`代币发行总量`),
-            text:
-              utilsNumber.formatNumberMeta(d, { grouped: true }).text +
-              " " +
-              `${this.detailCardInfo.currencyInfo.assignCurrency}`,
+            text: showText + " " + showCurrency,
           };
         }
         if (i === 3) {
