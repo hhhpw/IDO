@@ -93,13 +93,12 @@
       </div>
     </div>
     <star-space :size="30"></star-space>
-    <div class="detail-card-footer">
-      {{
-        this.language === "zh"
-          ? detailCardInfo.prdDesc
-          : detailCardInfo.prdDescEn
-      }}
-    </div>
+    <div
+      class="detail-card-footer"
+      v-html="
+        language === 'zh' ? detailCardInfo.prdDesc : detailCardInfo.prdDescEn
+      "
+    ></div>
   </div>
 </template>
 <script>
