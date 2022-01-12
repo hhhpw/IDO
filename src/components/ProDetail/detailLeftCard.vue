@@ -313,8 +313,13 @@ export default {
       if (this.detailCardInfo.cardType === "will") {
         return;
       }
+      console.log(
+        "this.detailCardInfo.currencyInfo.stakeCurrency",
+        this.detailCardInfo.currencyInfo
+      );
       if (
-        this.detailCardInfo.currencyInfo.stakeCurrency === "STC" &&
+        this.detailCardInfo.currencyInfo.stakeAddress ===
+          "0x00000000000000000000000000000001::STC::STC" &&
         this.stakeStatus === "stake"
       ) {
         const cname = "reset-toast";
