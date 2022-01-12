@@ -21,12 +21,12 @@ const plugins = isProduction
       new UglifyJsPlugin({
         uglifyOptions: {
           //生产环境自动删除console
-          // compress: {
-          //   drop_debugger: true,
-          //   drop_console: true,
-          //   dead_code: true,
-          //   pure_funcs: ["console.log"], //移除console
-          // },
+          compress: {
+            drop_debugger: true,
+            drop_console: true,
+            dead_code: true,
+            pure_funcs: ["console.log"], //移除console
+          },
         },
         sourceMap: false,
         parallel: true,
