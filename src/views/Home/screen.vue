@@ -11,7 +11,7 @@
         class="home-banner-btns-btn"
         @click="utilsTool.openNewWindow('https://discord.gg/qCznEQ2R')"
       >
-        {{ $t("领取空投") }}
+        {{ $t("关注我们") }}
       </star-button>
       <star-button
         trborder
