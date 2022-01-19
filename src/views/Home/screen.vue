@@ -9,7 +9,7 @@
       <star-button
         blborder
         class="home-banner-btns-btn"
-        @click="utilsTool.openNewWindow('https://discord.gg/qCznEQ2R')"
+        @click="utilsTool.openNewWindow('https://discord.gg/qUgmuQNzgF')"
       >
         {{ $t("关注我们") }}
       </star-button>
