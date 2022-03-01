@@ -53,11 +53,13 @@ export default {
       //   return;
       // }
       this.getBalance();
-      this.loadInfo({
-        stakeToken: this.detailCardInfo.currencyInfo.stakeAddress,
-        payToken: this.detailCardInfo.currencyInfo.payAddress,
-        assignToken: this.detailCardInfo.currencyInfo.assignAddress,
-      });
+      setTimeout(() => {
+        this.loadInfo({
+          stakeToken: this.detailCardInfo.currencyInfo.stakeAddress,
+          payToken: this.detailCardInfo.currencyInfo.payAddress,
+          assignToken: this.detailCardInfo.currencyInfo.assignAddress,
+        });
+      }, 1500);
     }
   },
   methods: {
