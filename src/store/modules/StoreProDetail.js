@@ -2,10 +2,13 @@ import * as types from "../constants/prodetail";
 import { fromPairs } from "lodash";
 import utilsNumber from "@utils/number.js";
 import dayjs from "dayjs";
+
 import igoApi from "@api/igo.js";
 import IGOContract from "@starMaskWallet/igo";
 import utilsTool from "@utils/tool";
 import CONSTANTS_DIALOG from "@constants/dialog";
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 const mapKey = new Map([
   ["processing", "open"],
   ["init", "will"],
@@ -148,23 +151,25 @@ const StoreProDetail = {
         const proTimeList = [
           {
             title: "质押时间",
-            startDate: dayjs(pledgeStartTime).format("YYYY/MM/DD HH:mm:ss"),
-            endDate: dayjs(pledgeEndTime).format("YYYY/MM/DD HH:mm:ss"),
+            startDate: dayjs.utc(pledgeStartTime).format("YYYY/MM/DD HH:mm:ss"),
+            endDate: dayjs.utc(pledgeEndTime).format("YYYY/MM/DD HH:mm:ss"),
           },
           {
             title: "锁仓时间",
-            startDate: dayjs(lockStartTime).format("YYYY/MM/DD HH:mm:ss"),
-            endDate: dayjs(lockEndTime).format("YYYY/MM/DD HH:mm:ss"),
+            startDate: dayjs.utc(lockStartTime).format("YYYY/MM/DD HH:mm:ss"),
+            endDate: dayjs.utc(lockEndTime).format("YYYY/MM/DD HH:mm:ss"),
           },
           {
             title: "支付时间",
-            startDate: dayjs(payStartTime).format("YYYY/MM/DD HH:mm:ss"),
-            endDate: dayjs(payEndTime).format("YYYY/MM/DD HH:mm:ss"),
+            startDate: dayjs.utc(payStartTime).format("YYYY/MM/DD HH:mm:ss"),
+            endDate: dayjs.utc(payEndTime).format("YYYY/MM/DD HH:mm:ss"),
           },
           {
             title: "代币分配时间",
-            startDate: dayjs(assignmentStartTime).format("YYYY/MM/DD HH:mm:ss"),
-            endDate: dayjs(assignmentEndTime).format("YYYY/MM/DD HH:mm:ss"),
+            startDate: dayjs
+              .utc(assignmentStartTime)
+              .format("YYYY/MM/DD HH:mm:ss"),
+            endDate: dayjs.utc(assignmentEndTime).format("YYYY/MM/DD HH:mm:ss"),
           },
         ];
         const decentralizedList = [
