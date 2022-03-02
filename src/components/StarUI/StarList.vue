@@ -26,7 +26,7 @@
           <!-- <span> 2021 08 12 / 12:00:00 </span> -->
           <span>{{ data.endDate }}</span>
 
-          <span style="margin-left: 8px">UTC+8</span>
+          <!-- <span style="margin-left: 8px">UTC+8</span> -->
         </p>
         <!-- <p v-else>
           <span>{{ data.date }}</span>
